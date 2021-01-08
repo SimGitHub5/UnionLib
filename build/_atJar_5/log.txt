@@ -1,0 +1,5 @@
+Args: "--inJar", "D:\Java Projects\Needle\build\fg_cache\net\minecraftforge\forge\1.16.4-35.1.32\forge-1.16.4-35.1.32-injected.jar", "--outJar", "D:\Java Projects\Needle\build\fg_cache\net\minecraftforge\forge\1.16.4-35.1.32_mapped_snapshot_20201028-1.16.3\forge-1.16.4-35.1.32_mapped_snapshot_20201028-1.16.3.jar", "--logFile", "accesstransform.log", "--atFile", "D:\Java Projects\Needle\src\main\resources\META-INF\accesstransformer.cfg", "--atFile", "D:\Java Projects\Needle\build\_atJar_5\parent_at.cfg"
+Classpath: C:\Users\Stereowalker\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\accesstransformers\1.0.5\accesstransformers-1.0.5-fatjar.jar
+WorkDir: D:\Java Projects\Needle\build\_atJar_5
+Main: net.minecraftforge.accesstransformer.TransformerProcessor
+====================================

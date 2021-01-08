@@ -1,0 +1,25 @@
+
+[leveling_stats]
+	#The amount to modify the default Cold Resistance
+	#Range: -1000.0 ~ 1000.0
+	default_cold_resistance_modifier = 0.0
+	#The amount of Heat Resistance to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_heat_resistance_modifier = 20.0
+	#The amount of Cold Resistance to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_cold_resistance_modifier = 20.0
+	#Enable the Cold Resistance Stat
+	enable_cold_resistance = true
+	#The amount to modify the default Heat Resistance
+	#Range: -1000.0 ~ 1000.0
+	default_heat_resistance_modifier = 0.0
+	#Maximum level that the Heat Resistance stat can reach
+	#Range: 1 ~ 100
+	maximum_heat_resistance_level = 32
+	#Maximum level that the Cold Resistance stat can reach
+	#Range: 1 ~ 100
+	maximum_cold_resistance_level = 32
+	#Enable the Heat Resistance Stat
+	enable_heat_resistance = true
+

@@ -1,0 +1,157 @@
+
+[oregen]
+	#Should C.O.M.B.A.T. copper ores spawn ingame
+	generate_copper_ore = true
+	#Max number of copper ore veins that can spawn in one chunk
+	#Range: 1 ~ 100
+	copper_chance = 30
+	#Should C.O.M.B.A.T. limestone spawn ingame
+	generate_limestone = true
+	#Max number of tridox ore veins that can spawn in one chunk
+	#Range: 1 ~ 100
+	tridox_chance = 40
+	#Should C.O.M.B.A.T. oil spawn ingame
+	generate_oil = true
+	#Max number of oil veins that can spawn in one chunk
+	#Range: 1 ~ 100
+	oil_chance = 1
+
+[leveling_stats]
+	#The amount to modify the default Swim Speed
+	#Range: -1000.0 ~ 1000.0
+	default_swim_speed_modifier = -0.0015625
+	#The amount of Cold Resistance to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_cold_resistance_modifier = 10.0
+	#The amount to modify the default Attack Speed
+	#Range: -1000.0 ~ 1000.0
+	default_attack_speed_modifier = 0.0
+	#if true, experience levels will be used for upgrades, if false experience points will be used
+	use_experience_levels = true
+	#The amount of Mana Regen to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_mana_regen_modifier = 32.0
+	#Maximum level that the Mana Regen stat can reach
+	#Range: 1 ~ 100
+	maximum_mana_regen_level = 32
+	#Maximum level that the Luck stat can reach
+	#Range: 1 ~ 100
+	maximum_luck_level = 32
+	#Enable the Max Healht Stat
+	enable_max_health = true
+	#The amount of Swim Speed to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_swim_speed_modifier = 0.05
+	#The amount to modify the default Magic Strength
+	#Range: -1000.0 ~ 1000.0
+	default_magic_strength_modifier = -0.3125
+	#Maximum level that the Max Health stat can reach
+	#Range: 1 ~ 100
+	maximum_max_health_level = 32
+	#The amount to modify the default Physical Strength
+	#Range: -1000.0 ~ 1000.0
+	default_physical_strength_modifier = 0.0
+	#Enable the Magic Strength Stat
+	enable_magic_strength = true
+	#Enable the Physical Strength Stat
+	enable_physical_strength = true
+	#The amount to modify the default Max Mana
+	#Range: -1000.0 ~ 1000.0
+	default_max_mana_modifier = -312.5
+	#Maximum level that the Attack Speed stat can reach
+	#Range: 1 ~ 100
+	maximum_attack_speed_level = 32
+	#The amount of Attack Speed to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_attack_speed_modifier = 4.0
+	#Maximum level that the Movement Speed stat can reach
+	#Range: 1 ~ 100
+	maximum_movement_speed_level = 32
+	#Enable the Attack Speed Stat
+	enable_attack_speed = true
+	#The amount to modify the default Max Health
+	#Range: -18.0 ~ 1000.0
+	default_max_health_modifier = -4.0
+	#The amount of Movement Speed to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_movement_speed_modifier = 0.05
+	#The amount to modify the default Mana Regen
+	#Range: -1000.0 ~ 1000.0
+	default_mana_regen_modifier = -1.0
+	#Enable the Movement Speed Stat
+	enable_movement_speed = true
+	#The amount of Physical Strength to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_physical_strength_modifier = 4.0
+	#Enable the Mana Regen Stat
+	enable_mana_regen = true
+	#Maximum level that the Defence stat can reach
+	#Range: 1 ~ 100
+	maximum_defence_level = 32
+	#Enable the Luck Stat
+	enable_luck = true
+	#Enable the Swim Speed Stat
+	enable_swim_speed = true
+	#Maximum level that the Magic Strength stat can reach
+	#Range: 1 ~ 100
+	maximum_magic_strength_level = 32
+	#Maximum level that the Heat Resistance stat can reach
+	#Range: 1 ~ 100
+	maximum_heat_resistance_level = 32
+	#Maximum level that the Cold Resistance stat can reach
+	#Range: 1 ~ 100
+	maximum_cold_resistance_level = 32
+	#Enable the Max Mana Stat
+	enable_max_mana = true
+	#The amount to modify the default Defence
+	#Range: -1000.0 ~ 1000.0
+	default_defence_modifier = 0.0
+	#Maximum level that the Max Mana stat can reach
+	#Range: 1 ~ 100
+	maximum_max_mana_level = 32
+	#The amount to modify the default Heat Resistance
+	#Range: -1000.0 ~ 1000.0
+	default_heat_resistance_modifier = 0.0
+	#Maximum level that the Physical Strength stat can reach
+	#Range: 1 ~ 100
+	maximum_physical_strength_level = 32
+	#Enable the Heat Resistance Stat
+	enable_heat_resistance = true
+	#Enable the Defence Stat
+	enable_defence = true
+	#The amount to modify the default Luck
+	#Range: -1000.0 ~ 1000.0
+	default_luck_modifier = 0.0
+	#The amount of Heat Resistance to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_heat_resistance_modifier = 10.0
+	#The amount to modify the default Movement Speed
+	#Range: -1000.0 ~ 1000.0
+	default_movement_speed_modifier = -0.0015625
+	#The amount of Magic Strength to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_magic_strength_modifier = 10.0
+	#Enable the Cold Resistance Stat
+	enable_cold_resistance = true
+	#The amount of Luck to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_luck_modifier = 5.0
+	#The amount of Max Health to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_max_health_modifier = 64.0
+	#The amount to modify the default Cold Resistance
+	#Range: -1000.0 ~ 1000.0
+	default_cold_resistance_modifier = 0.0
+	#The amount of experience taken for each upgrade. This number is multiplied by the current level of the stat to determine the cost of the next upgrade
+	#Range: 1 ~ 100
+	experience_cost = 1
+	#Maximum level that the Swim Speed stat can reach
+	#Range: 1 ~ 100
+	maximum_swim_speed_level = 32
+	#The amount of Defence to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_defence_modifier = 10.0
+	#The amount of Max Mana to be added when at max level
+	#Range: 0.0 ~ 100000.0
+	maximum_max_mana_modifier = 10000.0
+

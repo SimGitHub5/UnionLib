@@ -1,0 +1,156 @@
+---- Minecraft Crash Report ----
+// Uh... Did I do that?
+
+Time: 8/2/20 8:26 AM
+Description: Container click
+
+java.lang.ArrayIndexOutOfBoundsException: 28
+	at java.util.Arrays$ArrayList.set(Unknown Source) ~[?:1.8.0_231] {}
+	at net.minecraft.util.NonNullList.set(NonNullList.java:50) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.inventory.Inventory.setInventorySlotContents(Inventory.java:137) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.inventory.container.Slot.putStack(Slot.java:83) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.inventory.container.Container.func_241440_b_(Container.java:238) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.inventory.container.Container.slotClick(Container.java:179) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.client.multiplayer.PlayerController.windowClick(PlayerController.java:410) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.gui.screen.inventory.ContainerScreen.handleMouseClick(ContainerScreen.java:558) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at com.stereowalker.unionlib.client.gui.screen.inventory.UnionInventoryScreen.handleMouseClick(UnionInventoryScreen.java:177) ~[main/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.gui.screen.inventory.ContainerScreen.mouseReleased(ContainerScreen.java:515) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at com.stereowalker.unionlib.client.gui.screen.inventory.UnionInventoryScreen.mouseReleased(UnionInventoryScreen.java:164) ~[main/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.MouseHelper.lambda$mouseButtonCallback$1(MouseHelper.java:98) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:421) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.MouseHelper.mouseButtonCallback(MouseHelper.java:96) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:185) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.MouseHelper.lambda$registerCallbacks$5(MouseHelper.java:184) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36) ~[lwjgl-glfw-3.2.2.jar:build 10] {}
+	at org.lwjgl.system.JNI.invokeV(Native Method) ~[lwjgl-3.2.2.jar:build 10] {}
+	at org.lwjgl.glfw.GLFW.glfwPollEvents(GLFW.java:3101) ~[lwjgl-glfw-3.2.2.jar:build 10] {}
+	at com.mojang.blaze3d.systems.RenderSystem.flipFrame(RenderSystem.java:89) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.MainWindow.flipFrame(MainWindow.java:304) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:997) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.run(Minecraft.java:587) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.main.Main.main(Main.java:184) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_231] {}
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source) ~[?:1.8.0_231] {}
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source) ~[?:1.8.0_231] {}
+	at java.lang.reflect.Method.invoke(Unknown Source) ~[?:1.8.0_231] {}
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:55) ~[forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37) [modlauncher-6.1.1.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54) [modlauncher-6.1.1.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72) [modlauncher-6.1.1.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:81) [modlauncher-6.1.1.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:65) [modlauncher-6.1.1.jar:?] {}
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:105) [forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at java.util.Arrays$ArrayList.set(Unknown Source)
+	at net.minecraft.util.NonNullList.set(NonNullList.java:50)
+	at net.minecraft.inventory.Inventory.setInventorySlotContents(Inventory.java:137)
+	at net.minecraft.inventory.container.Slot.putStack(Slot.java:83)
+	at net.minecraft.inventory.container.Container.func_241440_b_(Container.java:238)
+
+-- Click info --
+Details:
+	Menu Type: unionlib:union_inventory
+	Menu Class: com.stereowalker.unionlib.inventory.container.UnionContainer
+	Slot Count: 55
+	Slot: -999
+	Button: 2
+	Type: QUICK_CRAFT
+Stacktrace:
+	at net.minecraft.inventory.container.Container.slotClick(Container.java:179)
+	at net.minecraft.client.multiplayer.PlayerController.windowClick(PlayerController.java:410)
+	at net.minecraft.client.gui.screen.inventory.ContainerScreen.handleMouseClick(ContainerScreen.java:558)
+	at com.stereowalker.unionlib.client.gui.screen.inventory.UnionInventoryScreen.handleMouseClick(UnionInventoryScreen.java:177)
+	at net.minecraft.client.gui.screen.inventory.ContainerScreen.mouseReleased(ContainerScreen.java:515)
+	at com.stereowalker.unionlib.client.gui.screen.inventory.UnionInventoryScreen.mouseReleased(UnionInventoryScreen.java:164)
+	at net.minecraft.client.MouseHelper.lambda$mouseButtonCallback$1(MouseHelper.java:98)
+
+-- Affected screen --
+Details:
+	Screen name: com.stereowalker.unionlib.client.gui.screen.inventory.UnionInventoryScreen
+Stacktrace:
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:421)
+	at net.minecraft.client.MouseHelper.mouseButtonCallback(MouseHelper.java:96)
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:185)
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86)
+	at net.minecraft.client.MouseHelper.lambda$registerCallbacks$5(MouseHelper.java:184)
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36)
+	at org.lwjgl.system.JNI.invokeV(Native Method)
+	at org.lwjgl.glfw.GLFW.glfwPollEvents(GLFW.java:3101)
+	at com.mojang.blaze3d.systems.RenderSystem.flipFrame(RenderSystem.java:89)
+
+-- Affected level --
+Details:
+	All players: 1 total; [ClientPlayerEntity['Dev'/127, l='ClientLevel', x=-5.01, y=70.00, z=181.84]]
+	Chunk stats: Client Chunk Cache: 841, 497
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (176,67,240), Chunk: (at 0,4,0 in 11,15; contains blocks 176,0,240 to 191,255,255), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 14665 game time, 25706 day time
+	Server brand: forge
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.world.ClientWorld.fillCrashReport(ClientWorld.java:464)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2035)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:603)
+	at net.minecraft.client.main.Main.main(Main.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:55)
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37)
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54)
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72)
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:81)
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:65)
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:105)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.1
+	Minecraft Version ID: 1.16.1
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 1696809048 bytes (1618 MB) / 3955752960 bytes (3772 MB) up to 6668419072 bytes (6359 MB)
+	CPUs: 8
+	JVM Flags: 1 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 6.1.1+74+master.966c698
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.jar mixin PLUGINSERVICE 
+		/eventbus-3.0.3-service.jar eventbus PLUGINSERVICE 
+		/forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-2.2.0-shadowed.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 32.0
+	Forge: net.minecraftforge:32.0.92
+	FML Language Providers: 
+		javafml@32.0
+		minecraft@1
+	Mod List: 
+		client-extra.jar Minecraft {minecraft@1.16.1 DONE}
+		main UnionLib {unionlib@version DONE}
+		forge-1.16.1-32.0.92_mapped_snapshot_20200723-1.16.1-recomp.jar Forge {forge@32.0.92 DONE}
+	Launched Version: MOD_DEV
+	Backend library: LWJGL version 3.2.2 build 10
+	Backend API: Quadro K2100M/PCIe/SSE2 GL version 4.5.0 NVIDIA 353.62, NVIDIA Corporation
+	GL Caps: Using framebuffer using OpenGL 3.0
+	Using VBOs: Yes
+	Is Modded: Definitely; Client brand changed to 'forge'
+	Type: Client (map_client.txt)
+	Resource Packs: 
+	Current Language: English (US)
+	CPU: 8x Intel(R) Core(TM) i7-4910MQ CPU @ 2.90GHz
