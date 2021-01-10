@@ -47,6 +47,22 @@ function initializeCoreMod() {
                 }], classNode, "CraftingResultSlot");
                 return classNode;
             }
+        },
+		// apply custom attributes for every item
+        'item_stack_patch': {
+            'target': {
+                'type': 'CLASS',
+                'name': 'net.minecraft.item.ItemStack'
+            },
+            'transformer': function(classNode) {
+                patchMethod([{
+                    obfName: "func_111283_C",
+                    name: "getAttributeModifiers",
+                    desc: "(Lnet/minecraft/inventory/EquipmentSlotType;)Lcom/google/common/collect/Multimap;",
+                    patches: [patchItemStackGetAttributeModifiers]
+                }], classNode, "ItemStack");
+                return classNode;
+            }
         }
     };
 }
@@ -70,11 +86,11 @@ function patchMethod(entries, classNode, name) {
 					flag2 = false;
                     flag = false;
                 }
-				log("Patch " + (j+1) + (flag2 ? " was successful" : " failed"));
+				log((flag2 ? " Successfully applied" : " Failed to apply")+" patch " + (j+1));
             }
         }
 
-        log("Patching " + name + "#" + entry.name + (flag ? " was successful" : " failed"));
+        log("Patch for " + name + "#" + entry.name + (flag ? " was successful" : " failed"));
     }
 }
 
@@ -96,15 +112,14 @@ function patchInstructions(method, filter, action, obfuscated) {
     for (var i = 0; i < instructions.length; i++) {
 
         var node = filter(instructions[i], obfuscated);
-		debug("FILTER NODE: "+(!!node));
+		debug("DOES NODE MATCH: "+(!!node));
         if (!!node) {
 
             break;
         }
     }
-	debug("ACTION NODE: "+(!!node));
+	debug("APPLY PATCH ON NODE: "+(!!node));
     if (!!node) {
-		debug("Taken Action");
         action(node, method.instructions, obfuscated);
         return true;
     }
@@ -112,7 +127,7 @@ function patchInstructions(method, filter, action, obfuscated) {
 
 var patchStructureStartfunc_230366_a_1 = {
     filter: function(node, obfuscated) {
-        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructureStart", obfuscated ? "recalculateStructureSize" : "recalculateStructureSize", "()V")) {
+        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructureStart", obfuscated ? "func_202500_a" : "recalculateStructureSize", "()V")) {
             return node;
         }
     },
@@ -140,6 +155,28 @@ var patchStructureStartfunc_230366_a_2 = {
     }
 };
 
+var patchItemStackGetAttributeModifiers = {
+    filter: function(node, obfuscated) {
+        if (node instanceof VarInsnNode && node.getOpcode().equals(Opcodes.ALOAD) && node.var.equals(1)) {
+            var nextNode = node.getNext();
+            if (nextNode instanceof VarInsnNode && nextNode.getOpcode().equals(Opcodes.ALOAD) && nextNode.var.equals(0)) {
+                nextNode = nextNode.getNext();
+                // getAttributeModifiers is a Forge method
+                if (matchesMethod(nextNode, "net/minecraft/item/Item", obfuscated ? "getAttributeModifiers" : "getAttributeModifiers", "(Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;")) {
+                    return nextNode;
+                }
+            }
+        }
+    },
+    action: function(node, instructions, obfuscated) {
+        var insnList = new InsnList();
+        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        insnList.add(generateHook("adjustAttributeMap", "(Lcom/google/common/collect/Multimap;Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;"));
+		instructions.insert(node, insnList);
+    }
+};
+
 var patchCraftingResultSlotOnCrafting = {
     filter: function(node, obfuscated) {
 		debug("");
@@ -148,10 +185,8 @@ var patchCraftingResultSlotOnCrafting = {
 			if(!!node.owner) debug("Node Owner: "+node.owner);
 			if(!!node.name) debug("Node Name: "+node.name);
 			if(!!node.desc) debug("Node Desc: "+node.desc);
-			//debug("Node Is Var: "+(node instanceof VarInsnNode));
-			//debug("Node Is Jump: "+(node instanceof JumpInsnNode));
-			if(!!node.getOpcode()) debug("Node Opcodes: "+node.getOpcode());
 			if(!!node.var) debug("Node Var: "+node.var);	
+			if(!!node.getOpcode()) debug("Node Opcodes: "+node.getOpcode());
 		}
 		debug("*****************");
 		debug("");
@@ -162,31 +197,27 @@ var patchCraftingResultSlotOnCrafting = {
     action: function(node, instructions, obfuscated) {
         var insnList = new InsnList();
 		insnList.add(new VarInsnNode(Opcodes.ALOAD, null));
-        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/inventory/container/CraftingResultSlot", obfuscated ? "field_75238_b " : "player", "Lnet/minecraft/entity/player/PlayerEntity;"));
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-		insnList.add(new VarInsnNode(Opcodes.ALOAD, null));
         insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/inventory/container/CraftingResultSlot", obfuscated ? "field_75239_a" : "craftMatrix", "Lnet/minecraft/inventory/CraftingInventory;"));
         insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        insnList.add(generateHook("firePlayerCraftingEvent", "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/inventory/container/CraftingResultSlot;)V"));
+		insnList.add(new VarInsnNode(Opcodes.ALOAD, null));
+        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/inventory/container/CraftingResultSlot", obfuscated ? "field_75238_b" : "player", "Lnet/minecraft/entity/player/PlayerEntity;"));
+        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        insnList.add(generateHook("firePlayerCraftingEvent", "(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/inventory/container/CraftingResultSlot;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V"));
 		
 		debug("#########MC#########");
 		if(!!node.owner)debug("MC Node Owner: "+node.owner);
 		debug("MC Node Name: "+node.name);
 		debug("MC Node Desc: "+node.desc);
-		debug("MC Node Is Var: "+(node instanceof VarInsnNode));
-		debug("MC Node Is Method: "+(node instanceof MethodInsnNode));
-		debug("MC Node Opcodes: "+node.getOpcode());
 		debug("MC Node Var: "+node.var);	
+		debug("MC Node Opcodes: "+node.getOpcode());
 		debug("#########MC#########");
 		var node2 = insnList.get(0);
 		debug("#########CT#########");
 		if(!!node2.owner)debug("CT Node Owner: "+node2.owner);
 		debug("CT Node Name: "+node2.name);
 		debug("CT Node Desc: "+node2.desc);
-		debug("CT Node Is Var: "+(node2 instanceof VarInsnNode));
-		debug("CT Node Is Method: "+(node2 instanceof MethodInsnNode));
-		debug("CT Node Opcodes: "+node2.getOpcode());
 		debug("CT Node Var: "+node2.var);	
+		debug("CT Node Opcodes: "+node2.getOpcode());
 		debug("#########CT#########");
 		
         instructions.insert(node, insnList);

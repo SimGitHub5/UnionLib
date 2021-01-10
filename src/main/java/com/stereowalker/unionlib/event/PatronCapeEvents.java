@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.events;
+package com.stereowalker.unionlib.event;
 
 import com.stereowalker.unionlib.Cape;
 

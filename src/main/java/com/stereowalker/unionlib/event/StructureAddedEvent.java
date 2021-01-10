@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.events;
+package com.stereowalker.unionlib.event;
 
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.server.ServerWorld;

@@ -1,11 +1,19 @@
 package com.stereowalker.unionlib.hook;
 
-import com.stereowalker.unionlib.events.ItemCraftedEvent;
-import com.stereowalker.unionlib.events.StructureAddedEvent;
-import com.stereowalker.unionlib.events.StructurePieceAddedEvent;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableMultimap.Builder;
+import com.stereowalker.unionlib.event.StructureAddedEvent;
+import com.stereowalker.unionlib.event.StructurePieceAddedEvent;
+import com.stereowalker.unionlib.event.item.ItemAttributeEvent;
+import com.stereowalker.unionlib.event.item.ItemCraftedEvent;
+import com.google.common.collect.Multimap;
 
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ISeedReader;
@@ -27,7 +35,7 @@ public class UnionHooks {
 		MinecraftForge.EVENT_BUS.post(new StructurePieceAddedEvent(structurePiece, world));
 	}
 	
-	public static void firePlayerCraftingEvent(PlayerEntity player, ItemStack crafted, CraftingInventory craftMatrix, CraftingResultSlot slot)
+	public static void firePlayerCraftingEvent(CraftingInventory craftMatrix, CraftingResultSlot slot, PlayerEntity player, ItemStack crafted)
     {
         MinecraftForge.EVENT_BUS.post(new ItemCraftedEvent(player, crafted, craftMatrix, slot));
     }
@@ -56,5 +64,17 @@ public class UnionHooks {
 		fireStructurePieceAdded(structurePiece, world);
 		
 		return get;
+	}
+	
+	public static Multimap<Attribute, AttributeModifier> adjustAttributeMap(Multimap<Attribute, AttributeModifier> original, EquipmentSlotType equipmentSlot, ItemStack stack) {
+		HashMultimap<Attribute, AttributeModifier> modifiedMap = HashMultimap.create(original);
+		
+		ItemAttributeEvent event = new ItemAttributeEvent(modifiedMap, equipmentSlot, stack);
+		
+		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		if (!MinecraftForge.EVENT_BUS.post(event)) {
+			builder.putAll(modifiedMap);
+		}
+		return builder.build();
 	}
 }

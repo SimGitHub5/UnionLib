@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.events;
+package com.stereowalker.unionlib.event.item;
 
 import javax.annotation.Nonnull;
 
