@@ -1,29 +1,26 @@
 package com.stereowalker.unionlib.config;
 
-import com.stereowalker.unionlib.config.annotations.UnionConfig;
-import com.stereowalker.unionlib.config.annotations.UnionConfigComment;
-import com.stereowalker.unionlib.config.annotations.UnionConfigEntry;
-import com.stereowalker.unionlib.config.annotations.UnionConfigRange;
-
 @UnionConfig(name = "union")
 public class Config {
 
-	public static String ant1 = "HAPPY";
-
-	@UnionConfigEntry(group = "MMAN" , name = "Happy Ant")
-	public static String ant2 = "FAPPY";
-	
-	@UnionConfigEntry(group = "General" , name = "Debug")
-	@UnionConfigComment(comment = "Enable this to see debug messages")
+	@UnionConfig.Entry(group = "General" , name = "Debug")
+	@UnionConfig.Comment(comment = {"Enable this to see debug messages","Added"})
 	public static boolean debug = false;
 	
-	@UnionConfigEntry(group = "General" , name = "River")
-	@UnionConfigComment(comment = "Enable this to see ")
+	@UnionConfig.Entry(group = "Test Group" , name = "Test String")
+	public static String ant2 = "Default String Value Wtihout Coment";
+	
+	@UnionConfig.Entry(group = "Test Group" , name = "Test Integer")
+	@UnionConfig.Comment(comment = "Test Comment")
 	public static int river = 5;
 	
-	@UnionConfigEntry(group = "General" , name = "Sea")
-	@UnionConfigComment(comment = "Newton")
-	@UnionConfigRange(min = 0, max = 100)
-	public static int sea = 10;
+	@UnionConfig.Entry(group = "Test Group" , name = "Test Float")
+	@UnionConfig.Comment(comment = {"Test Single-line comment"})
+	@UnionConfig.Range(min = 0, max = 100)
+	public static float sea = 10;
+	
+	@UnionConfig.Entry(group = "Test Group" , name = "Test Enum")
+	@UnionConfig.Comment(comment = {"Test Multi-line comment","This is the second line"})
+	public static TestEnum testEnum = TestEnum.CARD;
 
 }

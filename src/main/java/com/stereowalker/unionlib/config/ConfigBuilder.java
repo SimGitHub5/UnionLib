@@ -6,19 +6,20 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.electronwill.nightconfig.core.ConfigFormat;
+import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.stereowalker.unionlib.config.annotations.UnionConfig;
-import com.stereowalker.unionlib.config.annotations.UnionConfigComment;
-import com.stereowalker.unionlib.config.annotations.UnionConfigEntry;
-import com.stereowalker.unionlib.config.annotations.UnionConfigRange;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,14 +34,42 @@ import net.minecraftforge.fml.loading.FMLPaths;
 public class ConfigBuilder {
 	private static Map<String,ForgeConfigSpec.ConfigValue<?>> values = new HashMap<String,ForgeConfigSpec.ConfigValue<?>>();
 
-	public static void load(Class<?> configClass) {
+	private static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
+		return values.get(config.name()+"="+configEntry.group()+"."+configEntry.name());
+	}
+	
+	public static void read(Class<?> configClass) {
 		if (configClass.isAnnotationPresent(UnionConfig.class)) {
 			UnionConfig config = configClass.getAnnotation(UnionConfig.class);
 			for (Field field : configClass.getFields()) {
-				UnionConfigEntry configEntry = field.getAnnotation(UnionConfigEntry.class);
+				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
 				if (configEntry != null) {
 					try {
-						field.set(null, values.get(config.name()+"="+configEntry.group()+"."+configEntry.name()).get());
+						if (getConfigValue(config, configEntry).get() instanceof Double && field.get(null) instanceof Float) {
+							field.set(null, ((Double)getConfigValue(config, configEntry).get()).floatValue());
+//						} else if (getConfigValue(config, configEntry).get() instanceof String && field.get(null) instanceof Enum) {
+//							Enum<?> enumValue = Enum.valueOf(((Enum<?>) field.get(null)).getDeclaringClass(), (String)getConfigValue(config, configEntry).get());
+//							field.set(null, enumValue);
+						} else {
+							field.set(null, getConfigValue(config, configEntry).get());
+						}
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void write(Class<?> configClass) {
+		if (configClass.isAnnotationPresent(UnionConfig.class)) {
+			UnionConfig config = configClass.getAnnotation(UnionConfig.class);
+			for (Field field : configClass.getFields()) {
+				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
+				if (configEntry != null && getConfigValue(config, configEntry) != null) {
+					try {
+						((ForgeConfigSpec.ConfigValue<Object>)getConfigValue(config, configEntry)).set(field.get(null));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -52,7 +81,7 @@ public class ConfigBuilder {
 	public static boolean hasConfigType(Class<?> configClass, Type type) {
 		if (configClass.isAnnotationPresent(UnionConfig.class)) {
 			for (Field field : configClass.getFields()) {
-				UnionConfigEntry configEntry = field.getAnnotation(UnionConfigEntry.class);
+				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
 				if (configEntry != null) {
 					if (configEntry.type() == type) {
 						return true;
@@ -67,48 +96,84 @@ public class ConfigBuilder {
 		if (configClass.isAnnotationPresent(UnionConfig.class)) {
 			UnionConfig config = configClass.getAnnotation(UnionConfig.class);
 			for (Field field : configClass.getFields()) {
-				UnionConfigEntry configEntry = field.getAnnotation(UnionConfigEntry.class);
+				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
 				if (configEntry != null) {
 					ForgeConfigSpec.Builder builder = configEntry.type() == Type.CLIENT ? client : configEntry.type() == Type.SERVER ? server : common;
 					try {
+						String enumComment = "";
+						if (field.get(null) instanceof CommentedEnum<?> && field.get(null) instanceof Enum<?>) {
+							enumComment =  ((CommentedEnum<?>)field.get(null)).getConfigComment();
+						}
+						enumComment+="\n";
+						
 						ForgeConfigSpec.ConfigValue<?> conf;
 						String j = "\n###########################################";
+						String k = "\n-------------------------------------------";
 						String h = j+"\n";
-						if (field.isAnnotationPresent(UnionConfigComment.class)) {
-							builder = builder.comment(h+field.getAnnotation(UnionConfigComment.class).comment()+j+ "\nDefault: "+field.get(null)+h);
+//						String l = k+"\n";
+						if (field.isAnnotationPresent(UnionConfig.Comment.class)) {
+							String comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
+							
+							if (field.getAnnotation(UnionConfig.Comment.class).comment().length > 1) {
+								for (int i = 1; i < field.getAnnotation(UnionConfig.Comment.class).comment().length; i++) {
+									comment+="\n"+field.getAnnotation(UnionConfig.Comment.class).comment()[i];
+								}
+							}
+							
+							builder = builder.comment(h+comment+k+enumComment+"Default: "+field.get(null)+k);
 						} else {
-							builder = builder.comment(h+"Default: "+field.get(null)+h);
+							builder = builder.comment(h+enumComment+"Default: "+field.get(null)+k);
 						}
 
 						if (field.get(null) instanceof Boolean) { //Boolean
 							conf = builder
-									.define(configEntry.group()+"."+configEntry.name(), (Boolean)field.get(null));
+									.define(configEntry.group()+".Boolean: "+configEntry.name(), (Boolean)field.get(null));
 						} else if (field.get(null) instanceof Enum) {
+							Enum<?> defaultValue = (Enum<?>)field.get(null);
+							
+							Collection<?> acceptableValues = (Collection<?>) Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants());
+							
 							conf = builder
-									.define(configEntry.group()+"."+configEntry.name(), (Enum<?>)field.get(null));
-						} else if (field.isAnnotationPresent(UnionConfigRange.class)) {
-							UnionConfigRange range = field.getAnnotation(UnionConfigRange.class);
+									.defineEnum(split(configEntry.group() + ".Enum: " + configEntry.name()),
+											Enum.valueOf(defaultValue.getDeclaringClass(), defaultValue.name()), EnumGetMethod.NAME_IGNORECASE, obj -> {
+								                if (obj instanceof Enum) {
+								                    return acceptableValues.contains(obj);
+								                }
+								                if (obj == null) {
+								                    return false;
+								                }
+								                try {
+								                    return acceptableValues.contains(EnumGetMethod.NAME_IGNORECASE.get(obj, defaultValue.getDeclaringClass()));
+								                } catch (IllegalArgumentException | ClassCastException e) {
+								                    return false;
+								                }
+								            });
+						} else if (field.get(null) instanceof String) {
+							conf = builder
+									.define(configEntry.group()+".String: "+configEntry.name(), (String)field.get(null));
+						} else if (field.isAnnotationPresent(UnionConfig.Range.class)) {
+							UnionConfig.Range range = field.getAnnotation(UnionConfig.Range.class);
 							Double min = (Double)range.min();
 							Double max = (Double)range.max();
 
 							if (field.get(null) instanceof Integer) {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Integer)field.get(null), min.intValue(), max.intValue(), Integer.class);
+										.defineInRange(configEntry.group()+".Integer: "+configEntry.name(), (Integer)field.get(null), min.intValue(), max.intValue(), Integer.class);
 							} else if (field.get(null) instanceof Float) {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Float)field.get(null), min.floatValue(), max.floatValue(), Float.class);
+										.defineInRange(configEntry.group()+".Float: "+configEntry.name(), (Float)field.get(null), min.floatValue(), max.floatValue(), Float.class);
 							} else if (field.get(null) instanceof Long) {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Long)field.get(null), min.longValue(), max.longValue(), Long.class);
+										.defineInRange(configEntry.group()+".Long: "+configEntry.name(), (Long)field.get(null), min.longValue(), max.longValue(), Long.class);
 							} else if (field.get(null) instanceof Short) {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Short)field.get(null), min.shortValue(), max.shortValue(), Short.class);
+										.defineInRange(configEntry.group()+".Short: "+configEntry.name(), (Short)field.get(null), min.shortValue(), max.shortValue(), Short.class);
 							} else if (field.get(null) instanceof Byte) {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Byte)field.get(null), min.byteValue(), max.byteValue(), Byte.class);
+										.defineInRange(configEntry.group()+".Byte: "+configEntry.name(), (Byte)field.get(null), min.byteValue(), max.byteValue(), Byte.class);
 							} else {
 								conf = builder
-										.defineInRange(configEntry.group()+"."+configEntry.name(), (Double)field.get(null), min, max, Double.class);
+										.defineInRange(configEntry.group()+".Double: "+configEntry.name(), (Double)field.get(null), min, max, Double.class);
 							}
 						} else {
 							conf = builder
@@ -148,6 +213,9 @@ public class ConfigBuilder {
 			common_builder.put(configClass, new ForgeConfigSpec.Builder());
 			server_builder.put(configClass, new ForgeConfigSpec.Builder());
 		}
+		
+		registerConfigurations(configClass);
+		loadConfigs(configClass);
 	}
 
 	public static void loadConfig(ForgeConfigSpec config, String path, String fileName) {
@@ -171,8 +239,8 @@ public class ConfigBuilder {
 		return true;
 	}
 
-	public static void registerConfigs() {
-		for (Class<?> configClass : configs) {
+	public static void registerConfigurations(Class<?> configClass) {
+//		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			String name = con.folder().isEmpty() ? con.name() : con.folder()+"\\"+con.name();
 
@@ -184,17 +252,17 @@ public class ConfigBuilder {
 			if (hasConfigType(configClass, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configClass), name+(con.appendWithType()?".client":"")+".toml");
 			if (hasConfigType(configClass, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configClass), name+(con.appendWithType()?".common":"")+".toml");
 			if (hasConfigType(configClass, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configClass), name+(con.appendWithType()?".server":"")+".toml");
-		}
+//		}
 	}
 
-	public static void loadConfigs() {
-		for (Class<?> configClass : configs) {
+	public static void loadConfigs(Class<?> configClass) {
+//		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 
 			if (hasConfigType(configClass, ModConfig.Type.CLIENT))loadConfig(client_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".client":"")+".toml");
 			if (hasConfigType(configClass, ModConfig.Type.COMMON))loadConfig(common_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".common":"")+".toml");
 			if (hasConfigType(configClass, ModConfig.Type.SERVER))loadConfig(server_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".server":"")+".toml");
-		}
+//		}
 	}
 
 	@SubscribeEvent
@@ -202,7 +270,7 @@ public class ConfigBuilder {
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
-				load(configClass);
+				read(configClass);
 				System.out.println("Detected change in a "+con.name()+"'s config file. Reloading values");
 			}
 		}
@@ -213,8 +281,16 @@ public class ConfigBuilder {
 		System.out.println("Detected change in a config file. Re-read and set all config values from file");
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
-			load(configClass);
+			read(configClass);
 			System.out.println("Loading "+con.name()+"'s config");
 		}
 	}
+	
+	private static final Joiner LINE_JOINER = Joiner.on("\n");
+    private static final Joiner DOT_JOINER = Joiner.on(".");
+    private static final Splitter DOT_SPLITTER = Splitter.on(".");
+    private static List<String> split(String path)
+    {
+        return Lists.newArrayList(DOT_SPLITTER.split(path));
+    }
 }

@@ -13,7 +13,7 @@ import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.mod.UnionMod;
-import com.stereowalker.unionlib.network.NetRegistry;
+import com.stereowalker.unionlib.network.PacketRegistry;
 import com.stereowalker.unionlib.util.EntityHelper;
 
 import net.minecraft.entity.EntityType;
@@ -65,13 +65,13 @@ public class UnionLib {
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ConfigBuilder.registerConfig(Config.class);
-		ConfigBuilder.registerConfigs();
+//		ConfigBuilder.registerConfigs();
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
-		ConfigBuilder.loadConfigs();
+//		ConfigBuilder.loadConfigs();
 		UAttributes.registerAll(modEventBus);
-		NetRegistry.registerMessages();
+		PacketRegistry.registerMessages();
 		
 //		UnionMod com = new UnionMod("combat", location("name"), LoadType.BOTH);
 //		UnionMod con = new UnionMod("controllersupport", location("name"), LoadType.CLIENT);

@@ -9,7 +9,7 @@ modId="unionlib"
 version="${version}"
 displayName="UnionLib"
 updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Survive/master/update.json"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/survive"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/unionlib"
 credits="Obviously you for downloading this mod"
 authors="Stereowalker"
 description='''
@@ -22,7 +22,7 @@ A library mod for all my mods
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[35.1.7,)" #mandatory
+    versionRange="[35.1.37,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
