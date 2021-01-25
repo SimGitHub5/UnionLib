@@ -16,7 +16,6 @@ import com.electronwill.nightconfig.core.ConfigFormat;
 import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -98,7 +97,18 @@ public class ConfigBuilder {
 			for (Field field : configClass.getFields()) {
 				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
 				if (configEntry != null) {
-					ForgeConfigSpec.Builder builder = configEntry.type() == Type.CLIENT ? client : configEntry.type() == Type.SERVER ? server : common;
+					Type type = configEntry.type() != null ? configEntry.type() : Type.COMMON;
+					
+					ForgeConfigSpec.Builder builder;
+					
+					if (type == Type.CLIENT) {
+						builder = client;
+					} else if (type == Type.SERVER) {
+						builder = server;
+					} else {
+						builder = common;
+					}
+					
 					try {
 						String enumComment = "";
 						if (field.get(null) instanceof CommentedEnum<?> && field.get(null) instanceof Enum<?>) {
@@ -266,7 +276,7 @@ public class ConfigBuilder {
 	}
 
 	@SubscribeEvent
-	public static void onReload(ModConfig.Reloading event) {
+	public static void onReload(ModConfig.ModConfigEvent event) {
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
@@ -286,8 +296,6 @@ public class ConfigBuilder {
 		}
 	}
 	
-	private static final Joiner LINE_JOINER = Joiner.on("\n");
-    private static final Joiner DOT_JOINER = Joiner.on(".");
     private static final Splitter DOT_SPLITTER = Splitter.on(".");
     private static List<String> split(String path)
     {

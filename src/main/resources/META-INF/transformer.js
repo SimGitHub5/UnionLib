@@ -127,7 +127,7 @@ function patchInstructions(method, filter, action, obfuscated) {
 
 var patchStructureStartfunc_230366_a_1 = {
     filter: function(node, obfuscated) {
-        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructureStart", obfuscated ? "func_202500_a" : "recalculateStructureSize", "()V")) {
+        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructureStart", "func_202500_a", "recalculateStructureSize", "()V")) {
             return node;
         }
     },
@@ -142,7 +142,7 @@ var patchStructureStartfunc_230366_a_1 = {
 
 var patchStructureStartfunc_230366_a_2 = {
     filter: function(node, obfuscated) {
-        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructurePiece", obfuscated ? "func_230383_a_" : "func_230383_a_", "(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z")) {
+        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructurePiece", "func_230383_a_", "func_230383_a_", "(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z")) {
             return node;
         }
     },
@@ -162,7 +162,7 @@ var patchItemStackGetAttributeModifiers = {
             if (nextNode instanceof VarInsnNode && nextNode.getOpcode().equals(Opcodes.ALOAD) && nextNode.var.equals(0)) {
                 nextNode = nextNode.getNext();
                 // getAttributeModifiers is a Forge method
-                if (matchesMethod(nextNode, "net/minecraft/item/Item", obfuscated ? "getAttributeModifiers" : "getAttributeModifiers", "(Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;")) {
+                if (matchesMethod(nextNode, "net/minecraft/item/Item", "getAttributeModifiers", "getAttributeModifiers", "(Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;")) {
                     return nextNode;
                 }
             }
@@ -190,7 +190,7 @@ var patchCraftingResultSlotOnCrafting = {
 		}
 		debug("*****************");
 		debug("");
-        if (matchesHook(node, "net/minecraft/item/ItemStack", obfuscated ? "func_77980_a" : "onCrafting", "(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V")) {
+        if (matchesHook(node, "net/minecraft/item/ItemStack", "func_77980_a", "onCrafting", "(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V")) {
             return node;
         }
     },
@@ -224,24 +224,24 @@ var patchCraftingResultSlotOnCrafting = {
     }
 };
 
-function matchesHook(node, owner, name, desc) {
+function matchesHook(node, owner, name, obfName, desc) {
 	
-	return !!node.owner && !!node.name && !!node.desc && matchesNode(node, owner, name, desc);
+	return !!node.owner && !!node.name && !!node.desc && matchesNode(node, owner, name, obfName, desc);
 }
 
-function matchesMethod(node, owner, name, desc) {
+function matchesMethod(node, owner, name, obfName, desc) {
 
-    return node instanceof MethodInsnNode && matchesNode(node, owner, name, desc);
+    return node instanceof MethodInsnNode && matchesNode(node, owner, name, obfName, desc);
 }
 
-function matchesField(node, owner, name, desc) {
+function matchesField(node, owner, name, obfName, desc) {
 
-    return node instanceof FieldInsnNode && matchesNode(node, owner, name, desc);
+    return node instanceof FieldInsnNode && matchesNode(node, owner, name, obfName, desc);
 }
 
-function matchesNode(node, owner, name, desc) {
+function matchesNode(node, owner, name, obfName, desc) {
 
-    return node.owner.equals(owner) && node.name.equals(name) && node.desc.equals(desc);
+    return node.owner.equals(owner) && (node.name.equals(name) || node.name.equals(obfName)) && node.desc.equals(desc);
 }
 
 function generateHook(name, desc) {
