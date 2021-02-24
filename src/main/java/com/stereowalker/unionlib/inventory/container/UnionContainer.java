@@ -23,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.ResourceLocation;
@@ -95,7 +94,8 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 				}
 
 				@OnlyIn(Dist.CLIENT)
-				public Pair<ResourceLocation, ResourceLocation> getBackground() {
+				@Override
+				public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
 					return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
 				}
 			});
@@ -114,7 +114,8 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			@OnlyIn(Dist.CLIENT)
-			public Pair<ResourceLocation, ResourceLocation> getBackground() {
+			@Override
+			public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
 				return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.EMPTY_ARMOR_SLOT_SHIELD);
 			}
 		});
@@ -149,7 +150,8 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 					}
 
 					@OnlyIn(Dist.CLIENT)
-					public Pair<ResourceLocation, ResourceLocation> getBackground() {
+					@Override
+					public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
 						return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ACCESSORY_SLOT_TEXTURES[accessoryslottype.getIndex()]);
 					}
 				});
@@ -316,7 +318,14 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 	}
 
 	@Override
-	public RecipeBookCategory func_241850_m() {
-		return RecipeBookCategory.CRAFTING;
+	//TODO Whut?
+	public void func_201771_a(RecipeItemHelper p_201771_1_) {
+		// TODO Auto-generated method stub
+		
 	}
+
+//	@Override
+//	public RecipeBookCategory func_241850_m() {
+//		return RecipeBookCategory.CRAFTING;
+//	}
 }

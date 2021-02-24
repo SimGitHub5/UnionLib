@@ -6,6 +6,7 @@ import com.stereowalker.unionlib.mod.UnionMod;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class UnionModsScreen extends DefaultScreen {
@@ -24,9 +25,9 @@ public class UnionModsScreen extends DefaultScreen {
 				UnionMod mod = UnionLib.mods.get(j);
 				this.addButton(
 						new OverlayImageButton(this.width / 2 + imgOffset, this.height / 6 + i*j, 20, 20, 0, 0, 20, mod.getModTexture(), 20, 40, (onPress) -> {
-						}, new TranslationTextComponent("menu.button.union")));
+						}, I18n.format("menu.button.union")));
 
-				Button config = this.addButton(new Button(this.width / 2 + configOffset, this.height / 6 + i*j, 200, 20, new TranslationTextComponent("union.gui.config"), (onPress) -> {
+				Button config = this.addButton(new Button(this.width / 2 + configOffset, this.height / 6 + i*j, 200, 20, I18n.format("union.gui.config"), (onPress) -> {
 					if (mod.getConfigScreen(minecraft, this) != null) {
 						this.getMinecraft().displayGuiScreen(mod.getConfigScreen(minecraft, this));
 					}

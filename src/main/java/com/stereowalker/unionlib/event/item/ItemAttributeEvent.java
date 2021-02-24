@@ -20,10 +20,10 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ItemAttributeEvent extends Event {
 	private final ItemStack stack;
-	private final HashMultimap<Attribute, AttributeModifier> attributeMap;
+	private final HashMultimap<String, AttributeModifier> attributeMap;
 	private final EquipmentSlotType equipmentSlot;
 	
-	public ItemAttributeEvent(HashMultimap<Attribute, AttributeModifier> attributeMap, EquipmentSlotType equipmentSlot, ItemStack stack) {
+	public ItemAttributeEvent(HashMultimap<String, AttributeModifier> attributeMap, EquipmentSlotType equipmentSlot, ItemStack stack) {
 		this.stack = stack;
 		this.equipmentSlot = equipmentSlot;
 		this.attributeMap = attributeMap;
@@ -37,7 +37,7 @@ public class ItemAttributeEvent extends Event {
 		return stack;
 	}
 	
-	public HashMultimap<Attribute, AttributeModifier> getAttributeMap() {
+	public HashMultimap<String, AttributeModifier> getAttributeMap() {
 		return attributeMap;
 	}
 }

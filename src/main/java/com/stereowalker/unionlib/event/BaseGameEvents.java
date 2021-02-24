@@ -3,13 +3,13 @@ package com.stereowalker.unionlib.event;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
-import com.stereowalker.unionlib.util.EntityHelper;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.GameRules;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
@@ -22,7 +22,7 @@ public class BaseGameEvents {
 
 	@SubscribeEvent
 	public static void setupDigSpeedAttribute(BreakSpeed event) {
-		double attribute = EntityHelper.getAttributeValue(event.getEntityLiving(), UAttributes.DIG_SPEED);
+		double attribute = event.getEntityLiving().getAttribute(UAttributes.DIG_SPEED).getValue();
 		event.setNewSpeed((float) (event.getOriginalSpeed() * attribute));
 	}
 
@@ -35,6 +35,13 @@ public class BaseGameEvents {
 			if (!player.getPersistentData().contains(UnionLib.INVENTORY_KEY)) {
 				UnionLib.saveInventory(player, unionInventory);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void loadInventory(EntityConstructing event) {
+		if (event.getEntity() instanceof PlayerEntity) {
+			((PlayerEntity)event.getEntity()).getAttributes().registerAttribute(UAttributes.DIG_SPEED);
 		}
 	}
 

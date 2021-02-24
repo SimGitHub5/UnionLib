@@ -16,7 +16,7 @@ public class ScreenHelper {
 
 	}
 	
-	static MainWindow window = Minecraft.getInstance().getMainWindow();
+	static MainWindow window = Minecraft.getInstance().func_228018_at_();
 	
 	public static int getYOffset(ScreenOffset pos) {
 		if (pos.equals(ScreenOffset.TOP_LEFT) || pos.equals(ScreenOffset.TOP) || pos.equals(ScreenOffset.TOP_RIGHT)) {

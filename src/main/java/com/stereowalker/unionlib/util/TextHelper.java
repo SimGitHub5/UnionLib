@@ -1,6 +1,5 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -19,7 +18,7 @@ public class TextHelper {
 	}
 
 	public static ITextComponent articulatedComponent(ITextComponent component, boolean iaArticleCapital, boolean shouldArticleUseComponentStyle) {
-		IFormattableTextComponent comp;
+		ITextComponent comp;
 		
 		if (iaArticleCapital) {
 			comp = new StringTextComponent(isFirstLeterVowel(component) ? "An " : "A ");
@@ -29,10 +28,10 @@ public class TextHelper {
 		}
 		
 		if (shouldArticleUseComponentStyle && component.getStyle() != null) {
-			comp = (comp.mergeStyle(component.getStyle())).append(component);
+			comp = (comp.setStyle(component.getStyle())).appendSibling(component);
 		}
 		else {
-			comp = comp.append(component);
+			comp = comp.appendSibling(component);
 		}
 		
 		return comp;

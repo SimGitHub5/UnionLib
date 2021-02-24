@@ -9,8 +9,8 @@ import net.minecraft.client.MouseHelper;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -37,12 +37,12 @@ public class UnionButtonEvent {
 		if(event.getGui() instanceof MainMenuScreen) {
 			event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
 				event.getGui().getMinecraft().displayGuiScreen(new UnionModsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.union")));
+			}, I18n.format("menu.button.union")));
 		}
 		if(event.getGui() instanceof IngameMenuScreen) {
 			event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 120 + -16, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
 				event.getGui().getMinecraft().displayGuiScreen(new UnionModsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.union")));
+			}, I18n.format("menu.button.union")));
 		}
 		}
 	}

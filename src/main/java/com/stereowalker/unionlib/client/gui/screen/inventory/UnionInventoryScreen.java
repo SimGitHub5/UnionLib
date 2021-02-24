@@ -11,14 +11,14 @@ import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,6 @@ public class UnionInventoryScreen extends DisplayEffectsScreen<UnionContainer> i
 	public UnionInventoryScreen(UnionContainer container, PlayerInventory playerInventory, ITextComponent title) {
 		super(container, playerInventory, title);
 		this.passEvents = true;
-		this.titleX = 97;
 	}
 
 	public void tick() {
@@ -63,52 +62,51 @@ public class UnionInventoryScreen extends DisplayEffectsScreen<UnionContainer> i
 		}));
 	}
 
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-		this.font.func_243248_b(matrixStack, this.title, (float)this.titleX, (float)this.titleY, 4210752);
+	protected void drawGuiContainerForegroundLayer(int x, int y) {
+		this.font.drawString(this.title.getFormattedText(), 97.0F, 8.0F, 4210752);
 	}
 
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
+	public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
+		this.renderBackground();
 		this.hasActivePotionEffects = !this.recipeBookGui.isVisible();
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
-			this.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
-			this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
+			this.drawGuiContainerBackgroundLayer(p_render_3_, p_render_1_, p_render_2_);
+			this.recipeBookGui.render(p_render_1_, p_render_2_, p_render_3_);
 		} else {
-			this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
-			super.render(matrixStack, mouseX, mouseY, partialTicks);
-			this.recipeBookGui.func_230477_a_(matrixStack, this.guiLeft, this.guiTop, false, partialTicks);
+			this.recipeBookGui.render(p_render_1_, p_render_2_, p_render_3_);
+			super.render(p_render_1_, p_render_2_, p_render_3_);
+			this.recipeBookGui.renderGhostRecipe(this.guiLeft, this.guiTop, false, p_render_3_);
 		}
 
-		this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
-		this.recipeBookGui.func_238924_c_(matrixStack, this.guiLeft, this.guiTop, mouseX, mouseY);
-		this.oldMouseX = (float)mouseX;
-		this.oldMouseY = (float)mouseY;
+		this.renderHoveredToolTip(p_render_1_, p_render_2_);
+		this.recipeBookGui.renderTooltip(this.guiLeft, this.guiTop, p_render_1_, p_render_2_);
+		this.oldMouseX = (float)p_render_1_;
+		this.oldMouseY = (float)p_render_2_;
+		this.func_212932_b(this.recipeBookGui);
 	}
 
-	@SuppressWarnings("deprecation")
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int x, int y) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.minecraft.getTextureManager().bindTexture(UNION_INVENTORY_BACKGROUND);
 		int i = this.guiLeft;
 		int j = this.guiTop;
-		this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+		this.blit(i, j, 0, 0, this.xSize, this.ySize);
 		drawEntityOnScreen(i + 51, j + 75, 30, (float)(i + 51) - this.oldMouseX, (float)(j + 75 - 50) - this.oldMouseY, this.minecraft.player);
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity p_228187_5_) {
-		float f = (float)Math.atan((double)(mouseX / 40.0F));
-		float f1 = (float)Math.atan((double)(mouseY / 40.0F));
+	public static void drawEntityOnScreen(int p_228187_0_, int p_228187_1_, int p_228187_2_, float p_228187_3_, float p_228187_4_, LivingEntity p_228187_5_) {
+		float f = (float)Math.atan((double)(p_228187_3_ / 40.0F));
+		float f1 = (float)Math.atan((double)(p_228187_4_ / 40.0F));
 		RenderSystem.pushMatrix();
-		RenderSystem.translatef((float)posX, (float)posY, 1050.0F);
+		RenderSystem.translatef((float)p_228187_0_, (float)p_228187_1_, 1050.0F);
 		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
 		MatrixStack matrixstack = new MatrixStack();
-		matrixstack.translate(0.0D, 0.0D, 1000.0D);
-		matrixstack.scale((float)scale, (float)scale, (float)scale);
-		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+		matrixstack.func_227861_a_(0.0D, 0.0D, 1000.0D);
+		matrixstack.func_227862_a_((float)p_228187_2_, (float)p_228187_2_, (float)p_228187_2_);
+		Quaternion quaternion = Vector3f.field_229183_f_.func_229187_a_(180.0F);
+		Quaternion quaternion1 = Vector3f.field_229179_b_.func_229187_a_(f1 * 20.0F);
 		quaternion.multiply(quaternion1);
-		matrixstack.rotate(quaternion);
+		matrixstack.func_227863_a_(quaternion);
 		float f2 = p_228187_5_.renderYawOffset;
 		float f3 = p_228187_5_.rotationYaw;
 		float f4 = p_228187_5_.rotationPitch;
@@ -121,13 +119,11 @@ public class UnionInventoryScreen extends DisplayEffectsScreen<UnionContainer> i
 		p_228187_5_.prevRotationYawHead = p_228187_5_.rotationYaw;
 		EntityRendererManager entityrenderermanager = Minecraft.getInstance().getRenderManager();
 		quaternion1.conjugate();
-		entityrenderermanager.setCameraOrientation(quaternion1);
+		entityrenderermanager.func_229089_a_(quaternion1);
 		entityrenderermanager.setRenderShadow(false);
-		IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-		RenderSystem.runAsFancy(() -> {
-			entityrenderermanager.renderEntityStatic(p_228187_5_, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
-		});
-		irendertypebuffer$impl.finish();
+		IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().func_228019_au_().func_228487_b_();
+		entityrenderermanager.func_229084_a_(p_228187_5_, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
+		irendertypebuffer$impl.func_228461_a_();
 		entityrenderermanager.setRenderShadow(true);
 		p_228187_5_.renderYawOffset = f2;
 		p_228187_5_.rotationYaw = f3;
@@ -143,7 +139,6 @@ public class UnionInventoryScreen extends DisplayEffectsScreen<UnionContainer> i
 
 	public boolean mouseClicked(double mouseX, double mouseY, int p_231044_5_) {
 		if (this.recipeBookGui.mouseClicked(mouseX, mouseY, p_231044_5_)) {
-			this.setListener(this.recipeBookGui);
 			return true;
 		} else {
 			return this.widthTooNarrow && this.recipeBookGui.isVisible() ? false : super.mouseClicked(mouseX, mouseY, p_231044_5_);

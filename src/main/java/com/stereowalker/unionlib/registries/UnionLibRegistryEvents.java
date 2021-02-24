@@ -22,7 +22,7 @@ public class UnionLibRegistryEvents
 	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event)
 	{
-		if(event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+		if(event.getMap().func_229223_g_().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
 		{
 			event.addSprite(UnionContainer.EMPTY_ACCESSORY_SLOT_RING);
 			event.addSprite(UnionContainer.EMPTY_ACCESSORY_SLOT_NECKLACE);

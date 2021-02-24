@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.stereowalker.unionlib.config.UnionValues;
 
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -25,10 +24,6 @@ public class RegistryHelper {
 	
 	public static boolean listContainsRegisteredEntry(UnionValues.ConfigValue<List<String>> names, ForgeRegistryEntry<?> registry) {
 		return listContainsRegisteredEntry(names.get(), registry);
-	}
-	
-	public static boolean matchesRegistryKey(ResourceLocation name, RegistryKey<?> key) {
-		return name.toString().equalsIgnoreCase(key.getLocation().toString());
 	}
 	
 	public static <T extends Enum<?>> T rotateEnumForward(T input, T[] values) {

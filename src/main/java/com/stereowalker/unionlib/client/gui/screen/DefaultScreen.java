@@ -1,8 +1,5 @@
 package com.stereowalker.unionlib.client.gui.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 
@@ -15,14 +12,14 @@ public class DefaultScreen extends Screen{
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground();
+		this.drawCenteredString(this.font, this.title.toString(), this.width / 2, 15, 16777215);
+		super.render(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void closeScreen() {
+	public void onClose() {
 		this.minecraft.displayGuiScreen(this.previousScreen);
 	}
 }

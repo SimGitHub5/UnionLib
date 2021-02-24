@@ -10,13 +10,10 @@ import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.config.Config;
 import com.stereowalker.unionlib.config.ConfigBuilder;
-import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.mod.UnionMod;
 import com.stereowalker.unionlib.network.PacketRegistry;
-import com.stereowalker.unionlib.util.EntityHelper;
 
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,7 +67,6 @@ public class UnionLib {
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
 //		ConfigBuilder.loadConfigs();
-		UAttributes.registerAll(modEventBus);
 		PacketRegistry.registerMessages();
 		
 //		UnionMod com = new UnionMod("combat", location("name"), LoadType.BOTH);
@@ -80,9 +76,9 @@ public class UnionLib {
 
 	private void setup(final FMLCommonSetupEvent event)
 	{
-		EntityHelper.registerAttributes(EntityType.PLAYER, builder -> {
-			builder.createMutableAttribute(UAttributes.DIG_SPEED);
-		});
+//		EntityHelper.registerAttributes(EntityType.PLAYER, builder -> {
+//			builder.createMutableAttribute(UAttributes.DIG_SPEED);
+//		});
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
