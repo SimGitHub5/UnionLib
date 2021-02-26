@@ -69,42 +69,13 @@ public class EntityHelper {
 	protected static BlockPos getPositionUnderneath(Entity entity) {
 		return new BlockPos(entity.getPosX(), entity.getBoundingBox().minY - 0.5000001D, entity.getPosZ());
 	}
-	
-	private static MutableAttribute mutable(EntityType<? extends LivingEntity> livingEntity, Attribute attributeIn) {
-		AttributeModifierMap playerAttributes = GlobalEntityTypeAttributes.getAttributesForEntity(livingEntity);
-		MutableAttribute currentAttributes = PlayerEntity.func_234570_el_();
-		boolean flag = false;
-		for (Attribute attribute : ForgeRegistries.ATTRIBUTES) {
-			if (playerAttributes.hasAttribute(attribute)) {
-				if (attribute.equals(attributeIn)) {
-					UnionLib.warn("Attribute "+attribute.getRegistryName()+" already exists in "+livingEntity.getName().getString()+". Ignoring");
-					flag = true;
-				}
-				if(!flag)currentAttributes.createMutableAttribute(attribute, playerAttributes.getAttributeBaseValue(attribute));
-			}
-		}
-		return currentAttributes;
-	}
-
-
-	/**
-	 * Should be called in {@link FMLCommonSetupEvent}
-	 * @param livingEntity
-	 * @param attributeIn
-	 */
-	public static void registerAttribute(EntityType<? extends LivingEntity> livingEntity, Attribute attributeIn) {
-		GlobalEntityTypeAttributes.put(livingEntity, mutable(livingEntity, attributeIn).createMutableAttribute(attributeIn).create());
-	}
-
-	public static void registerAttribute(EntityType<? extends LivingEntity> livingEntity, Attribute attributeIn, float baseValue) {
-		GlobalEntityTypeAttributes.put(livingEntity, mutable(livingEntity, attributeIn).createMutableAttribute(attributeIn, baseValue).create());
-	}
 
 	/**
 	 * Adds attributes to an entity type
 	 * @param type     Entity type
 	 * @param builder  Consumer for builder to add attributes
 	 */
+	@SuppressWarnings("deprecation")
 	public static void registerAttributes(EntityType<? extends LivingEntity> type, Consumer<MutableAttribute> builder) {
 		AttributeModifierMap.MutableAttribute newAttrs = AttributeModifierMap.createMutableAttribute();
 		if (GlobalEntityTypeAttributes.doesEntityHaveAttributes(type)) {
@@ -112,29 +83,5 @@ public class EntityHelper {
 		}
 		builder.accept(newAttrs);
 		GlobalEntityTypeAttributes.put(type, newAttrs.create());
-	}
-
-	@SuppressWarnings("unchecked")
-	public static double getAttributeValue(LivingEntity livingEntity, Attribute attribute) {
-		if (livingEntity.getAttribute(attribute) != null) {
-			return livingEntity.getAttributeValue(attribute);
-		} else {
-			UnionLib.warn("Did not find attribute "+attribute.getRegistryName()+" in "+livingEntity.getName().getString()+". Returning default attribute value");
-			registerAttribute((EntityType<? extends LivingEntity>) livingEntity.getType(), attribute);
-			UnionLib.debug("Attempted to put attribute "+attribute.getRegistryName()+" in "+livingEntity.getName().getString());
-			return attribute.getDefaultValue();
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static double getBaseAttributeValue(LivingEntity livingEntity, Attribute attribute) {
-		if (livingEntity.getAttribute(attribute) != null) {
-			return livingEntity.getBaseAttributeValue(attribute);
-		} else {
-			UnionLib.warn("Did not find attribute "+attribute.getRegistryName()+" in "+livingEntity.getName().getString()+". Returning default attribute value");
-			registerAttribute((EntityType<? extends LivingEntity>) livingEntity.getType(), attribute);
-			UnionLib.debug("Attempted to put attribute "+attribute.getRegistryName()+" in "+livingEntity.getName().getString());
-			return attribute.getDefaultValue();
-		}
 	}
 }

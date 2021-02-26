@@ -3,7 +3,6 @@ package com.stereowalker.unionlib.event;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
-import com.stereowalker.unionlib.util.EntityHelper;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +21,7 @@ public class BaseGameEvents {
 
 	@SubscribeEvent
 	public static void setupDigSpeedAttribute(BreakSpeed event) {
-		double attribute = EntityHelper.getAttributeValue(event.getEntityLiving(), UAttributes.DIG_SPEED);
+		double attribute = event.getEntityLiving().getAttributeValue(UAttributes.DIG_SPEED);
 		event.setNewSpeed((float) (event.getOriginalSpeed() * attribute));
 	}
 
