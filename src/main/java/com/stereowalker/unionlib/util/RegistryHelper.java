@@ -8,9 +8,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class RegistryHelper {
+	public static boolean matchesRegisteredEntry(ResourceLocation name, ForgeRegistryEntry<?> registry) {
+		return registry.getRegistryName().equals(name);
+	}
+	
 	public static boolean matchesRegisteredEntry(String name, ForgeRegistryEntry<?> registry) {
 		ResourceLocation loc = new ResourceLocation(name);
-		return registry.getRegistryName().equals(loc);
+		return matchesRegisteredEntry(loc, registry);
 	}
 	
 	public static boolean listContainsRegisteredEntry(List<String> names, ForgeRegistryEntry<?> registry) {

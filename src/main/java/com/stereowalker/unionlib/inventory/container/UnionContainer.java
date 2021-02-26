@@ -37,7 +37,7 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS = new ResourceLocation("item/empty_armor_slot_leggings");
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
-	
+
 	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.location("item/empty_accessory_slot_necklace");
 	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.location("item/empty_accessory_slot_ring");
 	private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
@@ -95,7 +95,7 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 
 				@OnlyIn(Dist.CLIENT)
 				@Override
-				public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+				public Pair<ResourceLocation, ResourceLocation> getBackground() {
 					return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
 				}
 			});
@@ -106,7 +106,7 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 				this.addSlot(new Slot(playerInventory, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
 			}
 		}
-		
+
 
 		for(int i1 = 0; i1 < 9; ++i1) {
 			this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
@@ -115,12 +115,12 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			@OnlyIn(Dist.CLIENT)
 			@Override
-			public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+			public Pair<ResourceLocation, ResourceLocation> getBackground() {
 				return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.EMPTY_ARMOR_SLOT_SHIELD);
 			}
 		});
-		
-		
+
+
 		for(int l = 0; l < 3; ++l) {
 			for(int j1 = 0; j1 < 3; ++j1) {
 				int index = j1 + l * 3;
@@ -151,7 +151,7 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 
 					@OnlyIn(Dist.CLIENT)
 					@Override
-					public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+					public Pair<ResourceLocation, ResourceLocation> getBackground() {
 						return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ACCESSORY_SLOT_TEXTURES[accessoryslottype.getIndex()]);
 					}
 				});
@@ -159,6 +159,7 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 		}
 	}
 
+	@Override
 	public void fillStackedContents(RecipeItemHelper itemHelperIn) {
 		this.craftMatrix.fillStackedContents(itemHelperIn);
 	}
@@ -178,25 +179,25 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
 		UnionLib.saveInventory(player, inventory);
 		//TODO: Access Transform This later
-//		      WorkbenchContainer.updateCraftingResult(this.windowId, this.player.world, this.player, this.craftMatrix, this.craftResult);
+		//		      WorkbenchContainer.updateCraftingResult(this.windowId, this.player.world, this.player, this.craftMatrix, this.craftResult);
 		updateCraftingResult(this.windowId, this.player.world, this.player, this.craftMatrix, this.craftResult);
 	}
 	protected static void updateCraftingResult(int id, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory inventoryResult) {
-	      if (!world.isRemote) {
-	         ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)player;
-	         ItemStack itemstack = ItemStack.EMPTY;
-	         Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
-	         if (optional.isPresent()) {
-	            ICraftingRecipe icraftingrecipe = optional.get();
-	            if (inventoryResult.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-	               itemstack = icraftingrecipe.getCraftingResult(inventory);
-	            }
-	         }
+		if (!world.isRemote) {
+			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)player;
+			ItemStack itemstack = ItemStack.EMPTY;
+			Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
+			if (optional.isPresent()) {
+				ICraftingRecipe icraftingrecipe = optional.get();
+				if (inventoryResult.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
+					itemstack = icraftingrecipe.getCraftingResult(inventory);
+				}
+			}
 
-	         inventoryResult.setInventorySlotContents(0, itemstack);
-	         serverplayerentity.connection.sendPacket(new SSetSlotPacket(id, 0, itemstack));
-	      }
-	   }
+			inventoryResult.setInventorySlotContents(0, itemstack);
+			serverplayerentity.connection.sendPacket(new SSetSlotPacket(id, 0, itemstack));
+		}
+	}
 
 	/**
 	 * Called when the container is closed.
@@ -282,11 +283,11 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 
 		return itemstack;
 	}
-	
-//	@Override
-//	public List<RecipeBookCategories> getRecipeBookCategories() {
-//		return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
-//	}
+
+	//	@Override
+	//	public List<RecipeBookCategories> getRecipeBookCategories() {
+	//		return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
+	//	}
 
 	/**
 	 * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in is
@@ -317,15 +318,8 @@ public class UnionContainer extends RecipeBookContainer<CraftingInventory> {
 		return this.craftMatrix;
 	}
 
-	@Override
-	//TODO Whut?
-	public void func_201771_a(RecipeItemHelper p_201771_1_) {
-		// TODO Auto-generated method stub
-		
-	}
-
-//	@Override
-//	public RecipeBookCategory func_241850_m() {
-//		return RecipeBookCategory.CRAFTING;
-//	}
+	//	@Override
+	//	public RecipeBookCategory func_241850_m() {
+	//		return RecipeBookCategory.CRAFTING;
+	//	}
 }

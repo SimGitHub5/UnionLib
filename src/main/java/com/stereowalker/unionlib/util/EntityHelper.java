@@ -1,7 +1,17 @@
 package com.stereowalker.unionlib.util;
 
+import java.util.List;
+import java.util.function.Consumer;
+
+import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
+import com.stereowalker.unionlib.event.BaseGameEvents;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -50,12 +60,34 @@ public class EntityHelper {
 	}
 
 	protected static float getJumpFactor(Entity entity) {
-		float f = entity.world.getBlockState(entity.getPosition()).getBlock().func_226892_n_();
-		float f1 = entity.world.getBlockState(getPositionUnderneath(entity)).getBlock().func_226892_n_();
+		float f = entity.world.getBlockState(entity.getPosition()).getBlock().getJumpFactor();
+		float f1 = entity.world.getBlockState(getPositionUnderneath(entity)).getBlock().getJumpFactor();
 		return (double)f == 1.0D ? f1 : f;
 	}
 
 	protected static BlockPos getPositionUnderneath(Entity entity) {
-		return new BlockPos(entity.func_226277_ct_(), entity.getBoundingBox().minY - 0.5000001D, entity.func_226281_cx_());
+		return new BlockPos(entity.getPosX(), entity.getBoundingBox().minY - 0.5000001D, entity.getPosZ());
+	}
+
+	public static void registerAttributes(EntityType<? extends LivingEntity> type, Consumer<List<Pair<IAttribute,Double>>> builder) {
+//		List<Pair<IAttribute,Double>> build = Lists.newArrayList();
+//		builder.accept(build);
+//		if (!BaseGameEvents.REGISTERED_ATTRIBUTES_1.containsKey(type)) {
+//			BaseGameEvents.REGISTERED_ATTRIBUTES_1.put(type, Lists.newArrayList());
+//		}
+//		
+//		List<Pair<IAttribute,Double>> newAttributeList = Lists.newArrayList();
+//		for (Pair<IAttribute,Double> builderAttributes : build) {
+//			if (BaseGameEvents.REGISTERED_ATTRIBUTES_1.get(type).size() > 0) {
+//				for (Pair<IAttribute,Double> registeredAttributes : BaseGameEvents.REGISTERED_ATTRIBUTES_1.get(type)) {
+//					if (builderAttributes.getFirst() == registeredAttributes.getFirst()) {
+//						registeredAttributes = builderAttributes;//.setBaseValue(builderAttributes.getBaseValue());
+//					} else {
+//						newAttributeList.add(builderAttributes);
+//					}
+//				}
+//			}
+//		}
+//		BaseGameEvents.REGISTERED_ATTRIBUTES_1.get(type).addAll(newAttributeList);
 	}
 }

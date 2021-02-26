@@ -1,10 +1,18 @@
 package com.stereowalker.unionlib.event;
 
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.mojang.datafixers.util.Pair;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -37,9 +45,20 @@ public class BaseGameEvents {
 			}
 		}
 	}
+
+//	public static final Map<EntityType<? extends LivingEntity>,List<IAttribute>> REGISTERED_ATTRIBUTES = Maps.newHashMap();
+//	public static final Map<EntityType<? extends LivingEntity>,List<Double>> REGISTERED_BASES = Maps.newHashMap();
+//	@SubscribeEvent
+//	public static void registerAttributes(EntityConstructing event) {
+//		if (event.getEntity() instanceof LivingEntity && REGISTERED_ATTRIBUTES_1.containsKey(((LivingEntity)event.getEntity()).getType())) {
+//			for (Pair<IAttribute,Double> ins : REGISTERED_ATTRIBUTES_1.get(((LivingEntity)event.getEntity()).getType())) {
+//				((PlayerEntity)event.getEntity()).getAttributes().registerAttribute(ins.getFirst()).setBaseValue(ins.getSecond());;
+//			}
+//		}
+//	}
 	
 	@SubscribeEvent
-	public static void loadInventory(EntityConstructing event) {
+	public static void registerAttributes(EntityConstructing event) {
 		if (event.getEntity() instanceof PlayerEntity) {
 			((PlayerEntity)event.getEntity()).getAttributes().registerAttribute(UAttributes.DIG_SPEED);
 		}

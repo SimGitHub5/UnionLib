@@ -77,7 +77,7 @@ public class UnionLib {
 	private void setup(final FMLCommonSetupEvent event)
 	{
 //		EntityHelper.registerAttributes(EntityType.PLAYER, builder -> {
-//			builder.createMutableAttribute(UAttributes.DIG_SPEED);
+//			builder.add(UAttributes.DIG_SPEED);
 //		});
 	}
 
