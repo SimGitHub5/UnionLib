@@ -30,6 +30,4 @@ bin/
 build/
 CREDITS.txt
 run/
-runClient.launch
-runData.launch
-runServer.launch
+*.launch

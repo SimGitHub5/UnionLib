@@ -71,7 +71,7 @@ public class UnionLib {
 		MinecraftForge.EVENT_BUS.register(this);
 //		ConfigBuilder.loadConfigs();
 		UAttributes.registerAll(modEventBus);
-		PacketRegistry.registerMessages();
+		PacketRegistry.registerMessages(CHANNEL);
 		
 //		UnionMod com = new UnionMod("combat", location("name"), LoadType.BOTH);
 //		UnionMod con = new UnionMod("controllersupport", location("name"), LoadType.CLIENT);

@@ -32,9 +32,30 @@ import net.minecraftforge.fml.loading.FMLPaths;
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigBuilder {
 	private static Map<String,ForgeConfigSpec.ConfigValue<?>> values = new HashMap<String,ForgeConfigSpec.ConfigValue<?>>();
+	
+	public static String configName(UnionConfig.Entry configEntry, String dataType) {
+		
+		if (configEntry.group() == "") {
+			if (dataType != "") {
+				return dataType+": "+configEntry.name();
+			} else {
+				return configEntry.name();
+			}
+		} else {
+			if (dataType != "") {
+				return configEntry.group()+"."+dataType+": "+configEntry.name();
+			} else {
+				return configEntry.group()+"."+configEntry.name();
+			}
+		}
+	}
+	
+	public static String configName(UnionConfig.Entry configEntry) {
+		return configName(configEntry, "");
+	}
 
 	private static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
-		return values.get(config.name()+"="+configEntry.group()+"."+configEntry.name());
+		return values.get(config.name()+"="+configName(configEntry));
 	}
 	
 	public static void read(Class<?> configClass) {
@@ -99,7 +120,7 @@ public class ConfigBuilder {
 				if (configEntry != null) {
 					Type type = configEntry.type() != null ? configEntry.type() : Type.COMMON;
 					
-					ForgeConfigSpec.Builder builder;
+					 ForgeConfigSpec.Builder builder = common;
 					
 					if (type == Type.CLIENT) {
 						builder = client;
@@ -120,31 +141,33 @@ public class ConfigBuilder {
 						String j = "\n###########################################";
 						String k = "\n-------------------------------------------";
 						String h = j+"\n";
-//						String l = k+"\n";
+						
+						String comment = "";
 						if (field.isAnnotationPresent(UnionConfig.Comment.class)) {
-							String comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
+							String config_comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
 							
 							if (field.getAnnotation(UnionConfig.Comment.class).comment().length > 1) {
 								for (int i = 1; i < field.getAnnotation(UnionConfig.Comment.class).comment().length; i++) {
-									comment+="\n"+field.getAnnotation(UnionConfig.Comment.class).comment()[i];
+									config_comment+="\n"+field.getAnnotation(UnionConfig.Comment.class).comment()[i];
 								}
 							}
 							
-							builder = builder.comment(h+comment+k+enumComment+"Default: "+field.get(null)+k);
+							comment = h+config_comment+k+enumComment+"Default: "+field.get(null)+k;
 						} else {
-							builder = builder.comment(h+enumComment+"Default: "+field.get(null)+k);
+							comment = h+enumComment+"Default: "+field.get(null)+k;
 						}
+						ForgeConfigSpec.Builder commented_builder = builder.comment(comment);
 
 						if (field.get(null) instanceof Boolean) { //Boolean
-							conf = builder
-									.define(configEntry.group()+".Boolean: "+configEntry.name(), (Boolean)field.get(null));
+							conf = commented_builder
+									.define(configName(configEntry, "Boolean"), (Boolean)field.get(null));
 						} else if (field.get(null) instanceof Enum) {
 							Enum<?> defaultValue = (Enum<?>)field.get(null);
 							
 							Collection<?> acceptableValues = (Collection<?>) Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants());
 							
-							conf = builder
-									.defineEnum(split(configEntry.group() + ".Enum: " + configEntry.name()),
+							conf = commented_builder
+									.defineEnum(split(configName(configEntry, "Enum")),
 											Enum.valueOf(defaultValue.getDeclaringClass(), defaultValue.name()), EnumGetMethod.NAME_IGNORECASE, obj -> {
 								                if (obj instanceof Enum) {
 								                    return acceptableValues.contains(obj);
@@ -159,38 +182,38 @@ public class ConfigBuilder {
 								                }
 								            });
 						} else if (field.get(null) instanceof String) {
-							conf = builder
-									.define(configEntry.group()+".String: "+configEntry.name(), (String)field.get(null));
+							conf = commented_builder
+									.define(configName(configEntry, "String"), (String)field.get(null));
 						} else if (field.isAnnotationPresent(UnionConfig.Range.class)) {
 							UnionConfig.Range range = field.getAnnotation(UnionConfig.Range.class);
 							Double min = (Double)range.min();
 							Double max = (Double)range.max();
 
 							if (field.get(null) instanceof Integer) {
-								conf = builder
-										.defineInRange(configEntry.group()+".Integer: "+configEntry.name(), (Integer)field.get(null), min.intValue(), max.intValue(), Integer.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Integer"), (Integer)field.get(null), min.intValue(), max.intValue(), Integer.class);
 							} else if (field.get(null) instanceof Float) {
-								conf = builder
-										.defineInRange(configEntry.group()+".Float: "+configEntry.name(), (Float)field.get(null), min.floatValue(), max.floatValue(), Float.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Float"), (Float)field.get(null), min.floatValue(), max.floatValue(), Float.class);
 							} else if (field.get(null) instanceof Long) {
-								conf = builder
-										.defineInRange(configEntry.group()+".Long: "+configEntry.name(), (Long)field.get(null), min.longValue(), max.longValue(), Long.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Long"), (Long)field.get(null), min.longValue(), max.longValue(), Long.class);
 							} else if (field.get(null) instanceof Short) {
-								conf = builder
-										.defineInRange(configEntry.group()+".Short: "+configEntry.name(), (Short)field.get(null), min.shortValue(), max.shortValue(), Short.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Short"), (Short)field.get(null), min.shortValue(), max.shortValue(), Short.class);
 							} else if (field.get(null) instanceof Byte) {
-								conf = builder
-										.defineInRange(configEntry.group()+".Byte: "+configEntry.name(), (Byte)field.get(null), min.byteValue(), max.byteValue(), Byte.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Byte"), (Byte)field.get(null), min.byteValue(), max.byteValue(), Byte.class);
 							} else {
-								conf = builder
-										.defineInRange(configEntry.group()+".Double: "+configEntry.name(), (Double)field.get(null), min, max, Double.class);
+								conf = commented_builder
+										.defineInRange(configName(configEntry, "Double"), (Double)field.get(null), min, max, Double.class);
 							}
 						} else {
-							conf = builder
-									.define(configEntry.group()+"."+configEntry.name(), field.get(null));
+							conf = commented_builder
+									.define(configName(configEntry), field.get(null));
 						}
 
-						values.put(config.name()+"="+configEntry.group()+"."+configEntry.name(), conf);
+						values.put(config.name()+"="+configName(configEntry), conf);
 
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
