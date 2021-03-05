@@ -11,8 +11,8 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class PacketRegistry {
 	static int netID = -1;
-	public static void registerMessages() {
-		registerMessage(UnionLib.CHANNEL, netID++, CUnionInventoryPacket.class, (packetBuffer) -> {return new CUnionInventoryPacket(packetBuffer);});
+	public static void registerMessages(SimpleChannel channel) {
+		registerMessage(channel, netID++, CUnionInventoryPacket.class, (packetBuffer) -> {return new CUnionInventoryPacket(packetBuffer);});
 	}
 
     public static <T extends BasePacket> void registerMessage(SimpleChannel channel, int index, Class<T> messageType, Function<PacketBuffer, T> decoder) {
