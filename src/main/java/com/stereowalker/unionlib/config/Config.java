@@ -19,6 +19,12 @@ public class Config {
 	@UnionConfig.Range(min = 0, max = 100)
 	public static float sea = 10;
 	
+	@UnionConfig.Entry(group = "Group" , name = "Test Long")
+	@UnionConfig.Comment(comment = {"comment"})
+	@UnionConfig.Range(min = 0, max = 1000)
+	@UnionConfig.Slider
+	public static long ha = 10;
+	
 	@UnionConfig.Entry(group = "Test Group" , name = "Test Enum")
 	@UnionConfig.Comment(comment = {"Test Multi-line comment","This is the second line"})
 	public static TestEnum testEnum = TestEnum.CARD;

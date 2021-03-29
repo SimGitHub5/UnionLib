@@ -69,6 +69,16 @@ public @interface UnionConfig {
 	@Retention(RUNTIME)
 	@Target(FIELD)
 	/**
+	 * Use this annotation if you want your sonfig to use a slider instead in the config gui
+	 * @author Stereowalker
+	 *
+	 */
+	public @interface Slider {
+	}
+	
+	@Retention(RUNTIME)
+	@Target(FIELD)
+	/**
 	 * @author Stereowalker
 	 *
 	 */

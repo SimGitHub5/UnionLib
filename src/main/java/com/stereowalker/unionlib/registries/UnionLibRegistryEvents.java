@@ -1,16 +1,19 @@
 package com.stereowalker.unionlib.registries;
 
+import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 import com.stereowalker.unionlib.item.UItems;
 
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -39,5 +42,10 @@ public class UnionLibRegistryEvents
 	@SubscribeEvent
 	public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
 		UContainerType.registerAll(event.getRegistry());
+	}
+	
+	@SubscribeEvent
+	public static void registerAttributes(EntityAttributeModificationEvent event) {
+		event.add(EntityType.PLAYER, UAttributes.DIG_SPEED);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.config.Config;
@@ -14,22 +15,25 @@ import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.mod.UnionMod;
 import com.stereowalker.unionlib.network.PacketRegistry;
-import com.stereowalker.unionlib.util.EntityHelper;
 
-import net.minecraft.entity.EntityType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 @Mod(value = "unionlib")
 public class UnionLib {
+//Komorebi
 
 	public static UnionLib instance;
 	public static final String MOD_ID = "unionlib";
@@ -65,24 +69,26 @@ public class UnionLib {
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ConfigBuilder.registerConfig(Config.class);
-//		ConfigBuilder.registerConfigs();
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
-//		ConfigBuilder.loadConfigs();
 		UAttributes.registerAll(modEventBus);
 		PacketRegistry.registerMessages(CHANNEL);
 		
-//		UnionMod com = new UnionMod("combat", location("name"), LoadType.BOTH);
+		for (int i = 0; i < 20; i++) {
+			new UnionMod("concept"+i, location("name"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
+				@Override
+				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
+					return new ConfigScreen(previousScreen, Config.class, new TranslationTextComponent("Config"));
+				}
+			};
+		}
 //		UnionMod con = new UnionMod("controllersupport", location("name"), LoadType.CLIENT);
 //		UnionMod sur = new UnionMod("survive", location("name"), LoadType.BOTH);
 	}
 
 	private void setup(final FMLCommonSetupEvent event)
 	{
-		EntityHelper.registerAttributes(EntityType.PLAYER, builder -> {
-			builder.createMutableAttribute(UAttributes.DIG_SPEED);
-		});
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {

@@ -26,20 +26,27 @@ public class UnionMod {
 	private final String NETWORK_PROTOCOL_VERSION = "1";
 
 	public final Logger LOGGER = LogManager.getLogger(modid);
-	public final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
+	public final SimpleChannel channel;
 	private int netID = -1;
 
-	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType) {
+	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType, boolean shouldLoadMod) {
 		this.modid = modid;
 		this.modTexture = modTexture;
 		this.loadType = loadType;
-		UnionLib.mods.add(this);
-		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> {
-			return (minecraft, parentScreen) -> {
-				return getConfigScreen(minecraft, parentScreen);
-			};
-		});
-		registerMessages(CHANNEL);
+		this.channel = NetworkRegistry.newSimpleChannel(location("main_simple_channel"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
+		if (shouldLoadMod) {
+			UnionLib.mods.add(this);
+			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> {
+				return (minecraft, parentScreen) -> {
+					return getConfigScreen(minecraft, parentScreen);
+				};
+			});
+			registerMessages(channel);
+		}
+	}
+	
+	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType) {
+		this(modid, modTexture, loadType, true);
 	}
 
 	public LoadType getLoadType() {

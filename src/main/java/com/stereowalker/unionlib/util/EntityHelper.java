@@ -70,18 +70,18 @@ public class EntityHelper {
 		return new BlockPos(entity.getPosX(), entity.getBoundingBox().minY - 0.5000001D, entity.getPosZ());
 	}
 
-	/**
-	 * Adds attributes to an entity type
-	 * @param type     Entity type
-	 * @param builder  Consumer for builder to add attributes
-	 */
-	@SuppressWarnings("deprecation")
-	public static void registerAttributes(EntityType<? extends LivingEntity> type, Consumer<MutableAttribute> builder) {
-		AttributeModifierMap.MutableAttribute newAttrs = AttributeModifierMap.createMutableAttribute();
-		if (GlobalEntityTypeAttributes.doesEntityHaveAttributes(type)) {
-			newAttrs.attributeMap.putAll(GlobalEntityTypeAttributes.getAttributesForEntity(type).attributeMap);
-		}
-		builder.accept(newAttrs);
-		GlobalEntityTypeAttributes.put(type, newAttrs.create());
-	}
+//	/**
+//	 * Adds attributes to an entity type
+//	 * @param type     Entity type
+//	 * @param builder  Consumer for builder to add attributes
+//	 */
+//	@SuppressWarnings("deprecation")
+//	public static void registerAttributes(EntityType<? extends LivingEntity> type, Consumer<MutableAttribute> builder) {
+//		AttributeModifierMap.MutableAttribute newAttrs = AttributeModifierMap.createMutableAttribute();
+//		if (GlobalEntityTypeAttributes.doesEntityHaveAttributes(type)) {
+//			newAttrs.attributeMap.putAll(GlobalEntityTypeAttributes.getAttributesForEntity(type).attributeMap);
+//		}
+//		builder.accept(newAttrs);
+//		GlobalEntityTypeAttributes.put(type, newAttrs.create());
+//	}
 }

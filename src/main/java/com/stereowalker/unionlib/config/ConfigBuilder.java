@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,7 +35,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigBuilder {
-	private static Map<String,ForgeConfigSpec.ConfigValue<?>> values = new HashMap<String,ForgeConfigSpec.ConfigValue<?>>();
+	private static Map<String,Holder> values = new HashMap<String,Holder>();
 	
 	public static String configName(UnionConfig.Entry configEntry, String dataType) {
 		
@@ -55,7 +59,18 @@ public class ConfigBuilder {
 	}
 
 	private static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
-		return values.get(config.name()+"="+configName(configEntry));
+		return values.get(config.name()+"="+configName(configEntry)).getValue();
+	}
+	
+	public static Map<String,Holder> getValues(UnionConfig config) {
+		Map<String,Holder> values2 = new HashMap<String,Holder>();
+		
+		for (String configValue : values.keySet()) {
+			if (configValue.split("=")[0].equals(config.name())) {
+				values2.put(configValue, values.get(configValue));
+			}
+		}
+		return values2;
 	}
 	
 	public static void read(Class<?> configClass) {
@@ -67,9 +82,6 @@ public class ConfigBuilder {
 					try {
 						if (getConfigValue(config, configEntry).get() instanceof Double && field.get(null) instanceof Float) {
 							field.set(null, ((Double)getConfigValue(config, configEntry).get()).floatValue());
-//						} else if (getConfigValue(config, configEntry).get() instanceof String && field.get(null) instanceof Enum) {
-//							Enum<?> enumValue = Enum.valueOf(((Enum<?>) field.get(null)).getDeclaringClass(), (String)getConfigValue(config, configEntry).get());
-//							field.set(null, enumValue);
 						} else {
 							field.set(null, getConfigValue(config, configEntry).get());
 						}
@@ -143,6 +155,7 @@ public class ConfigBuilder {
 						String h = j+"\n";
 						
 						String comment = "";
+						List<ITextComponent> saved_comment = new ArrayList<ITextComponent>();
 						if (field.isAnnotationPresent(UnionConfig.Comment.class)) {
 							String config_comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
 							
@@ -153,10 +166,26 @@ public class ConfigBuilder {
 							}
 							
 							comment = h+config_comment+k+enumComment+"Default: "+field.get(null)+k;
+							
+							for (String s : config_comment.split("\n")) {
+								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.AQUA));
+							}
+							for (String s : enumComment.split("\n")) {
+								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.YELLOW));
+							}
+							saved_comment.add(new StringTextComponent("Default: "+field.get(null)).mergeStyle(TextFormatting.GREEN));
 						} else {
 							comment = h+enumComment+"Default: "+field.get(null)+k;
+							
+							for (String s : enumComment.split("\n")) {
+								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.YELLOW));
+							}
+							saved_comment.add(new StringTextComponent("Default: "+field.get(null)).mergeStyle(TextFormatting.GREEN));
 						}
 						ForgeConfigSpec.Builder commented_builder = builder.comment(comment);
+						
+						Double min = 0.0d;
+						Double max = 0.0d;
 
 						if (field.get(null) instanceof Boolean) { //Boolean
 							conf = commented_builder
@@ -186,8 +215,8 @@ public class ConfigBuilder {
 									.define(configName(configEntry, "String"), (String)field.get(null));
 						} else if (field.isAnnotationPresent(UnionConfig.Range.class)) {
 							UnionConfig.Range range = field.getAnnotation(UnionConfig.Range.class);
-							Double min = (Double)range.min();
-							Double max = (Double)range.max();
+							min = (Double)range.min();
+							max = (Double)range.max();
 
 							if (field.get(null) instanceof Integer) {
 								conf = commented_builder
@@ -213,7 +242,7 @@ public class ConfigBuilder {
 									.define(configName(configEntry), field.get(null));
 						}
 
-						values.put(config.name()+"="+configName(configEntry), conf);
+						values.put(config.name()+"="+configName(configEntry), new Holder(conf, saved_comment, field.isAnnotationPresent(UnionConfig.Slider.class), min, max));
 
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
@@ -323,5 +352,36 @@ public class ConfigBuilder {
     private static List<String> split(String path)
     {
         return Lists.newArrayList(DOT_SPLITTER.split(path));
+    }
+    
+    public static class Holder {
+    	protected final ForgeConfigSpec.ConfigValue<?> value;
+    	protected final List<ITextComponent> comments;
+    	protected final	boolean usesSider;
+    	protected final double min;
+    	protected final double max;
+    	public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<ITextComponent> comments, final boolean usesSider, final double min, final double max) {
+    		this.comments = comments;
+    		this.value = configvalue;
+    		this.usesSider = usesSider;
+    		this.min = min;
+    		this.max = max;
+		}
+		public ForgeConfigSpec.ConfigValue<?> getValue() {
+			return value;
+		}
+		public List<ITextComponent> getComments() {
+			return comments;
+		}
+		public boolean isUsesSider() {
+			return usesSider;
+		}
+		public double getMin() {
+			return min;
+		}
+		public double getMax() {
+			return max;
+		}
+    	
     }
 }

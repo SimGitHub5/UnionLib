@@ -7,16 +7,21 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 
 public class DefaultScreen extends Screen{
-	private final Screen previousScreen;
+	public final Screen previousScreen;
 
 	public DefaultScreen(ITextComponent titleIn, Screen screen) {
 		super(titleIn);
 		this.previousScreen = screen;
 	}
+	
+	public void drawOnScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		
+	}
 
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
+		this.drawOnScreen(matrixStack, mouseX, mouseY, partialTicks);
 		AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
