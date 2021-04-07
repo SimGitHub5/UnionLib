@@ -1,5 +1,6 @@
 package com.stereowalker.unionlib.client.gui.widget.list;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,8 +39,11 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 	public ConfigList(Minecraft mcIn, ConfigScreen screen, UnionConfig config) {
 		super(mcIn, screen.width +45, screen.height, 43, screen.height - 32, 25);
 		this.screen = screen;
+		List<String> c = Arrays.asList(ConfigBuilder.getValues(config).keySet().toArray(new String[0]));
+		Collections.sort(c);
+		
 		String currentCategory = "";
-		for (String configValue : ConfigBuilder.getValues(config).keySet()) {
+		for (String configValue : c) {
 			String name = "";
 			for (int i = 1; i < configValue.split("=").length; i++) {
 				name += configValue.split("=")[i];
@@ -181,6 +185,7 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 
 			this.enumButton = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(RegistryHelper.rotateEnumForward(config.get(), config.get().getDeclaringClass().getEnumConstants()));
+				ConfigBuilder.reload();
 			});
 		}
 
@@ -216,6 +221,7 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 
 			this.booleanButton = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(!config.get());
+				ConfigBuilder.reload();
 			});
 		}
 
@@ -253,6 +259,7 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 			this.stringField.setText(this.config.get());
 			this.stringField.setResponder((p_214319_1_) -> {
 				this.config.set(p_214319_1_);
+				ConfigBuilder.reload();
 			});
 			ConfigList.this.screen.addChild(this.stringField);
 		}
@@ -306,20 +313,26 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 						try {
 							if (config.get() instanceof Double) {
 								NumberedEntry.this.config.set((V)newValue);
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Float) {
 								NumberedEntry.this.config.set((V)(Float)newValue.floatValue());
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Long) {
 								NumberedEntry.this.config.set((V)(Long)newValue.longValue());
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Short) {
 								NumberedEntry.this.config.set((V)(Short)newValue.shortValue());
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Byte) {
 								NumberedEntry.this.config.set((V)(Byte)newValue.byteValue());
+								ConfigBuilder.reload();
 							} else {
 								NumberedEntry.this.config.set((V)(Integer)newValue.intValue());
+								ConfigBuilder.reload();
 							}
 						} catch (NumberFormatException e) {
 							config.set(oldValue);
-							//						this.setText(oldValue.toString());
+							ConfigBuilder.reload();
 						}
 						this.setMessage(new StringTextComponent(NumberedEntry.this.config.get().toString()));
 					}
@@ -353,19 +366,26 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 						try {
 							if (config.get() instanceof Double) {
 								NumberedEntry.this.config.set((V)(Double)Double.parseDouble(this.getText()));
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Float) {
 								NumberedEntry.this.config.set((V)(Float)Float.parseFloat(this.getText()));
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Long) {
 								NumberedEntry.this.config.set((V)(Long)Long.parseLong(this.getText()));
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Short) {
 								NumberedEntry.this.config.set((V)(Short)Short.parseShort(this.getText()));
+								ConfigBuilder.reload();
 							} else if (config.get() instanceof Byte) {
 								NumberedEntry.this.config.set((V)(Byte)Byte.parseByte(this.getText()));
+								ConfigBuilder.reload();
 							} else {
 								NumberedEntry.this.config.set((V)(Integer)Integer.parseInt(this.getText()));
+								ConfigBuilder.reload();
 							}
 						} catch (NumberFormatException e) {
 							config.set(oldValue);
+							ConfigBuilder.reload();
 							this.setText(oldValue.toString());
 						}
 					}

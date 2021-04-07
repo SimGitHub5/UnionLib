@@ -20,12 +20,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class BaseGameEvents {
 
 	@SubscribeEvent
-	public static void setupDigSpeedAttribute(BreakSpeed event) {
-		double attribute = event.getEntityLiving().getAttributeValue(UAttributes.DIG_SPEED);
-		event.setNewSpeed((float) (event.getOriginalSpeed() * attribute));
-	}
-
-	@SubscribeEvent
 	public static void loadInventory(LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof ServerPlayerEntity) {
 			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityLiving();

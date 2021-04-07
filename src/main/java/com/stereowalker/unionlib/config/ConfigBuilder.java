@@ -329,6 +329,16 @@ public class ConfigBuilder {
 
 	@SubscribeEvent
 	public static void onReload(ModConfig.ModConfigEvent event) {
+		reload();
+		System.out.println("From the event itself");
+	}
+
+	@SubscribeEvent
+	public static void onReload(ModConfig.Reloading event) {
+		reload();
+	}
+	
+	public static void reload() {
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
@@ -340,7 +350,7 @@ public class ConfigBuilder {
 
 	@SubscribeEvent
 	public static void onLoad(ModConfig.Loading event) {
-		System.out.println("Detected change in a config file. Re-read and set all config values from file");
+		System.out.println("Loading all values from the config files into their respective configuration variables");
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			read(configClass);

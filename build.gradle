@@ -1,17 +1,26 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
         jcenter()
         mavenCentral()
     }
+    
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, modId+".refmap.json"
+}
+
 
 version = modMinecraftVersion + "-" +modVersion
 group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -21,6 +30,12 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', Forge Version: ' + modForgeVersion)
+
+
+repositories {
+    maven {url = "https://repo.spongepowered.org/maven"} // mixin
+}
+
 minecraft {
     mappings channel: mappingsChannel, version: mappingsVersion
     //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
@@ -38,8 +53,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
 			
 			args '--username', 'CodeHexIO', '--uuid', 'c5751ce1d50e4d47ca120e1ea1c75542'
+			arg "-mixin.config="+modId+".mixins.json"
 
             mods {
                 modId {
@@ -57,6 +74,8 @@ minecraft {
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'REGISTRIES'
+            property 'mixin.env.disableRefMap', 'true'
+            arg "-mixin.config="+modId+".mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -72,6 +91,7 @@ minecraft {
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modForgeVersion
+	compile 'org.spongepowered:mixin:0.8'
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"\
@@ -120,6 +140,7 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": modVersion,
             "Implementation-Vendor" :"Stereowalker",
+            "MixinConfigs": modId+".mixins.json",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
