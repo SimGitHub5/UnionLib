@@ -1,21 +1,10 @@
 package com.stereowalker.unionlib.util;
 
-import java.util.function.Consumer;
-
-import com.stereowalker.unionlib.UnionLib;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * @author Stereowalker
@@ -69,19 +58,4 @@ public class EntityHelper {
 	protected static BlockPos getPositionUnderneath(Entity entity) {
 		return new BlockPos(entity.getPosX(), entity.getBoundingBox().minY - 0.5000001D, entity.getPosZ());
 	}
-
-//	/**
-//	 * Adds attributes to an entity type
-//	 * @param type     Entity type
-//	 * @param builder  Consumer for builder to add attributes
-//	 */
-//	@SuppressWarnings("deprecation")
-//	public static void registerAttributes(EntityType<? extends LivingEntity> type, Consumer<MutableAttribute> builder) {
-//		AttributeModifierMap.MutableAttribute newAttrs = AttributeModifierMap.createMutableAttribute();
-//		if (GlobalEntityTypeAttributes.doesEntityHaveAttributes(type)) {
-//			newAttrs.attributeMap.putAll(GlobalEntityTypeAttributes.getAttributesForEntity(type).attributeMap);
-//		}
-//		builder.accept(newAttrs);
-//		GlobalEntityTypeAttributes.put(type, newAttrs.create());
-//	}
 }
