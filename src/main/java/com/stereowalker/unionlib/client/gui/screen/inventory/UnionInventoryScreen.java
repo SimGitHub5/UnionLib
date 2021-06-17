@@ -64,7 +64,7 @@ public class UnionInventoryScreen extends DisplayEffectsScreen<UnionContainer> i
 	}
 
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-		this.font.func_243248_b(matrixStack, this.title, (float)this.titleX, (float)this.titleY, 4210752);
+		this.font.drawText(matrixStack, this.title, (float)this.titleX, (float)this.titleY, 4210752);
 	}
 
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

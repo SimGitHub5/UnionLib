@@ -29,10 +29,10 @@ public class TextHelper {
 		}
 		
 		if (shouldArticleUseComponentStyle && component.getStyle() != null) {
-			comp = (comp.mergeStyle(component.getStyle())).append(component);
+			comp = (comp.mergeStyle(component.getStyle())).appendSibling(component);
 		}
 		else {
-			comp = comp.append(component);
+			comp = comp.appendSibling(component);
 		}
 		
 		return comp;

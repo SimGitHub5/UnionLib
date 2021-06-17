@@ -38,8 +38,8 @@ public class OverlayImageButton extends ImageButton {
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+	public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
 		Minecraft minecraft = Minecraft.getInstance();
 		minecraft.getTextureManager().bindTexture(this.overlayLocation);
 		int i = this.yTexStart;

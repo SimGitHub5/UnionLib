@@ -26,4 +26,7 @@ public class ModHelper {
 	public static boolean isSurviveLoaded() {
 		return ModList.get().isLoaded("survive");
 	}
+	public static boolean isOriginsLoaded() {
+		return ModList.get().isLoaded("origins");
+	}
 }

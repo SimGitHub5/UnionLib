@@ -59,7 +59,11 @@ public class ConfigBuilder {
 	}
 
 	private static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
-		return values.get(config.name()+"="+configName(configEntry)).getValue();
+		if (config != null && configEntry != null) {
+			return values.get(config.name()+"="+configName(configEntry)).getValue();
+		} else {
+			return null;
+		}
 	}
 	
 	public static Map<String,Holder> getValues(UnionConfig config) {

@@ -124,7 +124,7 @@ public class ConfigList extends AbstractOptionList<ConfigList.Entry> {
 		}
 
 		public void render(MatrixStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			ConfigList.this.minecraft.fontRenderer.func_243248_b(p_230432_1_, this.labelText, (float)(ConfigList.this.minecraft.currentScreen.width / 2 - this.labelWidth / 2), (float)(p_230432_3_ + p_230432_6_ - 9 - 1), 16777215);
+			ConfigList.this.minecraft.fontRenderer.drawText(p_230432_1_, this.labelText, (float)(ConfigList.this.minecraft.currentScreen.width / 2 - this.labelWidth / 2), (float)(p_230432_3_ + p_230432_6_ - 9 - 1), 16777215);
 		}
 
 		public boolean changeFocus(boolean focus) {

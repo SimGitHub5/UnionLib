@@ -25,7 +25,6 @@ public class UnionMod {
 	private ModInfo modInfo;
 	private final String NETWORK_PROTOCOL_VERSION = "1";
 
-	public final Logger LOGGER = LogManager.getLogger(modid);
 	public final SimpleChannel channel;
 	private int netID = -1;
 
@@ -55,6 +54,10 @@ public class UnionMod {
 
 	public String getModid() {
 		return modid;
+	}
+	
+	public Logger getLogger() {
+		return LogManager.getLogger(modid);
 	}
 
 	public ResourceLocation getModTexture() {
