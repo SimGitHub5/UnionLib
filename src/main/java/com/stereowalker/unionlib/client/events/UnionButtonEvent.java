@@ -3,6 +3,7 @@ package com.stereowalker.unionlib.client.events;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.gui.screen.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
+import com.stereowalker.unionlib.config.Config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHelper;
@@ -33,7 +34,7 @@ public class UnionButtonEvent {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void drawButtons(GuiScreenEvent.InitGuiEvent event) {
-		if (UnionLib.drawMainMenuButton()) {
+		if (Config.config_button) {
 		if(event.getGui() instanceof MainMenuScreen) {
 			event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
 				event.getGui().getMinecraft().displayGuiScreen(new UnionModsScreen(event.getGui()));

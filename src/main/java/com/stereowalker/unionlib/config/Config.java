@@ -7,6 +7,10 @@ public class Config {
 	@UnionConfig.Comment(comment = {"Enable this to see debug messages","Added"})
 	public static boolean debug = false;
 	
+	@UnionConfig.Entry(group = "General" , name = "Show Config Button")
+	@UnionConfig.Comment(comment = {"Enable this to show the unionlib config button in the main menu"})
+	public static boolean config_button = true;
+	
 	@UnionConfig.Entry(group = "Test Group" , name = "Test String")
 	public static String ant2 = "Default String Value Wtihout Coment";
 	
@@ -19,7 +23,7 @@ public class Config {
 	@UnionConfig.Range(min = 0, max = 100)
 	public static float sea = 10;
 	
-	@UnionConfig.Entry(group = "Group" , name = "Test Long")
+	@UnionConfig.Entry(group = "Test Group" , name = "Test Long")
 	@UnionConfig.Comment(comment = {"comment"})
 	@UnionConfig.Range(min = 0, max = 1000)
 	@UnionConfig.Slider

@@ -60,7 +60,7 @@ public class ConfigBuilder {
 
 	private static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
 		if (config != null && configEntry != null) {
-			return values.get(config.name()+"="+configName(configEntry)).getValue();
+			return values.getOrDefault(config.name()+"="+configName(configEntry), new Holder(new ForgeConfigSpec.Builder().define("empty", "nothing_was_found"), null, false, 0, 0)).getValue();
 		} else {
 			return null;
 		}
@@ -247,7 +247,7 @@ public class ConfigBuilder {
 						}
 
 						values.put(config.name()+"="+configName(configEntry), new Holder(conf, saved_comment, field.isAnnotationPresent(UnionConfig.Slider.class), min, max));
-
+						config_initialization.put(configClass, true);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -257,6 +257,7 @@ public class ConfigBuilder {
 	}
 
 	private static final List<Class<?>> configs = Lists.newArrayList();
+	public static final Map<Class<?>,Boolean> config_initialization = Maps.newHashMap();
 
 	private static final Map<Class<?>,ForgeConfigSpec.Builder> client_builder = Maps.newHashMap();
 	public static final Map<Class<?>,ForgeConfigSpec> client_config = Maps.newHashMap();

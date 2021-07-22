@@ -61,10 +61,6 @@ public class UnionLib {
 	public static boolean disableConfig() {
 		return false;
 	}
-	
-	public static boolean drawMainMenuButton() {
-		return true;
-	}
 
 	public UnionLib() 
 	{
