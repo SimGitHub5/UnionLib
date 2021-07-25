@@ -1,6 +1,14 @@
 package com.stereowalker.unionlib;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -10,6 +18,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +34,28 @@ public class Cape {
 	// Copied from SkinManager
 	private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 2, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 	private static final Logger logger = LogManager.getLogger(UnionLib.MOD_ID);
+	private static final JsonParser parser = new JsonParser();
 
+	private static final Map<UUID, Integer> CAPES = Maps.newHashMap();
+	
+	public static void loadCapes() {
+		try {
+	         URL url = new URL("http://github.com/capes.json");
+	         URLConnection connection = url.openConnection();
+	         connection.connect();
+	         System.out.println("Internet is connected");
+	         
+	         JsonObject object = parser.parse(new InputStreamReader(url.openStream())).getAsJsonObject();
+	         
+	         for (Entry<String, JsonElement> element: object.entrySet()) {
+	        	 CAPES.put(UUID.fromString(element.getKey()), element.getValue().getAsInt());
+	         }
+	      } catch (MalformedURLException e) {
+	         System.out.println("Internet is not connected");
+	      } catch (IOException e) {
+	         System.out.println("Internet is not connected");
+	      }
+	}
 	/**
 	 * Queue the replacement of a player's cape with the Combat cape.
 	 * <p>
