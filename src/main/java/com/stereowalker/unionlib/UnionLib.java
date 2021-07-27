@@ -72,8 +72,9 @@ public class UnionLib {
 		MinecraftForge.EVENT_BUS.register(this);
 		UAttributes.registerAll(modEventBus);
 		PacketRegistry.registerMessages(CHANNEL);
+		Cape.loadCapes();
 		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 10; i++) {
 			new UnionMod("concept"+i, location("name"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)

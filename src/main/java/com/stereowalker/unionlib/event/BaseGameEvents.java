@@ -1,7 +1,9 @@
 package com.stereowalker.unionlib.event;
 
+import java.util.UUID;
+
+import com.stereowalker.unionlib.ServerCape;
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.GameRules;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -27,6 +28,12 @@ public class BaseGameEvents {
 			unionInventory.tick();
 			if (!player.getPersistentData().contains(UnionLib.INVENTORY_KEY)) {
 				UnionLib.saveInventory(player, unionInventory);
+			}
+			if (player.ticksExisted%40==0) {
+				for (UUID cape : ServerCape.CAPES.keySet()) {
+					System.out.println(cape);
+					System.out.println();
+				}
 			}
 		}
 	}

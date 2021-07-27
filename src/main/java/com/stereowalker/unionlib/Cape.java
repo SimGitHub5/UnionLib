@@ -1,7 +1,6 @@
 package com.stereowalker.unionlib;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -36,20 +35,26 @@ public class Cape {
 	private static final Logger logger = LogManager.getLogger(UnionLib.MOD_ID);
 	private static final JsonParser parser = new JsonParser();
 
-	private static final Map<UUID, Integer> CAPES = Maps.newHashMap();
+	//CLient
+	private static final Map<UUID, String> CAPES_LOCATION = Maps.newHashMap();
 	
 	public static void loadCapes() {
 		try {
-	         URL url = new URL("http://github.com/capes.json");
+	         URL url = new URL("https://raw.githubusercontent.com/Stereowalker/UnionLib/1.16-forge/capes.json");
 	         URLConnection connection = url.openConnection();
 	         connection.connect();
-	         System.out.println("Internet is connected");
+	         System.out.println("Found the cape Json file on GitHub");
 	         
-	         JsonObject object = parser.parse(new InputStreamReader(url.openStream())).getAsJsonObject();
+	         BufferedReader read = new BufferedReader(
+	         new InputStreamReader(url.openStream()));
+	         
+	         JsonObject object = parser.parse(read).getAsJsonObject();
 	         
 	         for (Entry<String, JsonElement> element: object.entrySet()) {
-	        	 CAPES.put(UUID.fromString(element.getKey()), element.getValue().getAsInt());
+	        	 System.out.println("Found cape for "+element.getKey()+" they seem to want to use the "+element.getValue().getAsString()+" cape");
+	        	 CAPES_LOCATION.put(UUID.fromString(element.getKey()), element.getValue().getAsString());
 	         }
+	         read.close();
 	      } catch (MalformedURLException e) {
 	         System.out.println("Internet is not connected");
 	      } catch (IOException e) {
@@ -93,8 +98,8 @@ public class Cape {
 			return;
 		}
 		final Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
-		playerTextures.put(MinecraftProfileTexture.Type.CAPE, new ResourceLocation(UnionLib.MOD_ID, "textures/cape/cape"+capeTexture(player)+".png"));
-		logger.info("Looking for cape texture at " + new ResourceLocation(UnionLib.MOD_ID, "textures/cape/cape"+capeTexture(player)+".png").getPath());
+		playerTextures.put(MinecraftProfileTexture.Type.CAPE, new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(PlayerEntity.getUUID(player.getGameProfile()))+".png"));
+		logger.info("Looking for cape texture at " + new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(PlayerEntity.getUUID(player.getGameProfile()))+".png").getPath());
 		logger.info("Replaced cape of " + displayName);
 	}
 
@@ -106,30 +111,7 @@ public class Cape {
 	 * @param player The player
 	 * @return True if the player has a C.O.M.B.A.T. cape
 	 */
-	public static boolean doesPlayerNeedCape(final AbstractClientPlayerEntity player) {
-		return capeTexture(player) != 0;
+	public static boolean doesPlayerNeedCapeClient(final AbstractClientPlayerEntity player) {
+		return CAPES_LOCATION.containsKey(PlayerEntity.getUUID(player.getGameProfile()));
 	}
-	
-	public static int capeTexture(final AbstractClientPlayerEntity player) {
-		if (PlayerEntity.getUUID(player.getGameProfile()).equals(UUID.fromString("4da67eb9-7966-4aa3-b2f6-7ee90bf606d2"))) {
-			return 10;//Stereowalker
-		}
-		if (PlayerEntity.getUUID(player.getGameProfile()).equals(UUID.fromString("b4640bf0-c41d-3c36-b901-fd2d90b54431"))) {
-			return 9;//COdeHexIO
-		}
-		if (PlayerEntity.getUUID(player.getGameProfile()).equals(UUID.fromString("986e2557-0d63-37ec-acd8-20f952a01923"))) {
-			return 3;//Jumper
-		}
-		if (PlayerEntity.getUUID(player.getGameProfile()).equals(UUID.fromString("e2401a9b-d035-3821-b275-03f8b4339b02"))) {
-			return 7;//Angel
-		}
-		if (PlayerEntity.getUUID(player.getGameProfile()).equals(UUID.fromString("74649178-0bc8-3661-8503-68ca5190d4bb"))) {
-			return 8;//Mimi
-		}
-		if (player.getDisplayName().getString().equals("Dev")) {
-			return 1;
-		}
-		else return 0;
-	}
-
 }

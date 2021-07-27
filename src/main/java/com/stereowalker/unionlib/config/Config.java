@@ -1,5 +1,7 @@
 package com.stereowalker.unionlib.config;
 
+import net.minecraftforge.fml.config.ModConfig.Type;
+
 @UnionConfig(name = "union")
 public class Config {
 
@@ -7,9 +9,13 @@ public class Config {
 	@UnionConfig.Comment(comment = {"Enable this to see debug messages","Added"})
 	public static boolean debug = false;
 	
-	@UnionConfig.Entry(group = "General" , name = "Show Config Button")
+	@UnionConfig.Entry(group = "General" , name = "Show Config Button", type = Type.CLIENT)
 	@UnionConfig.Comment(comment = {"Enable this to show the unionlib config button in the main menu"})
 	public static boolean config_button = true;
+	
+	@UnionConfig.Entry(group = "Capes" , name = "Show Capes", type = Type.CLIENT)
+	@UnionConfig.Comment(comment = {"Enable this to show the cape bestowed upon you if you are an obsidian supporter"})
+	public static boolean display_cape = true;
 	
 	@UnionConfig.Entry(group = "Test Group" , name = "Test String")
 	public static String ant2 = "Default String Value Wtihout Coment";
