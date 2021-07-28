@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Maps;
-import com.stereowalker.unionlib.network.client.play.SCapePacket;
+import com.stereowalker.unionlib.network.server.play.SCapePacket;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -35,23 +35,16 @@ public class ServerCape {
 	 *
 	 * @param player The player
 	 */
-	public static void queuePlayerCapeReplacementServer(final ServerPlayerEntity player) {
-		final String displayName = player.getDisplayName().getString();
-
-		logger.info("Queueing cape replacement for " + displayName);
-
+	public static void queuePlayerCapeReplacementOnServer(final ServerPlayerEntity player) {
 		THREAD_POOL.submit(() -> {
 			try {
 				Thread.sleep(100);
 			} catch (final InterruptedException e) {
-				logger.fatal("Cape delay thread for "+displayName+" interrupted");
+				logger.fatal("Cape delay thread on server interrupted");
 				return;
 			}
 
-			player.server.deferTask(() -> {
-			if(ServerCape.doesPlayerNeedCape(player)) {
-				new SCapePacket(/* ServerCape.CAPES */).send(player);
-			}});
+			player.server.deferTask(() -> new SCapePacket(ServerCape.CAPES).send(player));
 		});
 	}
 
@@ -64,8 +57,6 @@ public class ServerCape {
 	 * @return True if the player has a C.O.M.B.A.T. cape
 	 */
 	public static boolean doesPlayerNeedCape(final ServerPlayerEntity player) {
-		System.out.println("Contains Key? "+CAPES.containsKey(PlayerEntity.getUUID(player.getGameProfile())));
-		System.out.println("Enabled cape? "+CAPES.get(PlayerEntity.getUUID(player.getGameProfile())));
 		return CAPES.containsKey(PlayerEntity.getUUID(player.getGameProfile())) && CAPES.get(PlayerEntity.getUUID(player.getGameProfile()));
 	}
 }

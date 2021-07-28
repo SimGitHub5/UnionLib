@@ -2,10 +2,10 @@ package com.stereowalker.unionlib.network;
 
 import java.util.function.Function;
 
-import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
 import com.stereowalker.unionlib.network.client.play.CQueueCapePacket;
 import com.stereowalker.unionlib.network.client.play.CUnionInventoryPacket;
-import com.stereowalker.unionlib.network.client.play.SCapePacket;
+import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
+import com.stereowalker.unionlib.network.server.play.SCapePacket;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
