@@ -1,8 +1,5 @@
 package com.stereowalker.unionlib.event;
 
-import java.util.UUID;
-
-import com.stereowalker.unionlib.ServerCape;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 
@@ -28,12 +25,6 @@ public class BaseGameEvents {
 			unionInventory.tick();
 			if (!player.getPersistentData().contains(UnionLib.INVENTORY_KEY)) {
 				UnionLib.saveInventory(player, unionInventory);
-			}
-			if (player.ticksExisted%40==0) {
-				for (UUID cape : ServerCape.CAPES.keySet()) {
-					System.out.println(cape);
-					System.out.println();
-				}
 			}
 		}
 	}

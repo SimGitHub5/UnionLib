@@ -31,14 +31,16 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float getDigSpeed(float f) {
         ModifiableAttributeInstance instance = this.getAttribute(UAttributes.DIG_SPEED);
 
-        for (AttributeModifier modifier : instance.getModifierListCopy()) {
-            float amount = (float) modifier.getAmount();
-
-            if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
-                f += amount;
-            } else {
-                f *= (amount + 1);
-            }
+        if(instance != null) {
+        	for (AttributeModifier modifier : instance.getModifierListCopy()) {
+        		float amount = (float) modifier.getAmount();
+        		
+        		if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
+        			f += amount;
+        		} else {
+        			f *= (amount + 1);
+        		}
+        	}
         }
 
         return f;
