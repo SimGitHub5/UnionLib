@@ -275,14 +275,18 @@ public class ConfigBuilder {
 	 */
 	public static void registerConfig(Class<?> configClass) {
 		if (configClass.isAnnotationPresent(UnionConfig.class)) {
+			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
+			System.out.println("Registered the config for "+con.name());
 			configs.add(configClass);
 			client_builder.put(configClass, new ForgeConfigSpec.Builder());
 			common_builder.put(configClass, new ForgeConfigSpec.Builder());
 			server_builder.put(configClass, new ForgeConfigSpec.Builder());
+			
+			registerConfigurations(configClass);
+			loadConfigs(configClass);
+			read(configClass);
 		}
 		
-		registerConfigurations(configClass);
-		loadConfigs(configClass);
 	}
 
 	public static void loadConfig(ForgeConfigSpec config, String path, String fileName) {
@@ -348,19 +352,23 @@ public class ConfigBuilder {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
 				read(configClass);
-				System.out.println("Detected change in a "+con.name()+"'s config file. Reloading values");
+				System.out.println("Detected change in "+con.name()+"'s config file. Reloading values");
 			}
 		}
 	}
-
-	@SubscribeEvent
-	public static void onLoad(ModConfig.Loading event) {
+	
+	public static void load() {
 		System.out.println("Loading all values from the config files into their respective configuration variables");
 		for (Class<?> configClass : configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			read(configClass);
 			System.out.println("Loading "+con.name()+"'s config");
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLoad(ModConfig.Loading event) {
+		load();
 	}
 	
     private static final Splitter DOT_SPLITTER = Splitter.on(".");
