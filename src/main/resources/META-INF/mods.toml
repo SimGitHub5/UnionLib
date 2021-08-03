@@ -1,16 +1,15 @@
 
 modLoader="javafml"
-loaderVersion="[35,)"
+loaderVersion="[37,)"
 license="All Rights Reserved"
-issueTrackerURL="https://github.com/Stereowalker/C.O.M.B.A.T./issues"
-logoFile="pack.png"
 [[mods]]
 modId="unionlib"
 version="${version}"
 displayName="UnionLib"
 updateJSONURL="https://raw.githubusercontent.com/Stereowalker/UnionLib/1.16-forge/src/main/resources/META-INF/update.json?token=AIP6TBTIHETPW7EI7336PL3AHEHKG"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/unionlib"
-credits="I'd like to thank my Obsidian Patreon, Komorebi, and you for downloading this mod"
+logoFile="pack.png"
+credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
 authors="Stereowalker"
 description='''
 A library mod for all my mods
@@ -22,7 +21,7 @@ A library mod for all my mods
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[35.1.37,)" #mandatory
+    versionRange="[37,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -31,6 +30,6 @@ A library mod for all my mods
 [[dependencies.unionlib]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4,)"
+    versionRange="[1.17.1,1.18)"
     ordering="NONE"
     side="BOTH"
