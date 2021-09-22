@@ -17,10 +17,10 @@ import com.stereowalker.unionlib.mod.UnionMod;
 import com.stereowalker.unionlib.network.PacketRegistry;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,12 +30,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 @Mod(value = "unionlib")
 public class UnionLib {
-//Komorebi
 
 	public static UnionLib instance;
 	public static final String MOD_ID = "unionlib";
@@ -79,7 +78,7 @@ public class UnionLib {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-					return new ConfigScreen(previousScreen, Config.class, new TranslationTextComponent("Config"));
+					return new ConfigScreen(previousScreen, Config.class, new TranslatableComponent("Config"));
 				}
 			};
 		}
@@ -103,11 +102,11 @@ public class UnionLib {
 
 
 	/**
-	 * Returns the players accessory inventory. If this is ever edited, save it with {@link UnionLib#saveInventory(PlayerEntity, UnionInventory)}
+	 * Returns the players accessory inventory. If this is ever edited, save it with {@link UnionLib#saveInventory(Player, UnionInventory)}
 	 * @param player
 	 * @return
 	 */
-	public static UnionInventory getAccessoryInventory (PlayerEntity player) {
+	public static UnionInventory getAccessoryInventory (Player player) {
 		UnionInventory inventory = new UnionInventory(player);
 		inventory.read(player.getPersistentData().getList(INVENTORY_KEY, 10));
 		return inventory;
@@ -118,7 +117,7 @@ public class UnionLib {
 	 * @param player
 	 * @param inventory
 	 */
-	public static void saveInventory(PlayerEntity player, UnionInventory inventory) {
+	public static void saveInventory(Player player, UnionInventory inventory) {
 		player.getPersistentData().put(INVENTORY_KEY, inventory.write());
 	}
 }

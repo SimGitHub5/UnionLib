@@ -2,20 +2,20 @@ package com.stereowalker.unionlib.inventory;
 
 import com.stereowalker.unionlib.item.AccessoryItem;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
-public class UnionInventory extends Inventory {
-	public final PlayerEntity player;
-	public UnionInventory(PlayerEntity player) {
+public class UnionInventory extends SimpleContainer {
+	public final Player player;
+	public UnionInventory(Player player) {
 		super(9);
 		this.player = player;
 	}
 
-	//	   public void openInventory(PlayerEntity player) {
+	//	   public void openInventory(Player player) {
 	//	      if (this.associatedChest != null) {
 	//	         this.associatedChest.openChest();
 	//	      }
@@ -23,7 +23,7 @@ public class UnionInventory extends Inventory {
 	//	      super.openInventory(player);
 	//	   }
 	//
-	//	   public void closeInventory(PlayerEntity player) {
+	//	   public void closeInventory(Player player) {
 	//	      if (this.associatedChest != null) {
 	//	         this.associatedChest.closeChest();
 	//	      }
@@ -32,30 +32,30 @@ public class UnionInventory extends Inventory {
 	//	      this.associatedChest = null;
 	//	   }
 
-	public void read(ListNBT p_70486_1_) {
-		for(int i = 0; i < this.getSizeInventory(); ++i) {
-			this.setInventorySlotContents(i, ItemStack.EMPTY);
+	public void read(ListTag p_70486_1_) {
+		for(int i = 0; i < this.getContainerSize(); ++i) {
+			this.setItem(i, ItemStack.EMPTY);
 		}
 
 		for(int k = 0; k < p_70486_1_.size(); ++k) {
-			CompoundNBT compoundnbt = p_70486_1_.getCompound(k);
+			CompoundTag compoundnbt = p_70486_1_.getCompound(k);
 			int j = compoundnbt.getByte("Slot") & 255;
-			if (j >= 0 && j < this.getSizeInventory()) {
-				this.setInventorySlotContents(j, ItemStack.read(compoundnbt));
+			if (j >= 0 && j < this.getContainerSize()) {
+				this.setItem(j, ItemStack.of(compoundnbt));
 			}
 		}
 
 	}
 
-	public ListNBT write() {
-		ListNBT listnbt = new ListNBT();
+	public ListTag write() {
+		ListTag listnbt = new ListTag();
 
-		for(int i = 0; i < this.getSizeInventory(); ++i) {
-			ItemStack itemstack = this.getStackInSlot(i);
+		for(int i = 0; i < this.getContainerSize(); ++i) {
+			ItemStack itemstack = this.getItem(i);
 			if (!itemstack.isEmpty()) {
-				CompoundNBT compoundnbt = new CompoundNBT();
+				CompoundTag compoundnbt = new CompoundTag();
 				compoundnbt.putByte("Slot", (byte)i);
-				itemstack.write(compoundnbt);
+				itemstack.save(compoundnbt);
 				listnbt.add(compoundnbt);
 			}
 		}
@@ -68,10 +68,10 @@ public class UnionInventory extends Inventory {
 	 * receiving a block.
 	 */
 	public void tick() {
-		for (int i = 0; i < this.getSizeInventory(); i++) {
-			if (!this.getStackInSlot(i).isEmpty()) {
-				if (this.getStackInSlot(i).getItem() instanceof AccessoryItem) {
-					((AccessoryItem)this.getStackInSlot(i).getItem()).accessoryTick(player.world, player, this.getStackInSlot(i), i);
+		for (int i = 0; i < this.getContainerSize(); i++) {
+			if (!this.getItem(i).isEmpty()) {
+				if (this.getItem(i).getItem() instanceof AccessoryItem) {
+					((AccessoryItem)this.getItem(i).getItem()).accessoryTick(player.level, player, this.getItem(i), i);
 				}
 			}
 		}
@@ -81,11 +81,11 @@ public class UnionInventory extends Inventory {
 	 * Drop all armor and main inventory items.
 	 */
 	public void dropAllItems() {
-		for(int i = 0; i < this.getSizeInventory(); ++i) {
-			ItemStack itemstack = this.getStackInSlot(i);
+		for(int i = 0; i < this.getContainerSize(); ++i) {
+			ItemStack itemstack = this.getItem(i);
 			if (!itemstack.isEmpty()) {
-				this.player.dropItem(itemstack, true, false);
-				this.setInventorySlotContents(i, ItemStack.EMPTY);
+				this.player.drop(itemstack, true, false);
+				this.setItem(i, ItemStack.EMPTY);
 			}
 		}
 
@@ -95,23 +95,23 @@ public class UnionInventory extends Inventory {
 	 * Copy the ItemStack contents from another InventoryPlayer instance
 	 */
 	public void copyInventory(UnionInventory playerInventory) {
-		for(int i = 0; i < this.getSizeInventory(); ++i) {
-			this.setInventorySlotContents(i, playerInventory.getStackInSlot(i));
+		for(int i = 0; i < this.getContainerSize(); ++i) {
+			this.setItem(i, playerInventory.getItem(i));
 		}
 	}
 
 	/**
 	 * Don't rename this method to canInteractWith due to conflicts with Container
 	 */
-	public boolean isUsableByPlayer(PlayerEntity player) {
+	public boolean isUsableByPlayer(Player player) {
 		return true;
 	}
 	
 	public ItemStack getFirstRing() {
-		return this.getStackInSlot(3);
+		return this.getItem(3);
 	}
 	
 	public ItemStack getSecondRing() {
-		return this.getStackInSlot(6);
+		return this.getItem(6);
 	}
 }

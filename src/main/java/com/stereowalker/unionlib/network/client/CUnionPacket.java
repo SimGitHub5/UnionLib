@@ -4,10 +4,10 @@ import java.util.function.Supplier;
 
 import com.stereowalker.unionlib.network.BasePacket;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public abstract class CUnionPacket extends BasePacket{
 
@@ -15,7 +15,7 @@ public abstract class CUnionPacket extends BasePacket{
 		super(channel);
 	}
 	
-	public CUnionPacket(PacketBuffer packetBuffer, SimpleChannel channel) {
+	public CUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
 		super(packetBuffer, channel);
 	}
 
@@ -23,7 +23,7 @@ public abstract class CUnionPacket extends BasePacket{
 	public void message(final Supplier<NetworkEvent.Context> contextSupplier) {
 		final NetworkEvent.Context context = contextSupplier.get();
 		context.enqueueWork(() -> {
-			final ServerPlayerEntity sender = context.getSender();
+			final ServerPlayer sender = context.getSender();
 			if (sender == null) {
 				return;
 			}
@@ -31,7 +31,7 @@ public abstract class CUnionPacket extends BasePacket{
 		});
 	}
 	
-	public abstract boolean handleOnServer(ServerPlayerEntity sender);
+	public abstract boolean handleOnServer(ServerPlayer sender);
 
 	public void send() {
 		this.channel.sendToServer(this);

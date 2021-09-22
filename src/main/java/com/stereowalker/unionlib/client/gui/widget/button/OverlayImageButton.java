@@ -1,14 +1,14 @@
 package com.stereowalker.unionlib.client.gui.widget.button;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,15 +20,15 @@ public class OverlayImageButton extends ImageButton {
 	private final int textureWidth;
 	private final int textureHeight;
 
-	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.IPressable onPress, ITextComponent title) {
+	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
 		this(x, y, width, height, xTexStart, yTexStart, 20, UnionLib.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
-	
-	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.IPressable onPress, ITextComponent title) {
+
+	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
 		this(x, y, width, height, xTexStart, yTexStart, yDiffText, UnionLib.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
-	
-	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation resourceLocation, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.IPressable onPress, ITextComponent title) {
+
+	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation resourceLocation, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
 		super(x, y, width, height, xTexStart, yTexStart, yDiffText, resourceLocation, textureWidth, textureHeight, onPress, title);
 		this.overlayLocation = overlayLocation;
 		this.textureWidth = textureWidth;
@@ -38,10 +38,10 @@ public class OverlayImageButton extends ImageButton {
 	}
 
 	@Override
-	public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.getTextureManager().bindTexture(this.overlayLocation);
+	public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, this.overlayLocation);
 		int i = this.yTexStart;
 		RenderSystem.enableDepthTest();
 		blit(matrixStack, this.x, this.y, (float)this.xTexStart, (float)i, this.width, this.height, this.textureWidth, this.textureHeight/2);

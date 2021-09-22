@@ -2,32 +2,31 @@ package com.stereowalker.unionlib.resource;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Predicate;
 
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IFutureReloadListener;
-import net.minecraft.resources.IResourceManager;
-import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 
-public interface IResourceReloadListener<T> extends ISelectiveResourceReloadListener {
+public interface IResourceReloadListener<T> extends ResourceManagerReloadListener {
 
 	@Override
-	default void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+	default void onResourceManagerReload(
+			ResourceManager resourceManager/* , Predicate<IResourceType> resourcePredicate */) {
 		
 	}
 	
 	@Override
-	default CompletableFuture<Void> reload(IFutureReloadListener.IStage stage, IResourceManager resourceManager, IProfiler preparationsProfiler, IProfiler reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+	default CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier stage, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
 		return load(resourceManager, preparationsProfiler, backgroundExecutor)
-				.thenCompose(stage::markCompleteAwaitingOthers)
+				.thenCompose(stage::wait)
 				.thenAccept((value) -> {
 						apply(value, resourceManager, reloadProfiler, gameExecutor);
 				});
 
 	}
 
-	CompletableFuture<T> load(IResourceManager resourceManager, IProfiler profiler, Executor executor);
+	CompletableFuture<T> load(ResourceManager resourceManager, ProfilerFiller profiler, Executor executor);
 
-	CompletableFuture<Void> apply (T value, IResourceManager resourceManager, IProfiler profiler, Executor executor);
+	CompletableFuture<Void> apply (T value, ResourceManager resourceManager, ProfilerFiller profiler, Executor executor);
 }

@@ -2,10 +2,10 @@ package com.stereowalker.unionlib.event.item;
 
 import com.google.common.collect.HashMultimap;
 
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -21,15 +21,15 @@ import net.minecraftforge.eventbus.api.Event;
 public class ItemAttributeEvent extends Event {
 	private final ItemStack stack;
 	private final HashMultimap<Attribute, AttributeModifier> attributeMap;
-	private final EquipmentSlotType equipmentSlot;
+	private final EquipmentSlot equipmentSlot;
 	
-	public ItemAttributeEvent(HashMultimap<Attribute, AttributeModifier> attributeMap, EquipmentSlotType equipmentSlot, ItemStack stack) {
+	public ItemAttributeEvent(HashMultimap<Attribute, AttributeModifier> attributeMap, EquipmentSlot equipmentSlot, ItemStack stack) {
 		this.stack = stack;
 		this.equipmentSlot = equipmentSlot;
 		this.attributeMap = attributeMap;
 	}
 	
-	public EquipmentSlotType getEquipmentSlot() {
+	public EquipmentSlot getEquipmentSlot() {
 		return equipmentSlot;
 	}
 	

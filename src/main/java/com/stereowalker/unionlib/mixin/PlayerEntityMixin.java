@@ -6,33 +6,33 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
 
-    private PlayerEntityMixin(EntityType<? extends LivingEntity> type, World world) {
+    private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
 
     @ModifyVariable(
-            method = "getDigSpeed(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)F",
+            method = "getDigSpeed(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)F",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/potion/EffectUtils;hasMiningSpeedup(Lnet/minecraft/entity/LivingEntity;)Z"
+                    target = "Lnet/minecraft/world/effect/MobEffectUtil;hasDigSpeed(Lnet/minecraft/world/entity/LivingEntity;)Z"
             ),
             index = 3
     )
     private float getDigSpeed(float f) {
-        ModifiableAttributeInstance instance = this.getAttribute(UAttributes.DIG_SPEED);
+        AttributeInstance instance = this.getAttribute(UAttributes.DIG_SPEED);
 
         if(instance != null) {
-        	for (AttributeModifier modifier : instance.getModifierListCopy()) {
+        	for (AttributeModifier modifier : instance.getModifiers()) {
         		float amount = (float) modifier.getAmount();
         		
         		if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {

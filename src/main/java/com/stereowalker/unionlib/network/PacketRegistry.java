@@ -7,8 +7,9 @@ import com.stereowalker.unionlib.network.client.play.CUnionInventoryPacket;
 import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
 import com.stereowalker.unionlib.network.server.play.SCapePacket;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+
 
 
 public class PacketRegistry {
@@ -20,7 +21,7 @@ public class PacketRegistry {
 		registerMessage(channel, netID++, SCapePacket.class, (packetBuffer) -> {return new SCapePacket(packetBuffer);});
 	}
 
-    public static <T extends BasePacket> void registerMessage(SimpleChannel channel, int index, Class<T> messageType, Function<PacketBuffer, T> decoder) {
+    public static <T extends BasePacket> void registerMessage(SimpleChannel channel, int index, Class<T> messageType, Function<FriendlyByteBuf, T> decoder) {
         channel.registerMessage(index, messageType, (packet,buffer) -> { packet.encode(buffer); }, decoder, (packet,context) -> { packet.message(context);});
     }
 }

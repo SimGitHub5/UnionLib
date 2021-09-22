@@ -2,11 +2,11 @@ package com.stereowalker.unionlib.item;
 
 import java.util.function.Predicate;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class AccessoryItem extends Item {
 	AccessorySlotType accessoryType;
@@ -17,7 +17,7 @@ public class AccessoryItem extends Item {
 	}
 
 	//	@Override
-	//	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+	//	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 	//		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 	//		if (itemSlot == 9) {
 	//			if (entityIn instanceof LivingEntity)
@@ -53,11 +53,11 @@ public class AccessoryItem extends Item {
 	//		return ItemStack.EMPTY;
 	//	}
 
-	public void accessoryTick(World world, LivingEntity entity, ItemStack stack, int slot) {
+	public void accessoryTick(Level world, LivingEntity entity, ItemStack stack, int slot) {
 		
 	}
 
-	public ITextComponent accessoryInformation() {
+	public Component accessoryInformation() {
 		return null;
 	}
 	

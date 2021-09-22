@@ -1,6 +1,7 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
+
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,7 +17,7 @@ public class ScreenHelper {
 
 	}
 	
-	static MainWindow window = Minecraft.getInstance().getMainWindow();
+	static Window window = Minecraft.getInstance().getWindow();
 	
 	public static int getYOffset(ScreenOffset pos) {
 		if (pos.equals(ScreenOffset.TOP_LEFT) || pos.equals(ScreenOffset.TOP) || pos.equals(ScreenOffset.TOP_RIGHT)) {
@@ -24,11 +25,11 @@ public class ScreenHelper {
 		}
 		
 		if (pos.equals(ScreenOffset.LEFT) || pos.equals(ScreenOffset.CENTER) || pos.equals(ScreenOffset.RIGHT)) {
-			return window.getScaledHeight() / 2;
+			return window.getGuiScaledHeight() / 2;
 		}
 		
 		if (pos.equals(ScreenOffset.BOTTOM_LEFT) || pos.equals(ScreenOffset.BOTTOM) || pos.equals(ScreenOffset.BOTTOM_RIGHT)) {
-			return window.getScaledHeight();
+			return window.getGuiScaledHeight();
 		}
 		return 0;
 	}
@@ -39,11 +40,11 @@ public class ScreenHelper {
 		}
 		
 		if (pos.equals(ScreenOffset.TOP) || pos.equals(ScreenOffset.CENTER) || pos.equals(ScreenOffset.BOTTOM)) {
-			return window.getScaledWidth() / 2;
+			return window.getGuiScaledHeight() / 2;
 		}
 		
 		if (pos.equals(ScreenOffset.TOP_RIGHT) || pos.equals(ScreenOffset.RIGHT) || pos.equals(ScreenOffset.BOTTOM_RIGHT)) {
-			return window.getScaledWidth();
+			return window.getGuiScaledHeight();
 		}
 		return 0;
 	}

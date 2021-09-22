@@ -21,9 +21,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 @EventBusSubscriber(bus = Bus.MOD)
@@ -159,7 +160,7 @@ public class ConfigBuilder {
 						String h = j+"\n";
 						
 						String comment = "";
-						List<ITextComponent> saved_comment = new ArrayList<ITextComponent>();
+						List<Component> saved_comment = new ArrayList<Component>();
 						if (field.isAnnotationPresent(UnionConfig.Comment.class)) {
 							String config_comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
 							
@@ -172,19 +173,19 @@ public class ConfigBuilder {
 							comment = h+config_comment+k+enumComment+"Default: "+field.get(null)+k;
 							
 							for (String s : config_comment.split("\n")) {
-								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.AQUA));
+								saved_comment.add(new TextComponent(s).withStyle(ChatFormatting.AQUA));
 							}
 							for (String s : enumComment.split("\n")) {
-								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.YELLOW));
+								saved_comment.add(new TextComponent(s).withStyle(ChatFormatting.YELLOW));
 							}
-							saved_comment.add(new StringTextComponent("Default: "+field.get(null)).mergeStyle(TextFormatting.GREEN));
+							saved_comment.add(new TextComponent("Default: "+field.get(null)).withStyle(ChatFormatting.GREEN));
 						} else {
 							comment = h+enumComment+"Default: "+field.get(null)+k;
 							
 							for (String s : enumComment.split("\n")) {
-								saved_comment.add(new StringTextComponent(s).mergeStyle(TextFormatting.YELLOW));
+								saved_comment.add(new TextComponent(s).withStyle(ChatFormatting.YELLOW));
 							}
-							saved_comment.add(new StringTextComponent("Default: "+field.get(null)).mergeStyle(TextFormatting.GREEN));
+							saved_comment.add(new TextComponent("Default: "+field.get(null)).withStyle(ChatFormatting.GREEN));
 						}
 						ForgeConfigSpec.Builder commented_builder = builder.comment(comment);
 						
@@ -337,13 +338,13 @@ public class ConfigBuilder {
 	}
 
 	@SubscribeEvent
-	public static void onReload(ModConfig.ModConfigEvent event) {
+	public static void onReload(ModConfigEvent event) {
 		reload();
 		System.out.println("From the event itself");
 	}
 
 	@SubscribeEvent
-	public static void onReload(ModConfig.Reloading event) {
+	public static void onReload(ModConfigEvent.Reloading event) {
 		reload();
 	}
 	
@@ -367,7 +368,7 @@ public class ConfigBuilder {
 	}
 
 	@SubscribeEvent
-	public static void onLoad(ModConfig.Loading event) {
+	public static void onLoad(ModConfigEvent.Loading event) {
 		load();
 	}
 	
@@ -379,11 +380,11 @@ public class ConfigBuilder {
     
     public static class Holder {
     	protected final ForgeConfigSpec.ConfigValue<?> value;
-    	protected final List<ITextComponent> comments;
+    	protected final List<Component> comments;
     	protected final	boolean usesSider;
     	protected final double min;
     	protected final double max;
-    	public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<ITextComponent> comments, final boolean usesSider, final double min, final double max) {
+    	public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<Component> comments, final boolean usesSider, final double min, final double max) {
     		this.comments = comments;
     		this.value = configvalue;
     		this.usesSider = usesSider;
@@ -393,7 +394,7 @@ public class ConfigBuilder {
 		public ForgeConfigSpec.ConfigValue<?> getValue() {
 			return value;
 		}
-		public List<ITextComponent> getComments() {
+		public List<Component> getComments() {
 			return comments;
 		}
 		public boolean isUsesSider() {

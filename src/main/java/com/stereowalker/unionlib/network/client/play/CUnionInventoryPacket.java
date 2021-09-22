@@ -6,11 +6,11 @@ import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 import com.stereowalker.unionlib.network.client.CUnionPacket;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
 
 public class CUnionInventoryPacket extends CUnionPacket {
 	private UUID uuid;
@@ -20,24 +20,24 @@ public class CUnionInventoryPacket extends CUnionPacket {
 		this.uuid = uuid;
 	}
 
-	public CUnionInventoryPacket (final PacketBuffer packetBuffer) {
+	public CUnionInventoryPacket (final FriendlyByteBuf packetBuffer) {
 		super(packetBuffer, UnionLib.CHANNEL);
 		this.uuid = (new UUID(packetBuffer.readLong(), packetBuffer.readLong()));
 	}
 
 	@Override
-	public void encode(final PacketBuffer packetBuffer) {
+	public void encode(final FriendlyByteBuf packetBuffer) {
 		packetBuffer.writeLong(this.uuid.getMostSignificantBits());
 		packetBuffer.writeLong(this.uuid.getLeastSignificantBits());
 	}
 
 	@Override
-	public boolean handleOnServer(ServerPlayerEntity sender) {
+	public boolean handleOnServer(ServerPlayer sender) {
 		final UUID uuid = this.uuid;
-		if (uuid.equals(PlayerEntity.getUUID(sender.getGameProfile()))) {
-			sender.openContainer(new SimpleNamedContainerProvider((p_220270_2_, p_220270_3_, p_220270_4_) -> {
-				return new UnionContainer(p_220270_2_, p_220270_3_, UnionLib.getAccessoryInventory(sender), sender.world.isRemote, p_220270_4_);
-			}, new TranslationTextComponent("")));
+		if (uuid.equals(Player.createPlayerUUID(sender.getGameProfile()))) {
+			sender.openMenu(new SimpleMenuProvider((p_220270_2_, p_220270_3_, p_220270_4_) -> {
+				return new UnionContainer(p_220270_2_, p_220270_3_, UnionLib.getAccessoryInventory(sender), sender.level.isClientSide, p_220270_4_);
+			}, new TranslatableComponent("")));
 		}
 		return true;
 	}

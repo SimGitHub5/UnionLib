@@ -4,8 +4,8 @@ import java.util.function.Predicate;
 
 import com.stereowalker.unionlib.item.AccessoryItem.AccessorySlotType;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemFilters {
 	public static final Predicate<ItemStack> RINGS = (stack) -> {

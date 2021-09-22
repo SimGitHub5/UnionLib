@@ -15,52 +15,19 @@ var LineNumberNode = Java.type('org.objectweb.asm.tree.LineNumberNode');
 function initializeCoreMod() {
 
     return {
-
-        // Structure Event Patch
-        'structure_start_patch': {
-            'target': {
-                'type': 'CLASS',
-                'name': 'net.minecraft.world.gen.feature.structure.StructureStart'
-            },
-            'transformer': function(classNode) {
-                patchMethod([{
-                    obfName: "func_230366_a_",
-                    name: "func_230366_a_",
-                    desc: "(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;)V",
-                    patches: [patchStructureStartfunc_230366_a_1, patchStructureStartfunc_230366_a_2]
-                }], classNode, "StructureStart");
-                return classNode;
-            }
-        },
 		// Forge's event doesn't include the slot involved in the crafting, so we do this ourselves
         'crafting_result_slot_patch': {
             'target': {
                 'type': 'CLASS',
-                'name': 'net.minecraft.inventory.container.CraftingResultSlot'
+                'name': 'net.minecraft.world.inventory.ResultSlot'
             },
             'transformer': function(classNode) {
                 patchMethod([{
-                    obfName: "func_75208_c",
-                    name: "onCrafting",
-                    desc: "(Lnet/minecraft/item/ItemStack;)V",
+                    obfName: "m_5845_",
+                    name: "checkTakeAchievements",
+                    desc: "(Lnet/minecraft/world/item/ItemStack;)V",
                     patches: [patchCraftingResultSlotOnCrafting]
-                }], classNode, "CraftingResultSlot");
-                return classNode;
-            }
-        },
-		// apply custom attributes for every item
-        'item_stack_patch': {
-            'target': {
-                'type': 'CLASS',
-                'name': 'net.minecraft.item.ItemStack'
-            },
-            'transformer': function(classNode) {
-                patchMethod([{
-                    obfName: "func_111283_C",
-                    name: "getAttributeModifiers",
-                    desc: "(Lnet/minecraft/inventory/EquipmentSlotType;)Lcom/google/common/collect/Multimap;",
-                    patches: [patchItemStackGetAttributeModifiers]
-                }], classNode, "ItemStack");
+                }], classNode, "ResultSlot");
                 return classNode;
             }
         }
@@ -125,58 +92,6 @@ function patchInstructions(method, filter, action, obfuscated) {
     }
 }
 
-var patchStructureStartfunc_230366_a_1 = {
-    filter: function(node, obfuscated) {
-        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructureStart", "func_202500_a", "recalculateStructureSize", "()V")) {
-            return node;
-        }
-    },
-    action: function(node, instructions, obfuscated) {
-        var insnList = new InsnList();
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-        insnList.add(generateHook("onStructureAddedHook", "(Lnet/minecraft/world/gen/feature/structure/StructureStart;Lnet/minecraft/world/ISeedReader;)V"));
-        instructions.insert(node, insnList);
-    }
-};
-
-var patchStructureStartfunc_230366_a_2 = {
-    filter: function(node, obfuscated) {
-        if (matchesHook(node, "net/minecraft/world/gen/feature/structure/StructurePiece", "func_230383_a_", "func_230383_a_", "(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z")) {
-            return node;
-        }
-    },
-    action: function(node, instructions, obfuscated) {
-        var insnList = new InsnList();
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 12));
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-        insnList.add(generateHook("onStructurePieceAddedHook", "(ZLnet/minecraft/world/gen/feature/structure/StructurePiece;Lnet/minecraft/world/ISeedReader;)Z"));
-        instructions.insert(node, insnList);
-    }
-};
-
-var patchItemStackGetAttributeModifiers = {
-    filter: function(node, obfuscated) {
-        if (node instanceof VarInsnNode && node.getOpcode().equals(Opcodes.ALOAD) && node.var.equals(1)) {
-            var nextNode = node.getNext();
-            if (nextNode instanceof VarInsnNode && nextNode.getOpcode().equals(Opcodes.ALOAD) && nextNode.var.equals(0)) {
-                nextNode = nextNode.getNext();
-                // getAttributeModifiers is a Forge method
-                if (matchesMethod(nextNode, "net/minecraft/item/Item", "getAttributeModifiers", "getAttributeModifiers", "(Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;")) {
-                    return nextNode;
-                }
-            }
-        }
-    },
-    action: function(node, instructions, obfuscated) {
-        var insnList = new InsnList();
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-        insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        insnList.add(generateHook("adjustAttributeMap", "(Lcom/google/common/collect/Multimap;Lnet/minecraft/inventory/EquipmentSlotType;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;"));
-		instructions.insert(node, insnList);
-    }
-};
-
 var patchCraftingResultSlotOnCrafting = {
     filter: function(node, obfuscated) {
 		debug("");
@@ -190,19 +105,19 @@ var patchCraftingResultSlotOnCrafting = {
 		}
 		debug("*****************");
 		debug("");
-        if (matchesHook(node, "net/minecraft/item/ItemStack", "func_77980_a", "onCrafting", "(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V")) {
+        if (matchesHook(node, "net/minecraft/world/item/ItemStack", "m_41678_", "onCraftedBy", "(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;I)V")) {
             return node;
         }
     },
     action: function(node, instructions, obfuscated) {
         var insnList = new InsnList();
 		insnList.add(new VarInsnNode(Opcodes.ALOAD, null));
-        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/inventory/container/CraftingResultSlot", obfuscated ? "field_75239_a" : "craftMatrix", "Lnet/minecraft/inventory/CraftingInventory;"));
+        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/inventory/ResultSlot", obfuscated ? "f_40162_" : "craftSlots", "Lnet/minecraft/world/inventory/CraftingContainer;"));
         insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		insnList.add(new VarInsnNode(Opcodes.ALOAD, null));
-        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/inventory/container/CraftingResultSlot", obfuscated ? "field_75238_b" : "player", "Lnet/minecraft/entity/player/PlayerEntity;"));
+        insnList.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/inventory/ResultSlot", obfuscated ? "f_40163_" : "player", "Lnet/minecraft/world/entity/player/Player;"));
         insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-        insnList.add(generateHook("firePlayerCraftingEvent", "(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/inventory/container/CraftingResultSlot;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V"));
+        insnList.add(generateHook("firePlayerCraftingEvent", "(Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultSlot;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V"));
 		
 		debug("#########MC#########");
 		if(!!node.owner)debug("MC Node Owner: "+node.owner);
@@ -271,7 +186,5 @@ function log(message) {
 }
 
 function debug(message) {
-	if (false) {
-		print("[UnionLib Transformer Debug]: " + message);
-	}
+	//print("[UnionLib Transformer Debug]: " + message);
 }

@@ -5,10 +5,10 @@ import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 import com.stereowalker.unionlib.item.UItems;
 
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.entity.EntityType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -25,7 +25,7 @@ public class UnionLibRegistryEvents
 	@OnlyIn(Dist.CLIENT)
 	public static void onTextureStitch(TextureStitchEvent.Pre event)
 	{
-		if(event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+		if(event.getMap().location().equals(TextureAtlas.LOCATION_BLOCKS))
 		{
 			event.addSprite(UnionContainer.EMPTY_ACCESSORY_SLOT_RING);
 			event.addSprite(UnionContainer.EMPTY_ACCESSORY_SLOT_NECKLACE);
@@ -40,7 +40,7 @@ public class UnionLibRegistryEvents
 	}
 	
 	@SubscribeEvent
-	public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+	public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
 		UContainerType.registerAll(event.getRegistry());
 	}
 	

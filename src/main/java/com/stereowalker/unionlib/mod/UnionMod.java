@@ -6,23 +6,23 @@ import org.apache.logging.log4j.Logger;
 import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.MavenVersionStringHelper;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmllegacy.MavenVersionStringHelper;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 public class UnionMod {
 	private String modid;
 	private LoadType loadType;
 	private ResourceLocation modTexture;
-	private ModInfo modInfo;
+	private IModInfo modInfo;
 	private final String NETWORK_PROTOCOL_VERSION = "1";
 
 	public final SimpleChannel channel;
@@ -35,15 +35,16 @@ public class UnionMod {
 		this.channel = NetworkRegistry.newSimpleChannel(location("main_simple_channel"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
 		if (shouldLoadMod) {
 			UnionLib.mods.add(this);
-			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> {
-				return (minecraft, parentScreen) -> {
+			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {
+				return new ConfigGuiHandler.ConfigGuiFactory((minecraft, parentScreen) -> {
 					return getConfigScreen(minecraft, parentScreen);
-				};
+				});
+
 			});
 			registerMessages(channel);
 		}
 	}
-	
+
 	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType) {
 		this(modid, modTexture, loadType, true);
 	}
@@ -55,7 +56,7 @@ public class UnionMod {
 	public String getModid() {
 		return modid;
 	}
-	
+
 	public Logger getLogger() {
 		return LogManager.getLogger(modid);
 	}
@@ -68,22 +69,22 @@ public class UnionMod {
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return null;
 	}
-	
+
 	public ResourceLocation location(String name)
 	{
 		return new ResourceLocation(modid, name);
 	}
-	
+
 	public String locationString(String name)
 	{
 		return modid+":"+name;
 	}
-	
+
 	public void registerMessages(SimpleChannel channel) {
-		
+
 	}
 
-	public ModInfo getModInfo() {
+	public IModInfo getModInfo() {
 		ModList.get().getMods().forEach((mod) -> {
 			if (mod.getModId() == getModid()) {
 				modInfo = mod;
@@ -91,7 +92,7 @@ public class UnionMod {
 		});
 		return modInfo;
 	}
-	
+
 	public String getVersion() {
 		if (getModInfo() != null) {
 			return MavenVersionStringHelper.artifactVersionToString(getModInfo().getVersion());

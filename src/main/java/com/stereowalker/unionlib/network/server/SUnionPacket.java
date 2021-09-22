@@ -6,17 +6,17 @@ import java.util.function.Supplier;
 import com.stereowalker.unionlib.network.BasePacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public abstract class SUnionPacket extends BasePacket {
 	
@@ -24,7 +24,7 @@ public abstract class SUnionPacket extends BasePacket {
 		super(channel);
 	}
 	
-	public SUnionPacket(PacketBuffer packetBuffer, SimpleChannel channel) {
+	public SUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
 		super(packetBuffer, channel);
 	}
 
@@ -43,20 +43,20 @@ public abstract class SUnionPacket extends BasePacket {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract boolean handleOnClient(ClientPlayerEntity player);
+	public abstract boolean handleOnClient(LocalPlayer player);
 
-	public void send(ServerPlayerEntity playerEntity) {
-		this.channel.sendTo(this, playerEntity.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+	public void send(ServerPlayer playerEntity) {
+		this.channel.sendTo(this, playerEntity.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 	}
 
-	public void send(ServerWorld world) {
-		for (ServerPlayerEntity playerEntity : world.getPlayers()) {
+	public void send(ServerLevel world) {
+		for (ServerPlayer playerEntity : world.players()) {
 			send(playerEntity);
 		}
 	}
 
 	public void send(MinecraftServer server) {
-		for (ServerPlayerEntity playerEntity : server.getPlayerList().getPlayers()) {
+		for (ServerPlayer playerEntity : server.getPlayerList().getPlayers()) {
 			send(playerEntity);
 		}
 	}

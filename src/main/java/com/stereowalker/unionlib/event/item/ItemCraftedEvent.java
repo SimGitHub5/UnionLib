@@ -2,23 +2,23 @@ package com.stereowalker.unionlib.event.item;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
- * This Event also takes the CraftingResultSlot
+ * This Event also takes the ResultSlot
  * @author Stereowalker
  *
  */
 public class ItemCraftedEvent extends PlayerEvent {
     @Nonnull
     private final ItemStack craftingStack;
-    private final IInventory craftMatrix;
-    private final CraftingResultSlot resultSlot;
-    public ItemCraftedEvent(PlayerEntity player, @Nonnull ItemStack crafting, IInventory craftMatrix, CraftingResultSlot slot)
+    private final Container craftMatrix;
+    private final ResultSlot resultSlot;
+    public ItemCraftedEvent(Player player, @Nonnull ItemStack crafting, Container craftMatrix, ResultSlot slot)
     {
         super(player);
         this.craftingStack = crafting;
@@ -32,12 +32,12 @@ public class ItemCraftedEvent extends PlayerEvent {
         return this.craftingStack;
     }
 
-    public IInventory getCraftingMatrix()
+    public Container getCraftingMatrix()
     {
         return this.craftMatrix;
     }
 
-	public CraftingResultSlot getResultSlot() {
+	public ResultSlot getResultSlot() {
 		return resultSlot;
 	}
 }

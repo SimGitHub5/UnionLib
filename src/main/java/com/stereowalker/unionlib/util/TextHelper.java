@@ -1,15 +1,15 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 
 public class TextHelper {
 	public static boolean isFirstLeterVowel(String text) {
 		return text.toLowerCase().charAt(0) == 'a' || text.toLowerCase().charAt(0) == 'e' || text.toLowerCase().charAt(0) == 'i' || text.toLowerCase().charAt(0) == 'o' || text.toLowerCase().charAt(0) == 'u';
 	}
 
-	public static boolean isFirstLeterVowel(ITextComponent component) {
+	public static boolean isFirstLeterVowel(Component component) {
 		return isFirstLeterVowel(component.getString());
 	}
 
@@ -18,21 +18,21 @@ public class TextHelper {
 		else return isFirstLeterVowel(text) ? "an "+text : "a "+text;
 	}
 
-	public static ITextComponent articulatedComponent(ITextComponent component, boolean iaArticleCapital, boolean shouldArticleUseComponentStyle) {
-		IFormattableTextComponent comp;
+	public static Component articulatedComponent(Component component, boolean iaArticleCapital, boolean shouldArticleUseComponentStyle) {
+		MutableComponent comp;
 		
 		if (iaArticleCapital) {
-			comp = new StringTextComponent(isFirstLeterVowel(component) ? "An " : "A ");
+			comp = new TextComponent(isFirstLeterVowel(component) ? "An " : "A ");
 		}
 		else {
-			comp = new StringTextComponent(isFirstLeterVowel(component) ? "an " : "a ");
+			comp = new TextComponent(isFirstLeterVowel(component) ? "an " : "a ");
 		}
 		
 		if (shouldArticleUseComponentStyle && component.getStyle() != null) {
-			comp = (comp.mergeStyle(component.getStyle())).appendSibling(component);
+			comp = (comp.withStyle(component.getStyle())).append(component);
 		}
 		else {
-			comp = comp.appendSibling(component);
+			comp = comp.append(component);
 		}
 		
 		return comp;

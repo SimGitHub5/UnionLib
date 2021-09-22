@@ -24,10 +24,10 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientCape {
 	// Copied from SkinManager
@@ -68,7 +68,7 @@ public class ClientCape {
 	 *
 	 * @param player The player
 	 */
-	public static void queuePlayerCapeReplacement(final AbstractClientPlayerEntity player) {
+	public static void queuePlayerCapeReplacement(final AbstractClientPlayer player) {
 		final String displayName = player.getDisplayName().getString();
 
 		logger.info("Queueing cape replacement for " + displayName);
@@ -81,7 +81,7 @@ public class ClientCape {
 				return;
 			}
 
-			Minecraft.getInstance().deferTask(() -> replacePlayerCape(player));
+			Minecraft.getInstance().submitAsync(() -> replacePlayerCape(player));
 		});
 	}
 
@@ -90,16 +90,16 @@ public class ClientCape {
 	 *
 	 * @param player The player
 	 */
-	private static void replacePlayerCape(final AbstractClientPlayerEntity player) {
+	private static void replacePlayerCape(final AbstractClientPlayer player) {
 		final String displayName = player.getDisplayName().getString();
-		final NetworkPlayerInfo playerInfo = player.getPlayerInfo();
+		final PlayerInfo playerInfo = player.getPlayerInfo();
 		if (playerInfo == null) {
-			logger.info("NetworkPlayerInfo of "+displayName+" is null. Cannot add cape");
+			logger.info("PlayerInfo of "+displayName+" is null. Cannot add cape");
 			return;
 		}
-		final Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
-		playerTextures.put(MinecraftProfileTexture.Type.CAPE, new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(PlayerEntity.getUUID(player.getGameProfile()))+".png"));
-		logger.info("Looking for cape texture at " + new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(PlayerEntity.getUUID(player.getGameProfile()))+".png").getPath());
+		final Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
+		playerTextures.put(MinecraftProfileTexture.Type.CAPE, new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(Player.createPlayerUUID(player.getGameProfile()))+".png"));
+		logger.info("Looking for cape texture at " + new ResourceLocation(UnionLib.MOD_ID, "textures/cape/"+CAPES_LOCATION.get(Player.createPlayerUUID(player.getGameProfile()))+".png").getPath());
 		logger.info("Replaced cape of " + displayName);
 	}
 
@@ -111,7 +111,7 @@ public class ClientCape {
 	 * @param player The player
 	 * @return True if the player has a C.O.M.B.A.T. cape
 	 */
-	public static boolean doesPlayerNeedCapeClient(final AbstractClientPlayerEntity player) {
-		return CAPES_LOCATION.containsKey(PlayerEntity.getUUID(player.getGameProfile()));
+	public static boolean doesPlayerNeedCapeClient(final AbstractClientPlayer player) {
+		return CAPES_LOCATION.containsKey(Player.createPlayerUUID(player.getGameProfile()));
 	}
 }

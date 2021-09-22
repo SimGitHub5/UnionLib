@@ -3,23 +3,24 @@ package com.stereowalker.unionlib.client.gui.widget.list;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.gui.screen.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 import com.stereowalker.unionlib.mod.UnionMod;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.AbstractOptionList;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ModList extends AbstractOptionList<ModList.Entry> {
+public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 
 	public ModList(Minecraft mcIn, UnionModsScreen screen) {
 		super(mcIn, screen.width +45, screen.height, 43, screen.height - 32, 25);
@@ -38,7 +39,7 @@ public class ModList extends AbstractOptionList<ModList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract static class Entry extends AbstractOptionList.Entry<ModList.Entry> {
+	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ModList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -55,16 +56,16 @@ public class ModList extends AbstractOptionList<ModList.Entry> {
 			this.screen = screen;
 			
 			this.modImage = new OverlayImageButton(0, 0, 20, 20, 0, 0, 20, mod.getModTexture(), 20, 40, (onPress) -> {
-					}, new TranslationTextComponent("menu.button.union"));
+					}, new TranslatableComponent("menu.button.union"));
 			
-			this.configButton = new Button(0, 0, 200, 20, new TranslationTextComponent("union.gui.config"), (onPress) -> {
+			this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.config"), (onPress) -> {
 				if (this.mod.getConfigScreen(minecraft, this.screen) != null) {
-					minecraft.displayGuiScreen(mod.getConfigScreen(minecraft, this.screen));
+					minecraft.setScreen(mod.getConfigScreen(minecraft, this.screen));
 				}
 			});
 		}
 
-		public void render(MatrixStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			this.modImage.x = p_230432_4_;
 			this.modImage.y = p_230432_3_;
 			this.modImage.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
@@ -74,10 +75,17 @@ public class ModList extends AbstractOptionList<ModList.Entry> {
 			this.configButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 		}
 
-		public List<? extends IGuiEventListener> getEventListeners() {
+		@Override
+		public List<? extends GuiEventListener> children() {
 			return ImmutableList.of(this.modImage, this.configButton);
 		}
 
+		@Override
+		public List<? extends NarratableEntry> narratables() {
+			return ImmutableList.of(this.modImage, this.configButton);
+		}
+
+		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (this.modImage.mouseClicked(mouseX, mouseY, button)) {
 				return true;
@@ -86,6 +94,7 @@ public class ModList extends AbstractOptionList<ModList.Entry> {
 			}
 		}
 
+		@Override
 		public boolean mouseReleased(double mouseX, double mouseY, int button) {
 			return this.modImage.mouseReleased(mouseX, mouseY, button) || this.configButton.mouseReleased(mouseX, mouseY, button);
 		}

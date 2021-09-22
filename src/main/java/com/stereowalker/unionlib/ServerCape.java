@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Maps;
 import com.stereowalker.unionlib.network.server.play.SCapePacket;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ServerCape {
 	// Copied from SkinManager
@@ -35,7 +35,7 @@ public class ServerCape {
 	 *
 	 * @param player The player
 	 */
-	public static void queuePlayerCapeReplacementOnServer(final ServerPlayerEntity player) {
+	public static void queuePlayerCapeReplacementOnServer(final ServerPlayer player) {
 		THREAD_POOL.submit(() -> {
 			try {
 				Thread.sleep(100);
@@ -44,7 +44,7 @@ public class ServerCape {
 				return;
 			}
 
-			player.server.deferTask(() -> new SCapePacket(ServerCape.CAPES).send(player));
+			player.server.submitAsync(() -> new SCapePacket(ServerCape.CAPES).send(player));
 		});
 	}
 
@@ -56,7 +56,7 @@ public class ServerCape {
 	 * @param player The player
 	 * @return True if the player has a C.O.M.B.A.T. cape
 	 */
-	public static boolean doesPlayerNeedCape(final ServerPlayerEntity player) {
-		return CAPES.containsKey(PlayerEntity.getUUID(player.getGameProfile())) && CAPES.get(PlayerEntity.getUUID(player.getGameProfile()));
+	public static boolean doesPlayerNeedCape(final ServerPlayer player) {
+		return CAPES.containsKey(Player.createPlayerUUID(player.getGameProfile())) && CAPES.get(Player.createPlayerUUID(player.getGameProfile()));
 	}
 }

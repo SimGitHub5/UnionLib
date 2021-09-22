@@ -5,25 +5,25 @@ import java.util.List;
 
 import com.stereowalker.unionlib.UnionLib;
 
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class UContainerType {
-	public static final List<ContainerType<?>> CONTAINERTYPES = new ArrayList<ContainerType<?>>();
-	public static final ContainerType<UnionContainer> UNION = register("union_inventory", UnionContainer::new);
+	public static final List<MenuType<?>> CONTAINERTYPES = new ArrayList<MenuType<?>>();
+	public static final MenuType<UnionContainer> UNION = register("union_inventory", UnionContainer::new);
 
-	public static <T extends Container> ContainerType<T> register(String name, ContainerType.IFactory<T> factory) {
-		ContainerType<T> container = new ContainerType<>(factory);
+	public static <T extends AbstractContainerMenu> MenuType<T> register(String name, MenuType.MenuSupplier<T> factory) {
+		MenuType<T> container = new MenuType<>(factory);
 		container.setRegistryName(UnionLib.location(name));
 		CONTAINERTYPES.add(container);
 		return container;
 	}
 
-	public static void registerAll(IForgeRegistry<ContainerType<?>> registry) {
-		for(ContainerType<?> container : CONTAINERTYPES) {
+	public static void registerAll(IForgeRegistry<MenuType<?>> registry) {
+		for(MenuType<?> container : CONTAINERTYPES) {
 			registry.register(container);
-//			UnionLib.debug("Container: \""+container.getRegistryName().toString()+"\" registered");
+//			UnionLib.debug("AbstractContainerMenu: \""+container.getRegistryName().toString()+"\" registered");
 		}
 //		UnionLib.debug("All Containers Registered");
 	}

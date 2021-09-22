@@ -3,11 +3,11 @@ package com.stereowalker.unionlib.event;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.GameRules;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
@@ -19,8 +19,8 @@ public class BaseGameEvents {
 
 	@SubscribeEvent
 	public static void loadInventory(LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof ServerPlayerEntity) {
-			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityLiving();
+		if (event.getEntityLiving() instanceof ServerPlayer) {
+			ServerPlayer player = (ServerPlayer) event.getEntityLiving();
 			UnionInventory unionInventory = UnionLib.getAccessoryInventory(player);
 			unionInventory.tick();
 			if (!player.getPersistentData().contains(UnionLib.INVENTORY_KEY)) {
@@ -31,8 +31,8 @@ public class BaseGameEvents {
 
 	@SubscribeEvent
 	public static void dropInventoryItems(LootingLevelEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity) {
-			dropInventory((PlayerEntity) event.getEntityLiving());
+		if (event.getEntityLiving() instanceof Player) {
+			dropInventory((Player) event.getEntityLiving());
 		}
 	}
 
@@ -42,28 +42,28 @@ public class BaseGameEvents {
 		UnionInventory originalUnionInventory = UnionLib.getAccessoryInventory(event.getOriginal());
 		if (!event.isWasDeath()) {
 			newUnionInventory.copyInventory(originalUnionInventory);
-		} else if (event.getPlayer().world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || event.getOriginal().isSpectator()) {
+		} else if (event.getPlayer().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || event.getOriginal().isSpectator()) {
 			newUnionInventory.copyInventory(originalUnionInventory);
 		}
 		UnionLib.saveInventory(event.getPlayer(), newUnionInventory);
 		UnionLib.saveInventory(event.getOriginal(), originalUnionInventory);
 	}
 
-	protected static void dropInventory(PlayerEntity player) {
+	protected static void dropInventory(Player player) {
 		UnionInventory unionInventory = UnionLib.getAccessoryInventory(player);
-		if (!player.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+		if (!player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
 			destroyVanishingCursedItems(player);
 			unionInventory.dropAllItems();
 		}
 
 	}
 
-	protected static void destroyVanishingCursedItems(PlayerEntity player) {
+	protected static void destroyVanishingCursedItems(Player player) {
 		UnionInventory unionInventory = UnionLib.getAccessoryInventory(player);
-		for(int i = 0; i < unionInventory.getSizeInventory(); ++i) {
-			ItemStack itemstack = unionInventory.getStackInSlot(i);
+		for(int i = 0; i < unionInventory.getContainerSize(); ++i) {
+			ItemStack itemstack = unionInventory.getItem(i);
 			if (!itemstack.isEmpty() && EnchantmentHelper.hasVanishingCurse(itemstack)) {
-				unionInventory.removeStackFromSlot(i);
+				unionInventory.removeItemNoUpdate(i);
 			}
 		}
 

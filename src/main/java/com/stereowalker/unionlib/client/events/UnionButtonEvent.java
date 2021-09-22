@@ -5,13 +5,10 @@ import com.stereowalker.unionlib.client.gui.screen.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 import com.stereowalker.unionlib.config.Config;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
-import net.minecraft.client.gui.screen.IngameMenuScreen;
-import net.minecraft.client.gui.screen.MainMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -23,27 +20,19 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class UnionButtonEvent {
 	private static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = UnionLib.location("textures/gui/union_button.png");
 
-	public static Screen getCurrentScreen() {
-		return Minecraft.getInstance().currentScreen;
-	}
-
-	public static MouseHelper getMouse() {
-		return Minecraft.getInstance().mouseHelper;
-	}
-
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void drawButtons(GuiScreenEvent.InitGuiEvent event) {
 		if (Config.config_button) {
-		if(event.getGui() instanceof MainMenuScreen) {
+		if(event.getGui() instanceof TitleScreen) {
 			event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-				event.getGui().getMinecraft().displayGuiScreen(new UnionModsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.union")));
+				event.getGui().getMinecraft().setScreen(new UnionModsScreen(event.getGui()));
+			}, new TranslatableComponent("menu.button.union")));
 		}
-		if(event.getGui() instanceof IngameMenuScreen) {
+		if(event.getGui() instanceof PauseScreen) {
 			event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 120 + -16, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-				event.getGui().getMinecraft().displayGuiScreen(new UnionModsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.union")));
+				event.getGui().getMinecraft().setScreen(new UnionModsScreen(event.getGui()));
+			}, new TranslatableComponent("menu.button.union")));
 		}
 		}
 	}

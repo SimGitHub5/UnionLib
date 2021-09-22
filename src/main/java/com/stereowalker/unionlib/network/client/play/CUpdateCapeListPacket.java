@@ -6,8 +6,8 @@ import com.stereowalker.unionlib.ServerCape;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.network.client.CUnionPacket;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 public class CUpdateCapeListPacket extends CUnionPacket {
 	private UUID uuid;
@@ -19,21 +19,21 @@ public class CUpdateCapeListPacket extends CUnionPacket {
 		this.isCapeActive = isCapeActive;
 	}
 
-	public CUpdateCapeListPacket (final PacketBuffer packetBuffer) {
+	public CUpdateCapeListPacket (final FriendlyByteBuf packetBuffer) {
 		super(packetBuffer, UnionLib.CHANNEL);
 		this.uuid = (new UUID(packetBuffer.readLong(), packetBuffer.readLong()));
 		this.isCapeActive = packetBuffer.readBoolean();
 	}
 
 	@Override
-	public void encode(final PacketBuffer packetBuffer) {
+	public void encode(final FriendlyByteBuf packetBuffer) {
 		packetBuffer.writeLong(this.uuid.getMostSignificantBits());
 		packetBuffer.writeLong(this.uuid.getLeastSignificantBits());
 		packetBuffer.writeBoolean(this.isCapeActive);
 	}
 
 	@Override
-	public boolean handleOnServer(ServerPlayerEntity sender) {
+	public boolean handleOnServer(ServerPlayer sender) {
 		ServerCape.sendCapeDataToServer(this.uuid, this.isCapeActive);
 		return true;
 	}

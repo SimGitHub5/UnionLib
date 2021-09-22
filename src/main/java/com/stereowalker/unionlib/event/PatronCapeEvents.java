@@ -6,8 +6,8 @@ import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
 import com.stereowalker.unionlib.network.client.play.CQueueCapePacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -20,10 +20,10 @@ public class PatronCapeEvents {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void entityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.getEntity() instanceof AbstractClientPlayerEntity) {
-			if(ClientCape.doesPlayerNeedCapeClient((AbstractClientPlayerEntity) event.getEntity()) && ((AbstractClientPlayerEntity) event.getEntity()) == Minecraft.getInstance().player) {
+		if (event.getEntity() instanceof AbstractClientPlayer) {
+			if(ClientCape.doesPlayerNeedCapeClient((AbstractClientPlayer) event.getEntity()) && ((AbstractClientPlayer) event.getEntity()) == Minecraft.getInstance().player) {
 				//Update the server on who would prefer to display their cape or not
-				new CUpdateCapeListPacket(PlayerEntity.getUUID(((AbstractClientPlayerEntity) event.getEntity()).getGameProfile()), Config.display_cape).send();
+				new CUpdateCapeListPacket(Player.createPlayerUUID(((AbstractClientPlayer) event.getEntity()).getGameProfile()), Config.display_cape).send();
 			}
 			new CQueueCapePacket().send();
 		}

@@ -1,10 +1,10 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author Stereowalker
@@ -13,7 +13,7 @@ import net.minecraft.util.math.MathHelper;
 public class EntityHelper {
 
 	/**
-	 *should from {@link PlayerEntity}. Added because it doesn't allow to specify which level
+	 *should from {@link Player}. Added because it doesn't allow to specify which level
 	 * @param level
 	 * @return
 	 */
@@ -26,16 +26,16 @@ public class EntityHelper {
 	}
 
 	/**
-	 *should from {@link PlayerEntity}. Added because {@link PlayerEntity#experienceLevel} doesn't return the actual value when just the players levels are deducted
+	 *should from {@link Player}. Added because {@link Player#experienceLevel} doesn't return the actual value when just the players levels are deducted
 	 * @param player
 	 * @return The actual total experience of the player
 	 */
-	public static int getActualExperienceTotal(PlayerEntity player) {
+	public static int getActualExperienceTotal(Player player) {
 		int xpTot = 0;
 		for (int i = 0; i < player.experienceLevel; i++) {
 			xpTot += getXpBarCap(i);
 		}
-		int f = MathHelper.floor(player.experience * (float)player.xpBarCap());
+		int f = Mth.floor(player.experienceProgress * (float)player.getXpNeededForNextLevel());
 		xpTot+=f;
 		return xpTot;
 	}
@@ -50,12 +50,12 @@ public class EntityHelper {
 	}
 
 	protected static float getJumpFactor(Entity entity) {
-		float f = entity.world.getBlockState(entity.getPosition()).getBlock().getJumpFactor();
-		float f1 = entity.world.getBlockState(getPositionUnderneath(entity)).getBlock().getJumpFactor();
+		float f = entity.level.getBlockState(entity.blockPosition()).getBlock().getJumpFactor();
+		float f1 = entity.level.getBlockState(getPositionUnderneath(entity)).getBlock().getJumpFactor();
 		return (double)f == 1.0D ? f1 : f;
 	}
 
 	protected static BlockPos getPositionUnderneath(Entity entity) {
-		return new BlockPos(entity.getPosX(), entity.getBoundingBox().minY - 0.5000001D, entity.getPosZ());
+		return new BlockPos(entity.getX(), entity.getBoundingBox().minY - 0.5000001D, entity.getZ());
 	}
 }

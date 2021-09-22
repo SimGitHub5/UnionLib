@@ -8,9 +8,9 @@ import com.stereowalker.unionlib.ClientCape;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.network.server.SUnionPacket;
 
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +24,7 @@ public class SCapePacket extends SUnionPacket {
 		this.size = capes.size();
 	}
 
-	public SCapePacket (final PacketBuffer packetBuffer) {
+	public SCapePacket (final FriendlyByteBuf packetBuffer) {
 		super(packetBuffer, UnionLib.CHANNEL);
 		this.capes = Maps.newHashMap();
 		this.size = packetBuffer.readInt();
@@ -34,7 +34,7 @@ public class SCapePacket extends SUnionPacket {
 	}
 
 	@Override
-	public void encode(final PacketBuffer packetBuffer) {
+	public void encode(final FriendlyByteBuf packetBuffer) {
 		packetBuffer.writeInt(this.size);
 		for (UUID uuid : this.capes.keySet()) {
 			packetBuffer.writeLong(uuid.getMostSignificantBits());
@@ -45,10 +45,10 @@ public class SCapePacket extends SUnionPacket {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean handleOnClient(ClientPlayerEntity player) {
+	public boolean handleOnClient(LocalPlayer player) {
 		for (UUID uuid : this.capes.keySet()) {
 			if (this.capes.get(uuid))
-				ClientCape.queuePlayerCapeReplacement((AbstractClientPlayerEntity) player.worldClient.getPlayerByUuid(uuid));
+				ClientCape.queuePlayerCapeReplacement((AbstractClientPlayer) player.clientLevel.getPlayerByUUID(uuid));
 		}
 		return true;
 	}

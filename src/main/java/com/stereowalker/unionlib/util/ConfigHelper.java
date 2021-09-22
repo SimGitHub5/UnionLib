@@ -9,6 +9,10 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
+/**
+ * @author Stereowalker
+ *
+ */
 public class ConfigHelper {
 
 	public static ConfigValue<List<String>> listValue(String category, String name, ForgeConfigSpec.Builder builder, List<String> defaultValue, String... text){

@@ -1,35 +1,35 @@
 package com.stereowalker.unionlib.client.gui.widget.button;
 
-import net.minecraft.client.gui.widget.AbstractSlider;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class Slider extends AbstractSlider {
+public class Slider extends AbstractSliderButton {
 
 	public Slider(int x, int y, int width, int height, double defaultValue) {
-		super(x, y, width, height, new StringTextComponent(""), defaultValue);
-		this./*updateMessage*/func_230979_b_();
+		super(x, y, width, height, new TextComponent(""), defaultValue);
+		this.updateMessage();
 	}
 	
-	public Slider(int x, int y, int width, int height, double defaultValue, ITextComponent message) {
+	public Slider(int x, int y, int width, int height, double defaultValue, Component message) {
 		super(x, y, width, height, message, defaultValue);
-		this./*updateMessage*/func_230979_b_();
+		this.updateMessage();
 	}
 
 	@Override
-	protected void /*updateMessage*/func_230979_b_() {
+	protected void updateMessage() {
 
 	}
 
 	@Override
-	protected void /*applyValue*/func_230972_a_() {
+	protected void applyValue() {
 
 	}
 	
 	public double getSliderValue(){
-		return sliderValue;
+		return value;
 	}
 }

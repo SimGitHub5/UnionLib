@@ -1,18 +1,18 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 
 public class NBTHelper {
 	
 	/**
 	 * creates a NBT list from the array of doubles passed to this function
 	 */
-	public static ListNBT newDoubleNBTList(double... numbers) {
-		ListNBT listnbt = new ListNBT();
+	public static ListTag newDoubleNBTList(double... numbers) {
+		ListTag listnbt = new ListTag();
 
 		for(double d0 : numbers) {
-			listnbt.add(DoubleNBT.valueOf(d0));
+			listnbt.add(DoubleTag.valueOf(d0));
 		}
 
 		return listnbt;
