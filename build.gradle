@@ -12,6 +12,11 @@ buildscript {
 		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
+
+plugins {
+  id "com.matthewprenger.cursegradle" version "1.4.0"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -86,23 +91,6 @@ dependencies {
 	implementation fg.deobf(fileTree(include: ['*.jar'], dir: 'libs'))
 	//implementation fg.deobf("curse.maven:mixinbootstrap-357178:3076610")
 }
-// Process resources on build
-processResources {
-	// This will ensure that this task is redone when the versions change.
-	inputs.property 'version', modVersion
-	
-	// Replace stuff in mods.toml, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-		
-		// Replace version
-		expand 'version': modVersion
-	}
-	// Copy everything else except the mods.toml
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
-	}
-}
 
 jar {
     manifest {
@@ -122,6 +110,29 @@ jar {
 task deobfJar(type: Jar) {
 	from sourceSets.main.output
 	classifier = "deobf"
+}
+
+curseforge {
+    if (project.hasProperty('curseApiKey')) {
+        apiKey = project.getProperty('curseApiKey')
+        project {
+            id = '367806'
+            //if (changelog_file.exists()) {
+              //  changelog = changelog_file
+            //}
+            changelog = 'RR'
+
+            releaseType = 'release'
+
+            mainArtifact(jar) {
+                displayName = "UnionLib-$project.version"
+            }
+            addArtifact deobfJar
+        }
+        options {
+    		debug = false // defaults to false
+  		}	
+    }
 }
 
 publishing {
