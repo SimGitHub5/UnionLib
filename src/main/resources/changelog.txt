@@ -1,8 +1,9 @@
 Build: 1.17.1-4.0.1 - Wed Sep 24 11:39:35 GMT 2021
 	Stereowalker:
-		Allowed objects to be usable as config containers
+		- Allowed objects to be usable as config containers
+		- Prevent items from loading when only client mods are loaded
 
 =========
 Build: 1.17.1-4.0.0 - Wed Sep 22 21:33:09 GMT 2021
 	Stereowalker:
-		Made initial port to 1.17.1
+		- Made initial port to 1.17.1

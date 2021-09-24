@@ -113,26 +113,21 @@ task deobfJar(type: Jar) {
 }
 
 curseforge {
-    if (project.hasProperty('curseApiKey')) {
-        apiKey = project.getProperty('curseApiKey')
-        project {
-            id = '367806'
-            //if (changelog_file.exists()) {
-              //  changelog = changelog_file
-            //}
-            changelog = 'RR'
-
-            releaseType = 'release'
-
-            mainArtifact(jar) {
-                displayName = "UnionLib-$project.version"
-            }
-            addArtifact deobfJar
-        }
-        options {
-    		debug = false // defaults to false
-  		}	
-    }
+    project {
+    	id = '367806'
+		apiKey = "$System.env.CURSEFORGEKEY"
+		changelog = file('src/main/resources/changelog.txt')
+		releaseType = 'release'
+		addGameVersion("1.17.1")
+        addGameVersion("Forge")
+		mainArtifact(jar) {
+			displayName = "UnionLib-$project.version"
+		}
+		addArtifact deobfJar
+	}
+	options {
+    	debug = false // defaults to false
+  	}	
 }
 
 publishing {
