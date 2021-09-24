@@ -16,6 +16,7 @@ import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.mod.UnionMod;
+import com.stereowalker.unionlib.mod.UnionMod.LoadType;
 import com.stereowalker.unionlib.network.PacketRegistry;
 
 import net.minecraft.client.Minecraft;
@@ -47,20 +48,21 @@ public class UnionLib {
 	private static final String NETWORK_PROTOCOL_VERSION = "1";
 	public static boolean debugMode = false;
 	public static List<UnionMod> mods = new ArrayList<UnionMod>();
+	public static LoadType loadLevel = null;
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
-	
+
 	public static void debug(String message) {
 		if (debugMode) {
 			UnionLib.LOGGER.debug(message);
 		}
 	}
-	
+
 	public static void warn(String message) {
 		if (debugMode) {
 			UnionLib.LOGGER.warn(message);
 		}
 	}
-	
+
 	public static boolean disableConfig() {
 		return false;
 	}
@@ -78,7 +80,7 @@ public class UnionLib {
 		UAttributes.registerAll(modEventBus);
 		PacketRegistry.registerMessages(CHANNEL);
 		ClientCape.loadCapes();
-		
+
 		new UnionMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, true) {
 			@Override
 			@OnlyIn(Dist.CLIENT)
@@ -87,22 +89,44 @@ public class UnionLib {
 			}
 		};
 		for (int i = 0; i < 4; i++) {
-			new UnionMod("concept_class"+i, location("textures/gui/test_1.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
+			new UnionMod("concept_class"+i, location("textures/gui/test_1.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.CLIENT, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-					return new ConfigScreen(previousScreen, TestClassConfig.class, new TranslatableComponent("Config"));
+					return new ConfigScreen(previousScreen, TestClassConfig.class, new TranslatableComponent("Test Config 1"));
 				}
 			};
 		}
 		for (int i = 0; i < 4; i++) {
-			new UnionMod("concept_object"+i, location("textures/gui/test_2.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
+			new UnionMod("concept_object"+i, location("textures/gui/test_2.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.CLIENT, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-					return new ConfigScreen(previousScreen, test_config, new TranslatableComponent("Config"));
+					return new ConfigScreen(previousScreen, test_config, new TranslatableComponent("Test Config 2"));
 				}
 			};
+		}
+		for (UnionMod mod : mods) {
+			if (mod.getLoadType() == LoadType.BOTH) {
+				loadLevel = LoadType.BOTH;
+				break;
+			}
+			if (mod.getLoadType() == LoadType.CLIENT) {
+				if (loadLevel == LoadType.SERVER) {
+					loadLevel = LoadType.BOTH;
+					break;
+				} else {
+					loadLevel = LoadType.CLIENT;
+				}
+			}
+			if (mod.getLoadType() == LoadType.SERVER) {
+				if (loadLevel == LoadType.CLIENT) {
+					loadLevel = LoadType.BOTH;
+					break;
+				} else {
+					loadLevel = LoadType.SERVER;
+				}
+			}
 		}
 	}
 
@@ -111,8 +135,10 @@ public class UnionLib {
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
-		KeyBindings.registerKeyBindings();
-		UScreens.registerScreens();
+		if (UnionLib.loadLevel != LoadType.CLIENT) {
+			KeyBindings.registerKeyBindings();
+			UScreens.registerScreens();
+		}
 	}
 
 	public static ResourceLocation location(String name)

@@ -1,9 +1,11 @@
 package com.stereowalker.unionlib.registries;
 
+import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 import com.stereowalker.unionlib.item.UItems;
+import com.stereowalker.unionlib.mod.UnionMod.LoadType;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.entity.EntityType;
@@ -36,16 +38,19 @@ public class UnionLibRegistryEvents
 
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		UItems.registerAll(event.getRegistry());
+		if (UnionLib.loadLevel != LoadType.CLIENT)
+			UItems.registerAll(event.getRegistry());
 	}
-	
+
 	@SubscribeEvent
 	public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
-		UContainerType.registerAll(event.getRegistry());
+		if (UnionLib.loadLevel != LoadType.CLIENT)
+			UContainerType.registerAll(event.getRegistry());
 	}
-	
+
 	@SubscribeEvent
 	public static void registerAttributes(EntityAttributeModificationEvent event) {
-		event.add(EntityType.PLAYER, UAttributes.DIG_SPEED);
+		if (UnionLib.loadLevel != LoadType.CLIENT)
+			event.add(EntityType.PLAYER, UAttributes.DIG_SPEED);
 	}
 }

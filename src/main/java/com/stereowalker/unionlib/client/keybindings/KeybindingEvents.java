@@ -1,5 +1,7 @@
 package com.stereowalker.unionlib.client.keybindings;
 
+import com.stereowalker.unionlib.UnionLib;
+import com.stereowalker.unionlib.mod.UnionMod.LoadType;
 import com.stereowalker.unionlib.network.client.play.CUnionInventoryPacket;
 
 import net.minecraft.client.Minecraft;
@@ -16,11 +18,13 @@ public class KeybindingEvents {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void keybindTick(ClientTickEvent playerEvent) {
-		if(mc.screen==null) {
-			LocalPlayer clientPlayer = mc.player;
-			
-			if (KeyBindings.OPEN_UNION_INVENTORY.consumeClick()) {
-				new CUnionInventoryPacket(clientPlayer.getUUID()).send();
+		if (UnionLib.loadLevel != LoadType.CLIENT) {
+			if(mc.screen==null) {
+				LocalPlayer clientPlayer = mc.player;
+				
+				if (KeyBindings.OPEN_UNION_INVENTORY.consumeClick()) {
+					new CUnionInventoryPacket(clientPlayer.getUUID()).send();
+				}
 			}
 		}
 	}
