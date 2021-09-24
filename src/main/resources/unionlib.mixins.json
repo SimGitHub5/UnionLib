@@ -4,7 +4,7 @@
   "refmap": "unionlib.refmap.json",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "PlayerEntityMixin",
+    "PlayerMixin",
 	"StructureStartMixin"
   ],
   "client": [

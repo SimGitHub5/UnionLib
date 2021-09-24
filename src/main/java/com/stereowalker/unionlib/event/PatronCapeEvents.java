@@ -1,9 +1,9 @@
 package com.stereowalker.unionlib.event;
 
 import com.stereowalker.unionlib.ClientCape;
-import com.stereowalker.unionlib.config.Config;
-import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
+import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.network.client.play.CQueueCapePacket;
+import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -23,7 +23,7 @@ public class PatronCapeEvents {
 		if (event.getEntity() instanceof AbstractClientPlayer) {
 			if(ClientCape.doesPlayerNeedCapeClient((AbstractClientPlayer) event.getEntity()) && ((AbstractClientPlayer) event.getEntity()) == Minecraft.getInstance().player) {
 				//Update the server on who would prefer to display their cape or not
-				new CUpdateCapeListPacket(Player.createPlayerUUID(((AbstractClientPlayer) event.getEntity()).getGameProfile()), Config.display_cape).send();
+				new CUpdateCapeListPacket(Player.createPlayerUUID(((AbstractClientPlayer) event.getEntity()).getGameProfile()), UnionLib.CONFIG.display_cape).send();
 			}
 			new CQueueCapePacket().send();
 		}

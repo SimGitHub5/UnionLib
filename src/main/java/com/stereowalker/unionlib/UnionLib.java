@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
+import com.stereowalker.unionlib.config.TestClassConfig;
+import com.stereowalker.unionlib.config.TestObjectConfig;
 import com.stereowalker.unionlib.config.Config;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
@@ -37,6 +39,8 @@ import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 public class UnionLib {
 
 	public static UnionLib instance;
+	public static TestObjectConfig test_config = new TestObjectConfig();
+	public static final Config CONFIG = new Config();
 	public static final String MOD_ID = "unionlib";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final String INVENTORY_KEY = "UnionInventory";
@@ -65,7 +69,9 @@ public class UnionLib {
 	{
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		ConfigBuilder.registerConfig(Config.class);
+		ConfigBuilder.registerConfig(CONFIG); 
+		ConfigBuilder.registerConfig(TestClassConfig.class);
+		ConfigBuilder.registerConfig(test_config);
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
@@ -73,17 +79,31 @@ public class UnionLib {
 		PacketRegistry.registerMessages(CHANNEL);
 		ClientCape.loadCapes();
 		
-		for (int i = 0; i < 10; i++) {
-			new UnionMod("concept"+i, location("name"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
+		new UnionMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, true) {
+			@Override
+			@OnlyIn(Dist.CLIENT)
+			public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
+				return new ConfigScreen(previousScreen, CONFIG, new TranslatableComponent("UnionLib Config"));
+			}
+		};
+		for (int i = 0; i < 4; i++) {
+			new UnionMod("concept_class"+i, location("textures/gui/test_1.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-					return new ConfigScreen(previousScreen, Config.class, new TranslatableComponent("Config"));
+					return new ConfigScreen(previousScreen, TestClassConfig.class, new TranslatableComponent("Config"));
 				}
 			};
 		}
-//		UnionMod con = new UnionMod("controllersupport", location("name"), LoadType.CLIENT);
-//		UnionMod sur = new UnionMod("survive", location("name"), LoadType.BOTH);
+		for (int i = 0; i < 4; i++) {
+			new UnionMod("concept_object"+i, location("textures/gui/test_2.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, !FMLEnvironment.production) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
+					return new ConfigScreen(previousScreen, test_config, new TranslatableComponent("Config"));
+				}
+			};
+		}
 	}
 
 	private void setup(final FMLCommonSetupEvent event)

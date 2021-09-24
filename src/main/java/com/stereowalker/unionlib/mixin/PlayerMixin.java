@@ -14,9 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerMixin extends LivingEntity {
 
-    private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
+    private PlayerMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
 
