@@ -26,13 +26,12 @@ public class UnionMod {
 	private final String NETWORK_PROTOCOL_VERSION = "1";
 
 	public final SimpleChannel channel;
-	private int netID = -1;
+	protected int netID = -1;
 
 	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType, boolean shouldLoadMod) {
 		this.modid = modid;
 		this.modTexture = modTexture;
 		this.loadType = loadType;
-		this.channel = NetworkRegistry.newSimpleChannel(location("main_simple_channel"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
 		if (shouldLoadMod) {
 			UnionLib.mods.add(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {
@@ -41,8 +40,15 @@ public class UnionMod {
 				});
 
 			});
-			registerMessages(channel);
+			if (this.loadType != LoadType.CLIENT) {
+				this.channel = NetworkRegistry.newSimpleChannel(location("main_simple_channel"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
+				registerMessages(channel);
+			}
+			else
+				this.channel = null;
 		}
+		else
+			this.channel = null;
 	}
 
 	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType) {

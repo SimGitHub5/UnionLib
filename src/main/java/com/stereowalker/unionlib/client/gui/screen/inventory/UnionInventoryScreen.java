@@ -84,7 +84,6 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 		this.oldMouseY = (float)mouseY;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

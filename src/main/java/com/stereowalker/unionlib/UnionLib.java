@@ -81,7 +81,7 @@ public class UnionLib {
 		PacketRegistry.registerMessages(CHANNEL);
 		ClientCape.loadCapes();
 
-		new UnionMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH, true) {
+		new UnionMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH) {
 			@Override
 			@OnlyIn(Dist.CLIENT)
 			public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {

@@ -8,6 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 
+@SuppressWarnings("deprecation")
 public interface IResourceReloadListener<T> extends ResourceManagerReloadListener {
 
 	@Override

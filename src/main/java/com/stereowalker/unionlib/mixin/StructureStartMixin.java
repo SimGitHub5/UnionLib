@@ -46,7 +46,8 @@ public class StructureStartMixin {
         return structurePiece.postProcess(serverWorldAccess, structureAccessor, chunkGenerator, random, boundingBox, chunkPos, blockPos);
     }
 
-    @Inject(method = "placeInChunk", at = @At("RETURN"))
+    @SuppressWarnings("deprecation")
+	@Inject(method = "placeInChunk", at = @At("RETURN"))
     private void structureGenerated(WorldGenLevel serverWorldAccess, StructureFeatureManager structureAccessor, ChunkGenerator chunkGenerator, Random random, BoundingBox blockBox, ChunkPos chunkPos, CallbackInfo ci) {
         ServerLevel world;
 
