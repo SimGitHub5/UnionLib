@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Lists;
 import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
@@ -15,9 +16,11 @@ import com.stereowalker.unionlib.config.Config;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
+import com.stereowalker.unionlib.item.UItems;
 import com.stereowalker.unionlib.mod.UnionMod;
 import com.stereowalker.unionlib.mod.UnionMod.LoadType;
 import com.stereowalker.unionlib.network.PacketRegistry;
+import com.stereowalker.unionlib.registries.RegisterObjects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -71,7 +74,7 @@ public class UnionLib {
 	{
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		ConfigBuilder.registerConfig(CONFIG); 
+		ConfigBuilder.registerConfig(CONFIG);
 		ConfigBuilder.registerConfig(TestClassConfig.class);
 		ConfigBuilder.registerConfig(test_config);
 		modEventBus.addListener(this::setup);
@@ -86,6 +89,11 @@ public class UnionLib {
 			@OnlyIn(Dist.CLIENT)
 			public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 				return new ConfigScreen(previousScreen, CONFIG, new TranslatableComponent("UnionLib Config"));
+			}
+
+			@Override
+			public List<Class<?>> getRegistries() {
+				return Lists.newArrayList(UItems.class);
 			}
 		};
 		for (int i = 0; i < 4; i++) {
@@ -106,26 +114,33 @@ public class UnionLib {
 				}
 			};
 		}
+
+		boolean setupLoadLevel = false;
 		for (UnionMod mod : mods) {
-			if (mod.getLoadType() == LoadType.BOTH) {
-				loadLevel = LoadType.BOTH;
-				break;
-			}
-			if (mod.getLoadType() == LoadType.CLIENT) {
-				if (loadLevel == LoadType.SERVER) {
+			///////////////////////////////////
+			if (!setupLoadLevel) {
+				if (mod.getLoadType() == LoadType.BOTH) {
 					loadLevel = LoadType.BOTH;
-					break;
-				} else {
-					loadLevel = LoadType.CLIENT;
+					setupLoadLevel = true;
+				} else if (mod.getLoadType() == LoadType.CLIENT) {
+					if (loadLevel == LoadType.SERVER) {
+						loadLevel = LoadType.BOTH;
+						setupLoadLevel = true;
+					} else {
+						loadLevel = LoadType.CLIENT;
+					}
+				} else if (mod.getLoadType() == LoadType.SERVER) {
+					if (loadLevel == LoadType.CLIENT) {
+						loadLevel = LoadType.BOTH;
+						setupLoadLevel = true;
+					} else {
+						loadLevel = LoadType.SERVER;
+					}
 				}
 			}
-			if (mod.getLoadType() == LoadType.SERVER) {
-				if (loadLevel == LoadType.CLIENT) {
-					loadLevel = LoadType.BOTH;
-					break;
-				} else {
-					loadLevel = LoadType.SERVER;
-				}
+			///////////////////////////////////
+			for (Class<?> clas : mod.getRegistries()) {
+				RegisterObjects.register(clas);
 			}
 		}
 	}

@@ -4,7 +4,6 @@ import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
-import com.stereowalker.unionlib.item.UItems;
 import com.stereowalker.unionlib.mod.UnionMod.LoadType;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -39,7 +38,7 @@ public class UnionLibRegistryEvents
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		if (UnionLib.loadLevel != LoadType.CLIENT)
-			UItems.registerAll(event.getRegistry());
+			RegisterObjects.putItemsInForgeRegistries(event.getRegistry());
 	}
 
 	@SubscribeEvent

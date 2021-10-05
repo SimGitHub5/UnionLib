@@ -1,8 +1,11 @@
 package com.stereowalker.unionlib.mod;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Lists;
 import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.client.Minecraft;
@@ -88,6 +91,10 @@ public class UnionMod {
 
 	public void registerMessages(SimpleChannel channel) {
 
+	}
+	
+	public List<Class<?>> getRegistries() {
+		return Lists.newArrayList();
 	}
 
 	public IModInfo getModInfo() {
