@@ -116,7 +116,7 @@ curseforge {
     project {
     	id = '367806'
 		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('src/main/resources/changelog.html')
+		changelog = file('changelog.txt')
 		releaseType = 'release'
 		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
