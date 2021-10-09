@@ -14,6 +14,7 @@ import com.stereowalker.unionlib.config.TestClassConfig;
 import com.stereowalker.unionlib.config.TestObjectConfig;
 import com.stereowalker.unionlib.config.Config;
 import com.stereowalker.unionlib.config.ConfigBuilder;
+import com.stereowalker.unionlib.config.ServerConfig;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.item.UItems;
@@ -45,6 +46,7 @@ public class UnionLib {
 	public static UnionLib instance;
 	public static TestObjectConfig test_config = new TestObjectConfig();
 	public static final Config CONFIG = new Config();
+	public static final ServerConfig SERVER_CONFIG = new ServerConfig();
 	public static final String MOD_ID = "unionlib";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final String INVENTORY_KEY = "UnionInventory";
@@ -75,6 +77,7 @@ public class UnionLib {
 		instance = this;
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ConfigBuilder.registerConfig(CONFIG);
+		ConfigBuilder.registerConfig(SERVER_CONFIG);
 		ConfigBuilder.registerConfig(TestClassConfig.class);
 		ConfigBuilder.registerConfig(test_config);
 		modEventBus.addListener(this::setup);

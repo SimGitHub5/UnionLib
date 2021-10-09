@@ -2,39 +2,28 @@ package com.stereowalker.unionlib.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.electronwill.nightconfig.core.ConfigFormat;
-import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.loading.FMLPaths;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public class ConfigBuilder {
 	static Map<String,Holder> values = new HashMap<String,Holder>();
 	
@@ -133,17 +122,6 @@ public class ConfigBuilder {
 		} 
 		return true;
 	}
-
-	@SubscribeEvent
-	public static void onReload(ModConfigEvent event) {
-		reload();
-		System.out.println("From the event itself");
-	}
-
-	@SubscribeEvent
-	public static void onReload(ModConfigEvent.Reloading event) {
-		reload();
-	}
 	
 	public static void reload() {
 		for (Class<?> configClass : ConfigClassBuilder.configs) {
@@ -162,29 +140,50 @@ public class ConfigBuilder {
 		}
 	}
 	
-	public static void load() {
+	public static void load(ModConfig.Type... exceptions) {
 		System.out.println("Loading all values from the config files into their respective configuration variables");
 		for (Class<?> configClass : ConfigClassBuilder.configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
-			ConfigClassBuilder.read(configClass);
+			ConfigClassBuilder.read(configClass, exceptions);
 			System.out.println("Loading "+con.name()+"'s config");
 		}
 		for (ConfigObject configObject : ConfigObjectBuilder.configs) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
-			ConfigObjectBuilder.read(configObject);
+			ConfigObjectBuilder.read(configObject, exceptions);
 			System.out.println("Loading "+con.name()+"'s config");
 		}
-	}
-
-	@SubscribeEvent
-	public static void onLoad(ModConfigEvent.Loading event) {
-		load();
 	}
 	
     private static final Splitter DOT_SPLITTER = Splitter.on(".");
     static List<String> split(String path)
     {
         return Lists.newArrayList(DOT_SPLITTER.split(path));
+    }
+    
+    @EventBusSubscriber(bus = Bus.MOD)
+    public static class ModEventBus {
+    	@SubscribeEvent
+    	public static void onLoad(ModConfigEvent.Loading event) {
+    		load();
+    	}
+    	@SubscribeEvent
+    	public static void onReload(ModConfigEvent.Reloading event) {
+    		reload();
+    	}
+    }
+    @EventBusSubscriber(bus = Bus.FORGE)
+    public static class ForgeEventBus {
+    	@SubscribeEvent
+    	public static void onLoad(WorldEvent.Load event) {
+    		load(ModConfig.Type.COMMON);
+    		if (!event.getWorld().isClientSide()) {
+    			System.out.println("Loading All Server Config Files");
+    			load(ModConfig.Type.SERVER);
+    		} else {
+    			System.out.println("Loading All Client Config Files");
+    			load(ModConfig.Type.CLIENT);
+    		}
+    	}
     }
     
     public static class Holder {

@@ -26,12 +26,13 @@ import net.minecraftforge.fml.loading.FMLPaths;
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigObjectBuilder {
 	
-	public static void read(ConfigObject configObject) {
+	public static void read(ConfigObject configObject, ModConfig.Type... readOnly) {
+		List<ModConfig.Type> types = Lists.newArrayList(readOnly);
 		if (configObject.getClass().isAnnotationPresent(UnionConfig.class)) {
 			UnionConfig config = configObject.getClass().getAnnotation(UnionConfig.class);
 			for (Field field : configObject.getClass().getFields()) {
 				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
-				if (configEntry != null) {
+				if (configEntry != null && (readOnly.length == 0 || types.contains(configEntry.type()))) {
 					try {
 						if (ConfigBuilder.getConfigValue(config, configEntry).get() instanceof Double && field.get(configObject) instanceof Float) {
 							field.set(configObject, ((Double)ConfigBuilder.getConfigValue(config, configEntry).get()).floatValue());
@@ -214,17 +215,17 @@ public class ConfigObjectBuilder {
 		client_config.put(configObject, client_builder.get(configObject).build());
 		common_config.put(configObject, common_builder.get(configObject).build());
 
-		if (hasConfigType(configObject, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configObject), name+(con.appendWithType()?".client":"")+".toml");
-		if (hasConfigType(configObject, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configObject), name+(con.appendWithType()?".common":"")+".toml");
-		if (hasConfigType(configObject, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configObject), name+(con.appendWithType()?".server":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configObject), name+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configObject), name+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configObject), name+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	public static void loadConfigs(ConfigObject configObject) {
 		UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 
-		if (hasConfigType(configObject, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".client":"")+".toml");
-		if (hasConfigType(configObject, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".common":"")+".toml");
-		if (hasConfigType(configObject, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".server":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configObject, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configObject), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	static final List<ConfigObject> configs = Lists.newArrayList();

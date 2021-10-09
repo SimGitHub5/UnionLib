@@ -26,12 +26,13 @@ import net.minecraftforge.fml.loading.FMLPaths;
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigClassBuilder {
 
-	public static void read(Class<?> configClass) {
+	public static void read(Class<?> configClass, ModConfig.Type... readOnly) {
+		List<ModConfig.Type> types = Lists.newArrayList(readOnly);
 		if (configClass.isAnnotationPresent(UnionConfig.class)) {
 			UnionConfig config = configClass.getAnnotation(UnionConfig.class);
 			for (Field field : configClass.getFields()) {
 				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
-				if (configEntry != null) {
+				if (configEntry != null && (readOnly.length == 0 || types.contains(configEntry.type()))) {
 					try {
 						if (ConfigBuilder.getConfigValue(config, configEntry).get() instanceof Double && field.get(null) instanceof Float) {
 							field.set(null, ((Double)ConfigBuilder.getConfigValue(config, configEntry).get()).floatValue());
@@ -214,17 +215,17 @@ public class ConfigClassBuilder {
 		client_config.put(configClass, client_builder.get(configClass).build());
 		common_config.put(configClass, common_builder.get(configClass).build());
 
-		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configClass), name+(con.appendWithType()?".client":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configClass), name+(con.appendWithType()?".common":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configClass), name+(con.appendWithType()?".server":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configClass), name+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configClass), name+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configClass), name+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	public static void loadConfigs(Class<?> configClass) {
 		UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 
-		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".client":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".common":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?".server":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	static final List<Class<?>> configs = Lists.newArrayList();

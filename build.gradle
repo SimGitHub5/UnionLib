@@ -118,7 +118,7 @@ curseforge {
 		apiKey = "$System.env.CURSEFORGEKEY"
 		changelog = file('src/main/resources/changelog.html')
 		releaseType = 'release'
-		addGameVersion("1.17.1")
+		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
 		mainArtifact(jar) {
 			displayName = "UnionLib-$project.version"
