@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.client.gui.widget.list;
+package com.stereowalker.unionlib.client.gui.components;
 
 import java.util.List;
 
@@ -6,8 +6,10 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.gui.screen.UnionModsScreen;
+import com.stereowalker.unionlib.client.gui.screens.ModConfigurationScreen;
+import com.stereowalker.unionlib.client.gui.screens.controls.ModControlsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
-import com.stereowalker.unionlib.mod.UnionMod;
+import com.stereowalker.unionlib.mod.MinecraftMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -24,7 +26,7 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 
 	public ModList(Minecraft mcIn, UnionModsScreen screen) {
 		super(mcIn, screen.width +45, screen.height, 43, screen.height - 32, 25);
-		for(UnionMod mod : UnionLib.mods) {
+		for(MinecraftMod mod : UnionLib.mods) {
 			this.addEntry(new ModList.ModEntry(mod, screen));
 		}
 
@@ -45,24 +47,41 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 	@OnlyIn(Dist.CLIENT)
 	public class ModEntry extends ModList.Entry {
 		/** The mod */
-		private final UnionMod mod;
+		private final MinecraftMod mod;
 		private final Screen screen;
 		/** The localized key description for this KeyEntry */
 		private final Button modImage;
 		private final Button configButton;
+		private final boolean noConfig;
 
-		private ModEntry(final UnionMod mod, final Screen screen) {
+		private ModEntry(final MinecraftMod mod, final Screen screen) {
 			this.mod = mod;
 			this.screen = screen;
 			
 			this.modImage = new OverlayImageButton(0, 0, 20, 20, 0, 0, 20, mod.getModTexture(), 20, 40, (onPress) -> {
 					}, new TranslatableComponent("menu.button.union"));
 			
-			this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.config"), (onPress) -> {
-				if (this.mod.getConfigScreen(minecraft, this.screen) != null) {
+			
+			if (this.mod.getConfigScreen(minecraft, this.screen) != null && this.mod.getModKeyMappings().length <= 0) {
+				this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.config"), (onPress) -> {
 					minecraft.setScreen(mod.getConfigScreen(minecraft, this.screen));
-				}
-			});
+				});
+				this.noConfig = false;
+			} else if (this.mod.getModKeyMappings().length > 0 && this.mod.getConfigScreen(minecraft, this.screen) == null) {
+				this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.controls"), (onPress) -> {
+					minecraft.setScreen(new ModControlsScreen(mod, this.screen, screen.getMinecraft().options));
+				});
+				this.noConfig = false;
+			} else if (this.mod.getModKeyMappings().length > 0 && this.mod.getConfigScreen(minecraft, this.screen) != null) {
+				this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.setup"), (onPress) -> {
+					minecraft.setScreen(new ModConfigurationScreen(mod, screen));
+				});
+				this.noConfig = false;
+			} else {
+				this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.controls"), (onPress) -> {
+				});
+				this.noConfig = true;
+			}
 		}
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
@@ -71,7 +90,7 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 			this.modImage.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.configButton.x = p_230432_4_ + 50;
 			this.configButton.y = p_230432_3_;
-			this.configButton.active = mod.getConfigScreen(minecraft, this.screen) != null;
+			this.configButton.active = !noConfig;
 			this.configButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 		}
 

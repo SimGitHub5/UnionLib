@@ -1,7 +1,7 @@
 package com.stereowalker.unionlib.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stereowalker.unionlib.client.gui.widget.list.ConfigList;
+import com.stereowalker.unionlib.client.gui.components.ConfigList;
 import com.stereowalker.unionlib.config.ConfigObject;
 import com.stereowalker.unionlib.config.UnionConfig;
 
@@ -47,7 +47,6 @@ public class ConfigScreen extends DefaultScreen {
 	@Override
 	public void drawOnScreen(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.list.render(matrixStack, mouseX, mouseY, partialTicks);
-		super.drawOnScreen(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

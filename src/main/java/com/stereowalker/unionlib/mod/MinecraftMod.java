@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.stereowalker.unionlib.UnionLib;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import net.minecraftforge.forgespi.language.IModInfo;
 
-public class UnionMod {
+public class MinecraftMod {
 	private String modid;
 	private LoadType loadType;
 	private ResourceLocation modTexture;
@@ -31,7 +32,7 @@ public class UnionMod {
 	public final SimpleChannel channel;
 	protected int netID = -1;
 
-	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType, boolean shouldLoadMod) {
+	public MinecraftMod(String modid, ResourceLocation modTexture, LoadType loadType, boolean shouldLoadMod) {
 		this.modid = modid;
 		this.modTexture = modTexture;
 		this.loadType = loadType;
@@ -54,10 +55,10 @@ public class UnionMod {
 			this.channel = null;
 	}
 
-	public UnionMod(String modid, ResourceLocation modTexture, LoadType loadType) {
+	public MinecraftMod(String modid, ResourceLocation modTexture, LoadType loadType) {
 		this(modid, modTexture, loadType, true);
 	}
-
+	
 	public LoadType getLoadType() {
 		return loadType;
 	}
@@ -77,6 +78,11 @@ public class UnionMod {
 	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return null;
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public KeyMapping[] getModKeyMappings() {
+		return new KeyMapping[0];
 	}
 
 	public ResourceLocation location(String name)

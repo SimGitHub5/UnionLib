@@ -4,7 +4,7 @@ import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
-import com.stereowalker.unionlib.mod.UnionMod.LoadType;
+import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.entity.EntityType;

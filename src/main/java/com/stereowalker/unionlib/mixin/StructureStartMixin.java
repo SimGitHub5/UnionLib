@@ -39,7 +39,7 @@ public class StructureStartMixin {
         if (serverWorldAccess instanceof ServerLevel) {
             world = (ServerLevel) serverWorldAccess;
         } else {
-            world = ((WorldGenRegion) serverWorldAccess).getLevel();
+            world = ((WorldGenRegion) serverWorldAccess).level;
         }
 
         MinecraftForge.EVENT_BUS.post(new StructurePieceAddedEvent(structurePiece, world));
@@ -54,7 +54,7 @@ public class StructureStartMixin {
         if (serverWorldAccess instanceof ServerLevel) {
             world = (ServerLevel) serverWorldAccess;
         } else {
-            world = ((WorldGenRegion) serverWorldAccess).getLevel();
+            world = ((WorldGenRegion) serverWorldAccess).level;
         }
 
         synchronized (this.pieces) {

@@ -1,7 +1,7 @@
 package com.stereowalker.unionlib.client.keybindings;
 
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.mod.UnionMod.LoadType;
+import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 import com.stereowalker.unionlib.network.client.play.CUnionInventoryPacket;
 
 import net.minecraft.client.Minecraft;

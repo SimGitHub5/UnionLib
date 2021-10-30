@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.client.gui.widget.list;
+package com.stereowalker.unionlib.client.gui.components;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class DefaultScreen extends Screen {
+public abstract class DefaultScreen extends Screen {
 	public final Screen previousScreen;
 
 	public DefaultScreen(Component titleIn, Screen screen) {
@@ -15,9 +15,7 @@ public class DefaultScreen extends Screen {
 		this.previousScreen = screen;
 	}
 	
-	public void drawOnScreen(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		
-	}
+	public abstract void drawOnScreen(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
 
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {

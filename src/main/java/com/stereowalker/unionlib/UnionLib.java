@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
@@ -18,11 +20,12 @@ import com.stereowalker.unionlib.config.ServerConfig;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.item.UItems;
-import com.stereowalker.unionlib.mod.UnionMod;
-import com.stereowalker.unionlib.mod.UnionMod.LoadType;
+import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 import com.stereowalker.unionlib.network.PacketRegistry;
 import com.stereowalker.unionlib.registries.RegisterObjects;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -30,6 +33,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +41,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
@@ -52,7 +57,7 @@ public class UnionLib {
 	public static final String INVENTORY_KEY = "UnionInventory";
 	private static final String NETWORK_PROTOCOL_VERSION = "1";
 	public static boolean debugMode = false;
-	public static List<UnionMod> mods = new ArrayList<UnionMod>();
+	public static List<MinecraftMod> mods = new ArrayList<MinecraftMod>();
 	public static LoadType loadLevel = null;
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
 
@@ -87,7 +92,7 @@ public class UnionLib {
 		PacketRegistry.registerMessages(CHANNEL);
 		ClientCape.loadCapes();
 
-		new UnionMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.BOTH) {
+		new MinecraftMod("unionlib", location("textures/gui/union_button.png"), com.stereowalker.unionlib.mod.MinecraftMod.LoadType.BOTH) {
 			@Override
 			@OnlyIn(Dist.CLIENT)
 			public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
@@ -98,9 +103,14 @@ public class UnionLib {
 			public List<Class<?>> getRegistries() {
 				return Lists.newArrayList(UItems.class);
 			}
+			
+			@Override
+			public KeyMapping[] getModKeyMappings() {
+				return new KeyMapping[]{KeyBindings.OPEN_UNION_INVENTORY};
+			}
 		};
-		for (int i = 0; i < 4; i++) {
-			new UnionMod("concept_class"+i, location("textures/gui/test_1.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.CLIENT, !FMLEnvironment.production) {
+		for (int i = 0; i < 2; i++) {
+			new MinecraftMod("concept_class"+i, location("textures/gui/test_1.png"), com.stereowalker.unionlib.mod.MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
@@ -108,8 +118,8 @@ public class UnionLib {
 				}
 			};
 		}
-		for (int i = 0; i < 4; i++) {
-			new UnionMod("concept_object"+i, location("textures/gui/test_2.png"), com.stereowalker.unionlib.mod.UnionMod.LoadType.CLIENT, !FMLEnvironment.production) {
+		for (int i = 0; i < 2; i++) {
+			new MinecraftMod("concept_object"+i, location("textures/gui/test_2.png"), com.stereowalker.unionlib.mod.MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
@@ -117,9 +127,17 @@ public class UnionLib {
 				}
 			};
 		}
+		for (int i = 0; i < 2; i++) {
+			new MinecraftMod("concept_keys"+i, location("textures/gui/test_3.png"), com.stereowalker.unionlib.mod.MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
+				@Override
+				public KeyMapping[] getModKeyMappings() {
+					return new KeyMapping[]{new KeyMapping("key.unionlib.test_bind", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "DAD")};
+				}
+			};
+		}
 
 		boolean setupLoadLevel = false;
-		for (UnionMod mod : mods) {
+		for (MinecraftMod mod : mods) {
 			///////////////////////////////////
 			if (!setupLoadLevel) {
 				if (mod.getLoadType() == LoadType.BOTH) {
@@ -154,7 +172,8 @@ public class UnionLib {
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			KeyBindings.registerKeyBindings();
+//			KeyBindings.registerKeyBindings();
+			mods.forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding));
 			UScreens.registerScreens();
 		}
 	}
