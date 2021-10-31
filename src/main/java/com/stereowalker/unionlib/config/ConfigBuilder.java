@@ -73,7 +73,7 @@ public class ConfigBuilder {
 	 * @param configClass
 	 */
 	public static void registerConfig(Class<?> configClass) {
-		if (configClass.isAnnotationPresent(UnionConfig.class)) {
+		if (configClass.isAnnotationPresent(UnionConfig.class) && !ConfigClassBuilder.configs.contains(configClass)) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			System.out.println("Registered the config for "+con.name());
 			ConfigClassBuilder.configs.add(configClass);
@@ -84,11 +84,15 @@ public class ConfigBuilder {
 			ConfigClassBuilder.registerConfigurations(configClass);
 			ConfigClassBuilder.loadConfigs(configClass);
 			ConfigClassBuilder.read(configClass);
+		} else if (!configClass.isAnnotationPresent(UnionConfig.class)) {
+			throw new RuntimeException("You cannot register a config if it does not have the UnionConfig annotation");
+		} else if (ConfigClassBuilder.configs.contains(configClass)) {
+			throw new RuntimeException("This config class has already been regtistered");
 		}
 	}
 	
 	public static void registerConfig(ConfigObject configObject) {
-		if (configObject.getClass().isAnnotationPresent(UnionConfig.class)) {
+		if (configObject.getClass().isAnnotationPresent(UnionConfig.class) && !ConfigObjectBuilder.configs.contains(configObject)) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 			System.out.println("Registered the config for "+con.name());
 			ConfigObjectBuilder.configs.add(configObject);
@@ -99,6 +103,10 @@ public class ConfigBuilder {
 			ConfigObjectBuilder.registerConfigurations(configObject);
 			ConfigObjectBuilder.loadConfigs(configObject);
 			ConfigObjectBuilder.read(configObject);
+		} else if (!configObject.getClass().isAnnotationPresent(UnionConfig.class)) {
+			throw new RuntimeException("You cannot register a config if it does not have the UnionConfig annotation");
+		} else if (ConfigObjectBuilder.configs.contains(configObject)) {
+			throw new RuntimeException("This config object has already been regtistered");
 		}
 	}
 
