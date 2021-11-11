@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.client.gui.components;
+package com.stereowalker.unionlib.client.gui.screens.config;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,7 +10,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stereowalker.unionlib.client.gui.screen.ConfigScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.Slider;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
@@ -83,7 +82,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 					this.addEntry(new ConfigList.NumberedEntry<Integer>(new TranslatableComponent(name2), comment, (ConfigValue<Integer>) ConfigBuilder.getValues(config).get(configValue).getValue(), usesSlider, holder.getMin(), holder.getMax()));
 				}
 			} else {
-				this.addEntry(new ConfigList.ConfigEntry(new TranslatableComponent(name2), ConfigBuilder.getValues(config).get(configValue).getComments()));
+				this.addEntry(new ConfigList.ConfigEntry<>(new TranslatableComponent(name2), ConfigBuilder.getValues(config).get(configValue).getComments(), ConfigBuilder.getValues(config).get(configValue).getValue()));
 			}
 		}
 	}
@@ -105,7 +104,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	public void tick() {
 		for (Entry ent : this.children()) {
 			if (ent instanceof ConfigList.ConfigEntry) {
-				((ConfigList.ConfigEntry)ent).tick();
+				((ConfigList.ConfigEntry<?>)ent).tick();
 			}
 		}
 	}
@@ -143,16 +142,17 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class ConfigEntry extends ConfigList.Entry {
+	public class ConfigEntry<T> extends ConfigList.Entry {
+		protected final ForgeConfigSpec.ConfigValue<T> config;
 		/** The mod */
-		private final Button configButton;
+		protected final Button configButton;
 
 		public void tick() {
 
 		}
 
-		private ConfigEntry(final Component name, final List<Component> comment) {
-
+		private ConfigEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<T> config) {
+			this.config = config;
 			this.configButton = new Button(0, 0, 200, 20, name, (onPress) -> {
 			}, (button, stack, x, y) -> {
 				int space = ConfigList.this.minecraft.screen.height - y;
@@ -169,7 +169,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			this.configButton.x = p_230432_4_ - 100;
+			this.configButton.x = p_230432_4_ - 90;
 			this.configButton.y = p_230432_3_;
 			this.configButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.configButton.active = false;
@@ -186,14 +186,11 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class EnumEntry extends ConfigList.ConfigEntry {
-		private final ForgeConfigSpec.ConfigValue<Enum<?>> config;
+	public class EnumEntry extends ConfigList.ConfigEntry<Enum<?>> {
 		private final Button enumButton;
 
 		private EnumEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<Enum<?>> config) {
-			super(name, comment);
-			this.config = config;
-
+			super(name, comment, config);
 			this.enumButton = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(RegistryHelper.rotateEnumForward(config.get(), config.get().getDeclaringClass().getEnumConstants()));
 				ConfigBuilder.reload();
@@ -202,7 +199,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.enumButton.x = p_230432_4_ + 120;
+			this.enumButton.x = p_230432_4_ + 130;
 			this.enumButton.y = p_230432_3_;
 			this.enumButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.enumButton.setMessage(new TranslatableComponent(config.get().name()));
@@ -222,13 +219,11 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class BooleanEntry extends ConfigList.ConfigEntry {
-		private final ForgeConfigSpec.ConfigValue<Boolean> config;
+	public class BooleanEntry extends ConfigList.ConfigEntry<Boolean> {
 		private final Button booleanButton;
 
 		private BooleanEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<Boolean> config) {
-			super(name, comment);
-			this.config = config;
+			super(name, comment, config);
 
 			this.booleanButton = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(!config.get());
@@ -238,7 +233,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.booleanButton.x = p_230432_4_ + 120;
+			this.booleanButton.x = p_230432_4_ + 130;
 			this.booleanButton.y = p_230432_3_;
 			this.booleanButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.booleanButton.setMessage(CommonComponents.optionStatus(config.get()));
@@ -258,13 +253,11 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class StringEntry extends ConfigList.ConfigEntry {
-		private final ForgeConfigSpec.ConfigValue<String> config;
+	public class StringEntry extends ConfigList.ConfigEntry<String> {
 		private final EditBox stringField;
 
 		private StringEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<String> config) {
-			super(name, comment);
-			this.config = config;
+			super(name, comment, config);
 
 			this.stringField = new EditBox(ConfigList.this.minecraft.font, 0, 0, 200, 20, new TranslatableComponent("config.editBox"));
 			this.stringField.setValue(this.config.get());
@@ -277,7 +270,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.stringField.x = p_230432_4_ + 120;
+			this.stringField.x = p_230432_4_ + 130;
 			this.stringField.y = p_230432_3_;
 			this.stringField.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 		}
@@ -302,16 +295,14 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class NumberedEntry<V extends Number> extends ConfigList.ConfigEntry {
-		private final ForgeConfigSpec.ConfigValue<V> config;
+	public class NumberedEntry<V extends Number> extends ConfigList.ConfigEntry<V> {
 		private final EditBox stringField;
 		private final Slider slider;
 		private final boolean useSlider;
 
 		@SuppressWarnings("unchecked")
 		private NumberedEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<V> config, final boolean useSlider, double min, double max) {
-			super(name, comment);
-			this.config = config;
+			super(name, comment, config);
 			this.useSlider = useSlider;
 
 			double shiftedMax = max-min;
@@ -419,11 +410,11 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
 			if (this.useSlider) {
-				this.slider.x = p_230432_4_ + 120;
+				this.slider.x = p_230432_4_ + 130;
 				this.slider.y = p_230432_3_;
 				this.slider.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			} else {
-				this.stringField.x = p_230432_4_ + 120;
+				this.stringField.x = p_230432_4_ + 130;
 				this.stringField.y = p_230432_3_;
 				this.stringField.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			}

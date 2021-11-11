@@ -15,6 +15,7 @@ import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -25,6 +26,17 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigObjectBuilder {
+	
+	public static TranslatableComponent getConfigName(ConfigObject configObject) {
+		if (configObject.getClass().isAnnotationPresent(UnionConfig.class)) {
+			UnionConfig config = configObject.getClass().getAnnotation(UnionConfig.class);
+			if (config.translatableName().isEmpty())
+				return new TranslatableComponent(config.name());
+			else
+				return new TranslatableComponent(config.translatableName());
+		}
+		return new TranslatableComponent("");
+	}
 	
 	public static void read(ConfigObject configObject, ModConfig.Type... readOnly) {
 		List<ModConfig.Type> types = Lists.newArrayList(readOnly);

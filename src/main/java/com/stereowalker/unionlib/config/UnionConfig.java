@@ -24,6 +24,10 @@ public @interface UnionConfig {
 	 */
 	String name();
 	/**
+	 * @return The name of the config file itself
+	 */
+	String translatableName() default "";
+	/**
 	 * The name of the folder the files of this config will be within the config folder. 
 	 * If this is empty, it will just put the files in the config folder
 	 * @return The folder

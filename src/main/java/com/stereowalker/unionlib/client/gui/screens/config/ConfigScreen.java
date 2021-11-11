@@ -1,8 +1,10 @@
-package com.stereowalker.unionlib.client.gui.screen;
+package com.stereowalker.unionlib.client.gui.screens.config;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stereowalker.unionlib.client.gui.components.ConfigList;
+import com.stereowalker.unionlib.client.gui.screen.DefaultScreen;
+import com.stereowalker.unionlib.config.ConfigClassBuilder;
 import com.stereowalker.unionlib.config.ConfigObject;
+import com.stereowalker.unionlib.config.ConfigObjectBuilder;
 import com.stereowalker.unionlib.config.UnionConfig;
 
 import net.minecraft.client.gui.components.Button;
@@ -28,6 +30,14 @@ public class ConfigScreen extends DefaultScreen {
 		super(title, screen);
 		this.configObject = configObject;
 		this.configClass = null;
+	}
+	
+	public ConfigScreen(Screen screen, Class<?> configClass) {
+		this(screen, configClass, ConfigClassBuilder.getConfigName(configClass));
+	}
+
+	public ConfigScreen(Screen screen, ConfigObject configObject) {
+		this(screen, configObject, ConfigObjectBuilder.getConfigName(configObject));
 	}
 
 	@Override

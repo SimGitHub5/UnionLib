@@ -15,6 +15,7 @@ import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -25,6 +26,17 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class ConfigClassBuilder {
+
+	public static TranslatableComponent getConfigName(Class<?> configClass) {
+		if (configClass.isAnnotationPresent(UnionConfig.class)) {
+			UnionConfig config = configClass.getAnnotation(UnionConfig.class);
+			if (config.translatableName().isEmpty())
+				return new TranslatableComponent(config.name());
+			else
+				return new TranslatableComponent(config.translatableName());
+		}
+		return new TranslatableComponent("");
+	}
 
 	public static void read(Class<?> configClass, ModConfig.Type... readOnly) {
 		List<ModConfig.Type> types = Lists.newArrayList(readOnly);
@@ -85,9 +97,9 @@ public class ConfigClassBuilder {
 				UnionConfig.Entry configEntry = field.getAnnotation(UnionConfig.Entry.class);
 				if (configEntry != null) {
 					Type type = configEntry.type() != null ? configEntry.type() : Type.COMMON;
-					
-					 ForgeConfigSpec.Builder builder = common;
-					
+
+					ForgeConfigSpec.Builder builder = common;
+
 					if (type == Type.CLIENT) {
 						builder = client;
 					} else if (type == Type.SERVER) {
@@ -95,32 +107,32 @@ public class ConfigClassBuilder {
 					} else {
 						builder = common;
 					}
-					
+
 					try {
 						String enumComment = "";
 						if (field.get(null) instanceof CommentedEnum<?> && field.get(null) instanceof Enum<?>) {
 							enumComment =  ((CommentedEnum<?>)field.get(null)).getConfigComment();
 						}
 						enumComment+="\n";
-						
+
 						ForgeConfigSpec.ConfigValue<?> conf;
 						String j = "\n###########################################";
 						String k = "\n-------------------------------------------";
 						String h = j+"\n";
-						
+
 						String comment = "";
 						List<Component> saved_comment = new ArrayList<Component>();
 						if (field.isAnnotationPresent(UnionConfig.Comment.class)) {
 							String config_comment = field.getAnnotation(UnionConfig.Comment.class).comment()[0];
-							
+
 							if (field.getAnnotation(UnionConfig.Comment.class).comment().length > 1) {
 								for (int i = 1; i < field.getAnnotation(UnionConfig.Comment.class).comment().length; i++) {
 									config_comment+="\n"+field.getAnnotation(UnionConfig.Comment.class).comment()[i];
 								}
 							}
-							
+
 							comment = h+config_comment+k+enumComment+"Default: "+field.get(null)+k;
-							
+
 							for (String s : config_comment.split("\n")) {
 								saved_comment.add(new TextComponent(s).withStyle(ChatFormatting.AQUA));
 							}
@@ -130,14 +142,14 @@ public class ConfigClassBuilder {
 							saved_comment.add(new TextComponent("Default: "+field.get(null)).withStyle(ChatFormatting.GREEN));
 						} else {
 							comment = h+enumComment+"Default: "+field.get(null)+k;
-							
+
 							for (String s : enumComment.split("\n")) {
 								saved_comment.add(new TextComponent(s).withStyle(ChatFormatting.YELLOW));
 							}
 							saved_comment.add(new TextComponent("Default: "+field.get(null)).withStyle(ChatFormatting.GREEN));
 						}
 						ForgeConfigSpec.Builder commented_builder = builder.comment(comment);
-						
+
 						Double min = 0.0d;
 						Double max = 0.0d;
 
@@ -146,24 +158,24 @@ public class ConfigClassBuilder {
 									.define(ConfigBuilder.configName(configEntry, "Boolean"), (Boolean)field.get(null));
 						} else if (field.get(null) instanceof Enum) {
 							Enum<?> defaultValue = (Enum<?>)field.get(null);
-							
+
 							Collection<?> acceptableValues = (Collection<?>) Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants());
-							
+
 							conf = commented_builder
 									.defineEnum(ConfigBuilder.split(ConfigBuilder.configName(configEntry, "Enum")),
 											Enum.valueOf(defaultValue.getDeclaringClass(), defaultValue.name()), EnumGetMethod.NAME_IGNORECASE, obj -> {
-								                if (obj instanceof Enum) {
-								                    return acceptableValues.contains(obj);
-								                }
-								                if (obj == null) {
-								                    return false;
-								                }
-								                try {
-								                    return acceptableValues.contains(EnumGetMethod.NAME_IGNORECASE.get(obj, defaultValue.getDeclaringClass()));
-								                } catch (IllegalArgumentException | ClassCastException e) {
-								                    return false;
-								                }
-								            });
+												if (obj instanceof Enum) {
+													return acceptableValues.contains(obj);
+												}
+												if (obj == null) {
+													return false;
+												}
+												try {
+													return acceptableValues.contains(EnumGetMethod.NAME_IGNORECASE.get(obj, defaultValue.getDeclaringClass()));
+												} catch (IllegalArgumentException | ClassCastException e) {
+													return false;
+												}
+											});
 						} else if (field.get(null) instanceof String) {
 							conf = commented_builder
 									.define(ConfigBuilder.configName(configEntry, "String"), (String)field.get(null));
