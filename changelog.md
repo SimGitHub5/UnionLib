@@ -1,3 +1,5 @@
+[4.1.1]
+- Made setting groups in config entries entirely optional
 [4.1.0]
 - Made necessary tweaks to the configuration screen
 - Prevented duplicate configs from getting registered

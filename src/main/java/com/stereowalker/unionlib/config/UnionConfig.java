@@ -24,7 +24,7 @@ public @interface UnionConfig {
 	 */
 	String name();
 	/**
-	 * @return The name of the config file itself
+	 * @return The translated name of the config. This shows up in menus
 	 */
 	String translatableName() default "";
 	/**
@@ -54,7 +54,7 @@ public @interface UnionConfig {
 	 */
 	public @interface Entry {
 		String name();
-		String group();
+		String group()default "";
 		ModConfig.Type type()default ModConfig.Type.COMMON;
 	}
 	

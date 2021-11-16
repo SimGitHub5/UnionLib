@@ -121,7 +121,7 @@ curseforge {
 		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
 		mainArtifact(jar) {
-			displayName = "UnionLib-$project.version"
+			displayName = modFilename+"-$project.version"
 		}
 		addArtifact deobfJar
 	}

@@ -29,14 +29,14 @@ public class ConfigBuilder {
 	
 	public static String configName(UnionConfig.Entry configEntry, String dataType) {
 		
-		if (configEntry.group() == "") {
-			if (dataType != "") {
+		if (configEntry.group().isEmpty()) {
+			if (!dataType.isEmpty()) {
 				return dataType+": "+configEntry.name();
 			} else {
 				return configEntry.name();
 			}
 		} else {
-			if (dataType != "") {
+			if (!dataType.isEmpty()) {
 				return configEntry.group()+"."+dataType+": "+configEntry.name();
 			} else {
 				return configEntry.group()+"."+configEntry.name();

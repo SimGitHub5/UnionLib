@@ -54,8 +54,12 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 			}
 
 			String name2 = "";
-			for (int i = 1; i < split(name).size(); i++) {
-				name2 += split(name).get(i);
+			if (split(name).size() > 1) {
+				for (int i = 1; i < split(name).size(); i++) {
+					name2 += split(name).get(i);
+				}
+			} else {
+				name2 = name;
 			}
 
 			Holder holder = ConfigBuilder.getValues(config).get(configValue);
