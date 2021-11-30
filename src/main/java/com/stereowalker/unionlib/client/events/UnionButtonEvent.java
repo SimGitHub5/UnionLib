@@ -1,7 +1,7 @@
 package com.stereowalker.unionlib.client.events;
 
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.client.gui.screen.UnionModsScreen;
+import com.stereowalker.unionlib.client.gui.screens.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 
 import net.minecraft.client.gui.screens.PauseScreen;

@@ -114,7 +114,7 @@ task deobfJar(type: Jar) {
 
 curseforge {
     project {
-    	id = '367806'
+    	id = modCurseId
 		apiKey = "$System.env.CURSEFORGEKEY"
 		changelog = file('changelog.md')
 		releaseType = 'release'
@@ -133,13 +133,28 @@ curseforge {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
-			artifact deobfJar
+        	groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+
+			pom.withXml {
+				asNode().remove(asNode().dependencies)
+			}
+
+			from components.java
+			//artifact sourcesJar
+			//artifact javadocJar
+			//artifact apiJar
         }
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            name = "modmaven"
+			credentials {
+				username "$System.env.ARTIFACTORYUSER"
+				password "$System.env.ARTIFACTORYPASS"
+			}
+			url = "https://modmaven.dev/artifactory/local-releases/"
         }
     }
 }

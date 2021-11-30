@@ -22,13 +22,50 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ConfigBuilder {
-	static Map<String,Holder> values = new HashMap<String,Holder>();
-	
+	static Map<String,Holder> client_values = new HashMap<String,Holder>();
+	static Map<String,Holder> common_values = new HashMap<String,Holder>();
+	static Map<String,Holder> server_values = new HashMap<String,Holder>();
+
+	static Map<String,Holder> retrieveValues(ModConfig.Type... types) {
+		Map<String,Holder> values = new HashMap<String,Holder>();
+		boolean hasClient = false; 
+		boolean hasCommon = false; 
+		boolean hasServer = false;
+		for (ModConfig.Type type : types) {
+			if (type == Type.CLIENT && !hasClient) {
+				hasClient = true;
+				values.putAll(client_values);
+			}
+			if (type == Type.COMMON && !hasCommon) {
+				hasCommon = true;
+				values.putAll(common_values);
+			}
+			if (type == Type.SERVER && !hasServer) {
+				hasServer = true;
+				values.putAll(server_values);
+			}
+		}
+		return values;
+	}
+
+	static void putValue(ModConfig.Type type, String key, Holder value) {
+		if (type == Type.CLIENT) {
+			client_values.put(key, value);
+		}
+		if (type == Type.COMMON) {
+			common_values.put(key, value);
+		}
+		if (type == Type.SERVER) {
+			server_values.put(key, value);
+		}
+	}
+
 	public static String configName(UnionConfig.Entry configEntry, String dataType) {
-		
+
 		if (configEntry.group().isEmpty()) {
 			if (!dataType.isEmpty()) {
 				return dataType+": "+configEntry.name();
@@ -43,25 +80,25 @@ public class ConfigBuilder {
 			}
 		}
 	}
-	
+
 	public static String configName(UnionConfig.Entry configEntry) {
 		return configName(configEntry, "");
 	}
 
 	static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
 		if (config != null && configEntry != null) {
-			return values.getOrDefault(config.name()+"="+configName(configEntry), new Holder(new ForgeConfigSpec.Builder().define("empty", "nothing_was_found"), null, false, 0, 0)).getValue();
+			return retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).getOrDefault(config.name()+"="+configName(configEntry), new Holder(new ForgeConfigSpec.Builder().define("empty", "nothing_was_found"), null, false, 0, 0)).getValue();
 		} else {
 			return null;
 		}
 	}
-	
+
 	public static Map<String,Holder> getValues(UnionConfig config) {
 		Map<String,Holder> values2 = new HashMap<String,Holder>();
-		
-		for (String configValue : values.keySet()) {
+
+		for (String configValue : retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).keySet()) {
 			if (configValue.split("=")[0].equals(config.name())) {
-				values2.put(configValue, values.get(configValue));
+				values2.put(configValue, retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).get(configValue));
 			}
 		}
 		return values2;
@@ -80,7 +117,7 @@ public class ConfigBuilder {
 			ConfigClassBuilder.client_builder.put(configClass, new ForgeConfigSpec.Builder());
 			ConfigClassBuilder.common_builder.put(configClass, new ForgeConfigSpec.Builder());
 			ConfigClassBuilder.server_builder.put(configClass, new ForgeConfigSpec.Builder());
-			
+
 			ConfigClassBuilder.registerConfigurations(configClass);
 			ConfigClassBuilder.loadConfigs(configClass);
 			ConfigClassBuilder.read(configClass);
@@ -90,7 +127,7 @@ public class ConfigBuilder {
 			throw new RuntimeException("This config class has already been regtistered");
 		}
 	}
-	
+
 	public static void registerConfig(ConfigObject configObject) {
 		if (configObject.getClass().isAnnotationPresent(UnionConfig.class) && !ConfigObjectBuilder.configs.contains(configObject)) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
@@ -99,7 +136,7 @@ public class ConfigBuilder {
 			ConfigObjectBuilder.client_builder.put(configObject, new ForgeConfigSpec.Builder());
 			ConfigObjectBuilder.common_builder.put(configObject, new ForgeConfigSpec.Builder());
 			ConfigObjectBuilder.server_builder.put(configObject, new ForgeConfigSpec.Builder());
-			
+
 			ConfigObjectBuilder.registerConfigurations(configObject);
 			ConfigObjectBuilder.loadConfigs(configObject);
 			ConfigObjectBuilder.read(configObject);
@@ -130,7 +167,7 @@ public class ConfigBuilder {
 		} 
 		return true;
 	}
-	
+
 	public static void reload() {
 		for (Class<?> configClass : ConfigClassBuilder.configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
@@ -147,7 +184,7 @@ public class ConfigBuilder {
 			}
 		}
 	}
-	
+
 	public static void load(ModConfig.Type... exceptions) {
 		System.out.println("Loading all values from the config files into their respective configuration variables");
 		for (Class<?> configClass : ConfigClassBuilder.configs) {
@@ -161,51 +198,51 @@ public class ConfigBuilder {
 			System.out.println("Loading "+con.name()+"'s config");
 		}
 	}
-	
-    private static final Splitter DOT_SPLITTER = Splitter.on(".");
-    static List<String> split(String path)
-    {
-        return Lists.newArrayList(DOT_SPLITTER.split(path));
-    }
-    
-    @EventBusSubscriber(bus = Bus.MOD)
-    public static class ModEventBus {
-    	@SubscribeEvent
-    	public static void onLoad(ModConfigEvent.Loading event) {
-    		load();
-    	}
-    	@SubscribeEvent
-    	public static void onReload(ModConfigEvent.Reloading event) {
-    		reload();
-    	}
-    }
-    @EventBusSubscriber(bus = Bus.FORGE)
-    public static class ForgeEventBus {
-    	@SubscribeEvent
-    	public static void onLoad(WorldEvent.Load event) {
-    		load(ModConfig.Type.COMMON);
-    		if (!event.getWorld().isClientSide()) {
-    			System.out.println("Loading All Server Config Files");
-    			load(ModConfig.Type.SERVER);
-    		} else {
-    			System.out.println("Loading All Client Config Files");
-    			load(ModConfig.Type.CLIENT);
-    		}
-    	}
-    }
-    
-    public static class Holder {
-    	protected final ForgeConfigSpec.ConfigValue<?> value;
-    	protected final List<Component> comments;
-    	protected final	boolean usesSider;
-    	protected final double min;
-    	protected final double max;
-    	public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<Component> comments, final boolean usesSider, final double min, final double max) {
-    		this.comments = comments;
-    		this.value = configvalue;
-    		this.usesSider = usesSider;
-    		this.min = min;
-    		this.max = max;
+
+	private static final Splitter DOT_SPLITTER = Splitter.on(".");
+	static List<String> split(String path)
+	{
+		return Lists.newArrayList(DOT_SPLITTER.split(path));
+	}
+
+	@EventBusSubscriber(bus = Bus.MOD)
+	public static class ModEventBus {
+		@SubscribeEvent
+		public static void onLoad(ModConfigEvent.Loading event) {
+			load();
+		}
+		@SubscribeEvent
+		public static void onReload(ModConfigEvent.Reloading event) {
+			reload();
+		}
+	}
+	@EventBusSubscriber(bus = Bus.FORGE)
+	public static class ForgeEventBus {
+		@SubscribeEvent
+		public static void onLoad(WorldEvent.Load event) {
+			load(ModConfig.Type.COMMON);
+			if (!event.getWorld().isClientSide()) {
+				System.out.println("Loading All Server Config Files");
+				load(ModConfig.Type.SERVER);
+			} else {
+				System.out.println("Loading All Client Config Files");
+				load(ModConfig.Type.CLIENT);
+			}
+		}
+	}
+
+	public static class Holder {
+		protected final ForgeConfigSpec.ConfigValue<?> value;
+		protected final List<Component> comments;
+		protected final	boolean usesSider;
+		protected final double min;
+		protected final double max;
+		public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<Component> comments, final boolean usesSider, final double min, final double max) {
+			this.comments = comments;
+			this.value = configvalue;
+			this.usesSider = usesSider;
+			this.min = min;
+			this.max = max;
 		}
 		public ForgeConfigSpec.ConfigValue<?> getValue() {
 			return value;
@@ -222,6 +259,6 @@ public class ConfigBuilder {
 		public double getMax() {
 			return max;
 		}
-    	
-    }
+
+	}
 }

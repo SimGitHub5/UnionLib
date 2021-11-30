@@ -208,7 +208,7 @@ public class ConfigClassBuilder {
 									.define(ConfigBuilder.configName(configEntry), field.get(null));
 						}
 
-						ConfigBuilder.values.put(config.name()+"="+ConfigBuilder.configName(configEntry), new Holder(conf, saved_comment, field.isAnnotationPresent(UnionConfig.Slider.class), min, max));
+						ConfigBuilder.putValue(type, config.name()+"="+ConfigBuilder.configName(configEntry), new Holder(conf, saved_comment, field.isAnnotationPresent(UnionConfig.Slider.class), min, max));
 						config_initialization.put(configClass, true);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();

@@ -10,6 +10,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.stereowalker.unionlib.client.gui.components.OverflowTextButton;
 import com.stereowalker.unionlib.client.gui.widget.button.Slider;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
@@ -157,7 +158,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		private ConfigEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<T> config) {
 			this.config = config;
-			this.configButton = new Button(0, 0, 200, 20, name, (onPress) -> {
+			this.configButton = new OverflowTextButton(0, 0, 200, 20, name, (onPress) -> {
 			}, (button, stack, x, y) -> {
 				int space = ConfigList.this.minecraft.screen.height - y;
 				int textHeight = comment.size();

@@ -7,7 +7,7 @@ import com.stereowalker.unionlib.config.UnionConfig.Entry;
 import com.stereowalker.unionlib.config.UnionConfig.Range;
 import com.stereowalker.unionlib.config.UnionConfig.Slider;
 
-@UnionConfig(name = "union-test-class")
+@UnionConfig(folder = "folder test", name = "union-test-class")
 public class TestClassConfig {
 
 	@UnionConfig.Entry(group = "Test Group 2" , name = "Debug")
