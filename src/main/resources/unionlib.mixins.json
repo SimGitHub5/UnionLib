@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.stereowalker.unionlib.mixin",
   "refmap": "unionlib.refmap.json",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "PlayerMixin",
 	"StructureStartMixin"

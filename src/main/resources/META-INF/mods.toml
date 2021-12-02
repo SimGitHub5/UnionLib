@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[38,)"
 license="All Rights Reserved"
 [[mods]]
 modId="unionlib"
 version="${file.jarVersion}"
 displayName="UnionLib"
-updateJSONURL="https://raw.githubusercontent.com/Stereowalker/UnionLib/1.16-forge/update.json"
+updateJSONURL="https://raw.githubusercontent.com/Stereowalker/UnionLib/1.18-forge/update.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/unionlib"
 logoFile="pack.png"
 credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
@@ -17,13 +17,13 @@ A library mod for all my mods
 [[dependencies.unionlib]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[37,)" #mandatory
+    versionRange="[38,)" #mandatory
     ordering="NONE"
     side="BOTH"
 # Here's another dependency
 [[dependencies.unionlib]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18)"
+    versionRange="[1.18,1.19)"
     ordering="NONE"
     side="BOTH"
