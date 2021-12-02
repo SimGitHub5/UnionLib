@@ -23,7 +23,7 @@ public class PatreonButton extends Button {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, UnionLib.location("textures/gui/patreon_button.png"));
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-		int i = this.getYImage(this.isHovered());
+		int i = this.getYImage(this./*isHovered*/m_198029_());
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();

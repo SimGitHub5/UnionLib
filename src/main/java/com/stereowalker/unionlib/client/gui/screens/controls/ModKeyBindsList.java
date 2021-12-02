@@ -14,7 +14,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.controls.ControlList;
+import net.minecraft.client.gui.screens.OptionsScreen;
+import net.minecraft.client.gui.screens.controls.ControlsScreen;
+import net.minecraft.client.gui.screens.controls.KeyBindsList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -22,9 +24,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ModControlList extends ControlList {
+public class ModKeyBindsList extends KeyBindsList {
 
-	public ModControlList(ModControlsScreen p_97399_, Minecraft p_97400_) {
+	public ModKeyBindsList(ModControlsScreen p_97399_, Minecraft p_97400_) {
 		super(p_97399_, p_97400_);
 		this.children().removeAll(this.children());
 
@@ -36,21 +38,21 @@ public class ModControlList extends ControlList {
 			String s1 = keymapping.getCategory();
 			if (!s1.equals(s)) {
 				s = s1;
-				this.addEntry(new ControlList.CategoryEntry(new TranslatableComponent(s1)));
+				this.addEntry(new KeyBindsList.CategoryEntry(new TranslatableComponent(s1)));
 			}
 
 			Component component = new TranslatableComponent(keymapping.getName());
 			int i = p_97400_.font.width(component);
-			if (i > this.maxNameWidth) {
-				this.maxNameWidth = i;
+			if (i > this./*maxNameWidth*/f_193859_) {
+				this./*maxNameWidth*/f_193859_ = i;
 			}
 
-			this.addEntry(new ModControlList.KeyEntry(keymapping, component));
+			this.addEntry(new ModKeyBindsList.KeyEntry(keymapping, component));
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class KeyEntry extends ControlList.Entry {
+	public class KeyEntry extends KeyBindsList.Entry {
 		/** The keybinding specified for this KeyEntry */
 		private final KeyMapping key;
 		/** The localized key description for this KeyEntry */
@@ -62,7 +64,7 @@ public class ModControlList extends ControlList {
 			this.key = p_97451_;
 			this.name = p_97452_;
 			this.changeButton = new Button(0, 0, 75 + 20 /*Forge: add space*/, 20, p_97452_, (p_97479_) -> {
-				ModControlList.this.controlsScreen.selectedKey = p_97451_;
+				ModKeyBindsList.this./*controlsScreen*/f_193858_./*selectedKey*/f_193975_ = p_97451_;
 			}) {
 				protected MutableComponent createNarrationMessage() {
 					return p_97451_.isUnbound() ? new TranslatableComponent("narrator.controls.unbound", p_97452_) : new TranslatableComponent("narrator.controls.bound", p_97452_, super.createNarrationMessage());
@@ -70,7 +72,7 @@ public class ModControlList extends ControlList {
 			};
 			this.resetButton = new Button(0, 0, 50, 20, new TranslatableComponent("controls.reset"), (p_97475_) -> {
 				key.setToDefault();
-				ModControlList.this.minecraft.options.setKey(p_97451_, p_97451_.getDefaultKey());
+				ModKeyBindsList.this.minecraft.options.setKey(p_97451_, p_97451_.getDefaultKey());
 				KeyMapping.resetMapping();
 			}) {
 				protected MutableComponent createNarrationMessage() {
@@ -80,9 +82,9 @@ public class ModControlList extends ControlList {
 		}
 
 		public void render(PoseStack pMatrixStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTicks) {
-			boolean flag = ModControlList.this.controlsScreen.selectedKey == this.key;
-			float f = (float)(pLeft + 90 - ModControlList.this.maxNameWidth);
-			ModControlList.this.minecraft.font.draw(pMatrixStack, this.name, f, (float)(pTop + pHeight / 2 - 9 / 2), 16777215);
+			boolean flag = ModKeyBindsList.this./*controlsScreen*/f_193858_./*selectedKey*/f_193975_ == this.key;
+			float f = (float)(pLeft + 90 - ModKeyBindsList.this./*maxNameWidth*/f_193859_);
+			ModKeyBindsList.this.minecraft.font.draw(pMatrixStack, this.name, f, (float)(pTop + pHeight / 2 - 9 / 2), 16777215);
 			this.resetButton.x = pLeft + 190 + 20;
 			this.resetButton.y = pTop;
 			this.resetButton.active = !this.key.isDefault();
@@ -93,10 +95,10 @@ public class ModControlList extends ControlList {
 			boolean flag1 = false;
 			boolean keyCodeModifierConflict = true; // less severe form of conflict, like SHIFT conflicting with SHIFT+G
 			if (!this.key.isUnbound()) {
-				for(KeyMapping keymapping : ModControlList.this.minecraft.options.keyMappings) {
+				for(KeyMapping keymapping : ModKeyBindsList.this.minecraft.options.keyMappings) {
 					if (keymapping != this.key && this.key.same(keymapping)) {
 						flag1 = true;
-						keyCodeModifierConflict &= keymapping.hasKeyCodeModifierConflict(keymapping);
+						keyCodeModifierConflict &= keymapping.hasKeyModifierConflict(keymapping);
 					}
 				}
 			}

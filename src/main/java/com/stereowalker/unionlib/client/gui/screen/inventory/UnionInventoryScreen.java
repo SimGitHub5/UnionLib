@@ -68,7 +68,7 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
-		this.doRenderEffects = !this.recipeBookGui.isVisible();
+//		this.doRenderEffects = !this.recipeBookGui.isVisible(); TODO: Figure out what that was
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(matrixStack, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);

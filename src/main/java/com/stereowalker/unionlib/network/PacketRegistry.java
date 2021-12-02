@@ -8,7 +8,7 @@ import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
 import com.stereowalker.unionlib.network.server.play.SCapePacket;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 
 

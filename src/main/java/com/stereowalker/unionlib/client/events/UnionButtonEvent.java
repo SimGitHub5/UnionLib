@@ -10,7 +10,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -21,16 +21,16 @@ public class UnionButtonEvent {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void drawButtons(GuiScreenEvent.InitGuiEvent event) {
+	public static void drawButtons(ScreenEvent.InitScreenEvent event) {
 		if (UnionLib.CONFIG.config_button) {
-			if(event.getGui() instanceof TitleScreen) {
-				event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-					event.getGui().getMinecraft().setScreen(new UnionModsScreen(event.getGui()));
+			if(event.getScreen() instanceof TitleScreen) {
+				event.addListener(new OverlayImageButton(event.getScreen().width / 2 + 104, event.getScreen().height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
+					event.getScreen().getMinecraft().setScreen(new UnionModsScreen(event.getScreen()));
 				}, new TranslatableComponent("menu.button.union")));
 			}
-			if(event.getGui() instanceof PauseScreen) {
-				event.addWidget(new OverlayImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 120 + -16, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-					event.getGui().getMinecraft().setScreen(new UnionModsScreen(event.getGui()));
+			if(event.getScreen() instanceof PauseScreen) {
+				event.addListener(new OverlayImageButton(event.getScreen().width / 2 + 104, event.getScreen().height / 4 + 120 + -16, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
+					event.getScreen().getMinecraft().setScreen(new UnionModsScreen(event.getScreen()));
 				}, new TranslatableComponent("menu.button.union")));
 			}
 		}

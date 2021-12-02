@@ -27,7 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin {
-
+	/*TODO: Wait for mapping
     @Shadow
     protected List<StructurePiece> pieces;
 
@@ -62,5 +62,5 @@ public class StructureStartMixin {
 
             MinecraftForge.EVENT_BUS.post(new StructureAddedEvent((StructureStart<?>) (Object)this, world));
         }
-    }
+    }*/
 }

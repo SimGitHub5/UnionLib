@@ -43,7 +43,7 @@ public class OverflowTextButton extends Button {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-		int i = this.getYImage(this.isHovered());
+		int i = this.getYImage(this./*isHovered*/m_198029_());
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
@@ -75,7 +75,7 @@ public class OverflowTextButton extends Button {
 			shouldhaveOverflow = false;
 		}
 
-		if (this.isHovered() && hasOverflow) {
+		if (this./*isHovered*/m_198029_() && hasOverflow) {
 			ticks++;
 			if (ticks >= UnionLib.CONFIG.textScrollSpeed) {
 				ticks = 0;
@@ -83,7 +83,7 @@ public class OverflowTextButton extends Button {
 				passedText = new TextComponent(passedText.getString()+remainingText.getString().charAt(0));
 				remainingText = new TextComponent(remainingText.getString().substring(1));
 			}
-		} else if (this.isHovered() && shouldhaveOverflow && completedTicks < UnionLib.CONFIG.textScrollReset) {
+		} else if (this./*isHovered*/m_198029_() && shouldhaveOverflow && completedTicks < UnionLib.CONFIG.textScrollReset) {
 			completedTicks++;
 		} else {
 			ticks = 0;
