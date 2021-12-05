@@ -8,6 +8,7 @@
 	"StructureStartMixin"
   ],
   "client": [
+	"GMix"
   ],
   "injectors": {
     "defaultRequire": 1
