@@ -332,12 +332,12 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 						}
 						return super.keyPressed(keyCode, scanCode, modifiers);
 					}
-					
+
 					@Override
 					protected void onFocusedChanged(boolean focused) {
 						super.onFocusedChanged(focused);
 					}
-					
+
 					@Override
 					public void tick() {
 						if (!this.isFocused() && !this.getValue().equals(config.get().toString())) {
@@ -345,7 +345,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 						}
 						super.tick();
 					}
-					
+
 					public void updateValues() {
 						if (!NumberedEntry.this.useSlider) {
 							V oldValue = config.get();

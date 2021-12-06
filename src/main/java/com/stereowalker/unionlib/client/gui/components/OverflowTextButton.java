@@ -93,5 +93,9 @@ public class OverflowTextButton extends Button {
 		}
 
 		drawCenteredString(pPoseStack, minecraft.font, buttonText, this.x + this.width / 2, this.y + (this.height - 8) / 2, getFGColor());
+	
+		if (this./*isHovered*/m_198029_()) {
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
+		}
 	}
 }
