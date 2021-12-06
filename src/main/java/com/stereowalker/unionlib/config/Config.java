@@ -9,9 +9,9 @@ public class Config implements ConfigObject {
 	@UnionConfig.Comment(comment = {"Enable this to see debug messages"})
 	public boolean debug = false;
 	
-	@UnionConfig.Entry(group = "General" , name = "OpenGL Debug")
+	@UnionConfig.Entry(group = "General" , name = "Disable OpenGL Logging")
 	@UnionConfig.Comment(comment = {"Enable this stop getting OpenGL messages","Useful for when you're constantly getting spammed with them"})
-	public boolean openGL_debug = false;
+	public boolean no_gl_debug = false;
 	
 	@UnionConfig.Entry(group = "General" , name = "Show Config Button", type = Type.CLIENT)
 	@UnionConfig.Comment(comment = {"Enable this to show the unionlib config button in the main menu"})

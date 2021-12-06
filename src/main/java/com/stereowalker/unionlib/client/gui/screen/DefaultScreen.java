@@ -27,6 +27,7 @@ public abstract class DefaultScreen extends Screen {
 
 	@Override
 	public void onClose() {
+		super.onClose();
 		this.minecraft.setScreen(this.previousScreen);
 	}
 }

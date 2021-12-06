@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.client.gui.components.OverflowTextButton;
+import com.stereowalker.unionlib.client.gui.screens.config.lists.ListScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.Slider;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
@@ -18,6 +19,7 @@ import com.stereowalker.unionlib.config.UnionConfig;
 import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.EditBox;
@@ -42,7 +44,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		this.screen = screen;
 		List<String> c = Arrays.asList(ConfigBuilder.getValues(config).keySet().toArray(new String[0]));
 		Collections.sort(c);
-		
+
 		String currentCategory = "";
 		for (String configValue : c) {
 			String name = "";
@@ -86,6 +88,8 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 				} else {
 					this.addEntry(new ConfigList.NumberedEntry<Integer>(new TranslatableComponent(name2), comment, (ConfigValue<Integer>) ConfigBuilder.getValues(config).get(configValue).getValue(), usesSlider, holder.getMin(), holder.getMax()));
 				}
+			} else if (ConfigBuilder.getValues(config).get(configValue).getValue().get() instanceof List<?>) {
+				this.addEntry(new ConfigList.ListEntry(new TranslatableComponent(name2), comment, (ConfigValue<List<?>>) ConfigBuilder.getValues(config).get(configValue).getValue()));
 			} else {
 				this.addEntry(new ConfigList.ConfigEntry<>(new TranslatableComponent(name2), ConfigBuilder.getValues(config).get(configValue).getComments(), ConfigBuilder.getValues(config).get(configValue).getValue()));
 			}
@@ -151,6 +155,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		protected final ForgeConfigSpec.ConfigValue<T> config;
 		/** The mod */
 		protected final Button configButton;
+		protected AbstractWidget configInteractable;
 
 		public void tick() {
 
@@ -171,6 +176,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 				if (comment != null)
 					ConfigList.this.minecraft.screen.renderComponentTooltip(stack, comment, x, drawY);
 			});
+			this.configInteractable = null;
 		}
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
@@ -178,25 +184,52 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 			this.configButton.y = p_230432_3_;
 			this.configButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.configButton.active = false;
+			if (configInteractable != null) {
+				this.configInteractable.x = p_230432_4_ + 130;
+				this.configInteractable.y = p_230432_3_;
+				this.configInteractable.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			}
 		}
 
 		public List<? extends GuiEventListener> children() {
-			return ImmutableList.of(this.configButton);
+			return this.configInteractable == null ? ImmutableList.of(this.configButton) : ImmutableList.of(this.configButton, this.configInteractable);
 		}
 
 		@Override
 		public List<? extends NarratableEntry> narratables() {
-			return ImmutableList.of(this.configButton);
+			return this.configInteractable == null ? ImmutableList.of(this.configButton) : ImmutableList.of(this.configButton, this.configInteractable);
+		}
+
+		@Override
+		public boolean mouseClicked(double mouseX, double mouseY, int button) {
+			if (this.configInteractable != null) return this.configInteractable.mouseClicked(mouseX, mouseY, button);
+			else return super.mouseClicked(mouseX, mouseY, button);
+		}
+
+		@Override
+		public boolean mouseReleased(double mouseX, double mouseY, int button) {
+			if (this.configInteractable != null) return this.configInteractable.mouseReleased(mouseX, mouseY, button);
+			else return super.mouseReleased(mouseX, mouseY, button);
+		}
+
+		@Override
+		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+			if (this.configInteractable != null) return this.configInteractable.keyPressed(keyCode, scanCode, modifiers);
+			else return super.keyPressed(keyCode, scanCode, modifiers);
+		}
+
+		@Override
+		public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+			if (this.configInteractable != null) return this.configInteractable.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+			else return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public class EnumEntry extends ConfigList.ConfigEntry<Enum<?>> {
-		private final Button enumButton;
-
 		private EnumEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<Enum<?>> config) {
 			super(name, comment, config);
-			this.enumButton = new Button(0, 0, 200, 20, name, (onPress) -> {
+			this.configInteractable = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(RegistryHelper.rotateEnumForward(config.get(), config.get().getDeclaringClass().getEnumConstants()));
 				ConfigBuilder.reload();
 			});
@@ -204,33 +237,16 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.enumButton.x = p_230432_4_ + 130;
-			this.enumButton.y = p_230432_3_;
-			this.enumButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.enumButton.setMessage(new TranslatableComponent(config.get().name()));
-		}
-
-		public List<? extends GuiEventListener> getEventListeners() {
-			return ImmutableList.of(this.enumButton);
-		}
-
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			return this.enumButton.mouseClicked(mouseX, mouseY, button);
-		}
-
-		public boolean mouseReleased(double mouseX, double mouseY, int button) {
-			return this.enumButton.mouseReleased(mouseX, mouseY, button);
+			this.configInteractable.setMessage(new TranslatableComponent(config.get().name()));
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public class BooleanEntry extends ConfigList.ConfigEntry<Boolean> {
-		private final Button booleanButton;
-
 		private BooleanEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<Boolean> config) {
 			super(name, comment, config);
 
-			this.booleanButton = new Button(0, 0, 200, 20, name, (onPress) -> {
+			this.configInteractable = new Button(0, 0, 200, 20, name, (onPress) -> {
 				config.set(!config.get());
 				ConfigBuilder.reload();
 			});
@@ -238,71 +254,32 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.booleanButton.x = p_230432_4_ + 130;
-			this.booleanButton.y = p_230432_3_;
-			this.booleanButton.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.booleanButton.setMessage(CommonComponents.optionStatus(config.get()));
-		}
-
-		public List<? extends GuiEventListener> getEventListeners() {
-			return ImmutableList.of(this.booleanButton);
-		}
-
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			return this.booleanButton.mouseClicked(mouseX, mouseY, button);
-		}
-
-		public boolean mouseReleased(double mouseX, double mouseY, int button) {
-			return this.booleanButton.mouseReleased(mouseX, mouseY, button);
+			this.configInteractable.setMessage(CommonComponents.optionStatus(config.get()));
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public class StringEntry extends ConfigList.ConfigEntry<String> {
-		private final EditBox stringField;
-
 		private StringEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<String> config) {
 			super(name, comment, config);
 
-			this.stringField = new EditBox(ConfigList.this.minecraft.font, 0, 0, 200, 20, new TranslatableComponent("config.editBox"));
-			this.stringField.setValue(this.config.get());
-			this.stringField.setResponder((p_214319_1_) -> {
+			this.configInteractable = new EditBox(ConfigList.this.minecraft.font, 0, 0, 200, 20, new TranslatableComponent("config.editBox"));
+			((EditBox)this.configInteractable).setValue(this.config.get());
+			((EditBox)this.configInteractable).setResponder((p_214319_1_) -> {
 				this.config.set(p_214319_1_);
 				ConfigBuilder.reload();
 			});
-			ConfigList.this.screen.addChild(this.stringField);
-		}
-
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			this.stringField.x = p_230432_4_ + 130;
-			this.stringField.y = p_230432_3_;
-			this.stringField.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			ConfigList.this.screen.addChild(this.configInteractable);
 		}
 
 		@Override
 		public void tick() {
-			this.stringField.tick();
-			super.tick();
-		}
-
-		public List<? extends GuiEventListener> getEventListeners() {
-			return ImmutableList.of(this.stringField);
-		}
-
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			return this.stringField.mouseClicked(mouseX, mouseY, button);
-		}
-
-		public boolean mouseReleased(double mouseX, double mouseY, int button) {
-			return this.stringField.mouseReleased(mouseX, mouseY, button);
+			((EditBox)this.configInteractable).tick();
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public class NumberedEntry<V extends Number> extends ConfigList.ConfigEntry<V> {
-		private final EditBox stringField;
-		private final Slider slider;
 		private final boolean useSlider;
 
 		@SuppressWarnings("unchecked")
@@ -311,140 +288,113 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 			this.useSlider = useSlider;
 
 			double shiftedMax = max-min;
-			this.slider = new Slider(0, 0, 200, 20, config.get().doubleValue()/shiftedMax, new TextComponent(config.get().toString())) {
-				@Override
-				protected void applyValue() {
-					if (NumberedEntry.this.useSlider) {
-						V oldValue = config.get();
-						Double newValue = (this.value*shiftedMax)+min;
-						try {
-							if (config.get() instanceof Double) {
-								NumberedEntry.this.config.set((V)newValue);
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Float) {
-								NumberedEntry.this.config.set((V)(Float)newValue.floatValue());
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Long) {
-								NumberedEntry.this.config.set((V)(Long)newValue.longValue());
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Short) {
-								NumberedEntry.this.config.set((V)(Short)newValue.shortValue());
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Byte) {
-								NumberedEntry.this.config.set((V)(Byte)newValue.byteValue());
-								ConfigBuilder.reload();
-							} else {
-								NumberedEntry.this.config.set((V)(Integer)newValue.intValue());
-								ConfigBuilder.reload();
-							}
-						} catch (NumberFormatException e) {
-							config.set(oldValue);
-							ConfigBuilder.reload();
-						}
-						this.setMessage(new TextComponent(NumberedEntry.this.config.get().toString()));
-					}
-				}
-			};
-			this.stringField = new EditBox(ConfigList.this.minecraft.font, 0, 0, 200, 20, new TranslatableComponent("config.editNumber")) {
-				@Override
-				public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-					if (keyCode == GLFW.GLFW_KEY_ENTER) {
-						updateValues();
-					}
-					return super.keyPressed(keyCode, scanCode, modifiers);
-				}
-
-				@Override
-				protected void onFocusedChanged(boolean focused) {
-					super.onFocusedChanged(focused);
-				}
-
-				@Override
-				public void tick() {
-					if (!this.isFocused() && !this.getValue().equals(config.get().toString())) {
-						updateValues();
-					}
-					super.tick();
-				}
-
-				public void updateValues() {
-					if (!NumberedEntry.this.useSlider) {
-						V oldValue = config.get();
-						try {
-							if (config.get() instanceof Double) {
-								NumberedEntry.this.config.set((V)(Double)Double.parseDouble(this.getValue()));
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Float) {
-								NumberedEntry.this.config.set((V)(Float)Float.parseFloat(this.getValue()));
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Long) {
-								NumberedEntry.this.config.set((V)(Long)Long.parseLong(this.getValue()));
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Short) {
-								NumberedEntry.this.config.set((V)(Short)Short.parseShort(this.getValue()));
-								ConfigBuilder.reload();
-							} else if (config.get() instanceof Byte) {
-								NumberedEntry.this.config.set((V)(Byte)Byte.parseByte(this.getValue()));
-								ConfigBuilder.reload();
-							} else {
-								NumberedEntry.this.config.set((V)(Integer)Integer.parseInt(this.getValue()));
+			if (useSlider) {
+				this.configInteractable = new Slider(0, 0, 200, 20, config.get().doubleValue()/shiftedMax, new TextComponent(config.get().toString())) {
+					@Override
+					protected void applyValue() {
+						if (NumberedEntry.this.useSlider) {
+							V oldValue = config.get();
+							Double newValue = (this.value*shiftedMax)+min;
+							try {
+								if (config.get() instanceof Double) {
+									NumberedEntry.this.config.set((V)newValue);
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Float) {
+									NumberedEntry.this.config.set((V)(Float)newValue.floatValue());
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Long) {
+									NumberedEntry.this.config.set((V)(Long)newValue.longValue());
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Short) {
+									NumberedEntry.this.config.set((V)(Short)newValue.shortValue());
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Byte) {
+									NumberedEntry.this.config.set((V)(Byte)newValue.byteValue());
+									ConfigBuilder.reload();
+								} else {
+									NumberedEntry.this.config.set((V)(Integer)newValue.intValue());
+									ConfigBuilder.reload();
+								}
+							} catch (NumberFormatException e) {
+								config.set(oldValue);
 								ConfigBuilder.reload();
 							}
-						} catch (NumberFormatException e) {
-							config.set(oldValue);
-							ConfigBuilder.reload();
-							this.setValue(oldValue.toString());
+							this.setMessage(new TextComponent(NumberedEntry.this.config.get().toString()));
 						}
 					}
-				}
-			};
-			this.stringField.setValue(this.config.get().toString());
-			ConfigList.this.screen.addChild(this.stringField);
-		}
-
-		@Override
-		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-			return this.stringField.keyPressed(keyCode, scanCode, modifiers);
-		}
-
-		@Override
-		public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-			return this.slider.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-		}
-
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			super.render(p_230432_1_, p_230432_2_, p_230432_3_, p_230432_4_, p_230432_5_, p_230432_6_, p_230432_7_, p_230432_8_, p_230432_9_, p_230432_10_);
-			if (this.useSlider) {
-				this.slider.x = p_230432_4_ + 130;
-				this.slider.y = p_230432_3_;
-				this.slider.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+				};
 			} else {
-				this.stringField.x = p_230432_4_ + 130;
-				this.stringField.y = p_230432_3_;
-				this.stringField.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+				this.configInteractable = new EditBox(ConfigList.this.minecraft.font, 0, 0, 200, 20, new TranslatableComponent("config.editNumber")) {
+					@Override
+					public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+						if (keyCode == GLFW.GLFW_KEY_ENTER) {
+							updateValues();
+						}
+						return super.keyPressed(keyCode, scanCode, modifiers);
+					}
+					
+					@Override
+					protected void onFocusedChanged(boolean focused) {
+						super.onFocusedChanged(focused);
+					}
+					
+					@Override
+					public void tick() {
+						if (!this.isFocused() && !this.getValue().equals(config.get().toString())) {
+							updateValues();
+						}
+						super.tick();
+					}
+					
+					public void updateValues() {
+						if (!NumberedEntry.this.useSlider) {
+							V oldValue = config.get();
+							try {
+								if (config.get() instanceof Double) {
+									NumberedEntry.this.config.set((V)(Double)Double.parseDouble(this.getValue()));
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Float) {
+									NumberedEntry.this.config.set((V)(Float)Float.parseFloat(this.getValue()));
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Long) {
+									NumberedEntry.this.config.set((V)(Long)Long.parseLong(this.getValue()));
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Short) {
+									NumberedEntry.this.config.set((V)(Short)Short.parseShort(this.getValue()));
+									ConfigBuilder.reload();
+								} else if (config.get() instanceof Byte) {
+									NumberedEntry.this.config.set((V)(Byte)Byte.parseByte(this.getValue()));
+									ConfigBuilder.reload();
+								} else {
+									NumberedEntry.this.config.set((V)(Integer)Integer.parseInt(this.getValue()));
+									ConfigBuilder.reload();
+								}
+							} catch (NumberFormatException e) {
+								config.set(oldValue);
+								ConfigBuilder.reload();
+								this.setValue(oldValue.toString());
+							}
+						}
+					}
+				};
+				((EditBox)this.configInteractable).setValue(this.config.get().toString());
+				ConfigList.this.screen.addChild(this.configInteractable);
 			}
 		}
 
 		@Override
 		public void tick() {
-			this.stringField.tick();
-			super.tick();
+			if (!useSlider) ((EditBox)this.configInteractable).tick();
 		}
+	}
 
-		public List<? extends GuiEventListener> getEventListeners() {
-			return ImmutableList.of(this.stringField, this.slider);
-		}
-
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			if (this.slider.mouseClicked(mouseX, mouseY, button)) {
-				return true;
-			} else {
-				return this.stringField.mouseClicked(mouseX, mouseY, button);
-			}
-		}
-
-		public boolean mouseReleased(double mouseX, double mouseY, int button) {
-			return this.stringField.mouseReleased(mouseX, mouseY, button) || this.slider.mouseReleased(mouseX, mouseY, button);
+	@OnlyIn(Dist.CLIENT)
+	public class ListEntry extends ConfigList.ConfigEntry<List<?>> {
+		private ListEntry(final Component name, final List<Component> comment, final ForgeConfigSpec.ConfigValue<List<?>> config) {
+			super(name, comment, config);
+			this.configInteractable = new Button(0, 0, 200, 20, new TranslatableComponent("list"), (onPress) -> {
+				ConfigList.this.minecraft.setScreen(new ListScreen(name, ConfigList.this.screen, config));
+			});
 		}
 	}
 }

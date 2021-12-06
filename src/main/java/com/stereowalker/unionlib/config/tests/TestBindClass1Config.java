@@ -1,12 +1,19 @@
 package com.stereowalker.unionlib.config.tests;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.stereowalker.unionlib.config.UnionConfig;
 
 @UnionConfig(name = "union-test-bind-1")
 public class TestBindClass1Config {
 
-	@UnionConfig.Entry(name = "This is a really long text to ensure that text scrolls correctly")
-	@UnionConfig.Comment(comment = {"Enable this to see debug messages","Added"})
-	public static boolean test_2_boolean = false;
+	@UnionConfig.Entry(name = "Test List 1")
+	@UnionConfig.Comment(comment = {"Test One"})
+	public static List<String> test_list = Lists.newArrayList("Arc", "Knight");
+	
+	@UnionConfig.Entry(name = "Test List 2")
+	@UnionConfig.Comment(comment = {"Test Two"})
+	public static List<Object> test_list_2 = Lists.newArrayList("Arc", 1);
 
 }
