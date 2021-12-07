@@ -108,10 +108,10 @@ jar {
     }
 }
 
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	classifier = "deobf"
-}
+//task deobfJar(type: Jar) {
+//	from sourceSets.main.output
+//	classifier = "deobf"
+//}
 
 curseforge {
     project {
@@ -124,7 +124,7 @@ curseforge {
 		mainArtifact(jar) {
 			displayName = modFilename+"-$project.version"
 		}
-		addArtifact deobfJar
+		//addArtifact deobfJar
 	}
 	options {
     	debug = false // defaults to false
@@ -155,6 +155,6 @@ publishing {
     }
 }
 
-artifacts {
-	archives deobfJar
-}
+//artifacts {
+//	archives deobfJar
+//}
