@@ -26,12 +26,12 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ConfigBuilder {
-	static Map<String,Holder> client_values = new HashMap<String,Holder>();
-	static Map<String,Holder> common_values = new HashMap<String,Holder>();
-	static Map<String,Holder> server_values = new HashMap<String,Holder>();
+	static Map<String,Holder<?>> client_values = new HashMap<String,Holder<?>>();
+	static Map<String,Holder<?>> common_values = new HashMap<String,Holder<?>>();
+	static Map<String,Holder<?>> server_values = new HashMap<String,Holder<?>>();
 
-	static Map<String,Holder> retrieveValues(ModConfig.Type... types) {
-		Map<String,Holder> values = new HashMap<String,Holder>();
+	static Map<String,Holder<?>> retrieveValues(ModConfig.Type... types) {
+		Map<String,Holder<?>> values = new HashMap<String,Holder<?>>();
 		boolean hasClient = false; 
 		boolean hasCommon = false; 
 		boolean hasServer = false;
@@ -52,7 +52,7 @@ public class ConfigBuilder {
 		return values;
 	}
 
-	static void putValue(ModConfig.Type type, String key, Holder value) {
+	static void putValue(ModConfig.Type type, String key, Holder<?> value) {
 		if (type == Type.CLIENT) {
 			client_values.put(key, value);
 		}
@@ -87,14 +87,14 @@ public class ConfigBuilder {
 
 	static ForgeConfigSpec.ConfigValue<?> getConfigValue(UnionConfig config, UnionConfig.Entry configEntry){
 		if (config != null && configEntry != null) {
-			return retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).getOrDefault(config.name()+"="+configName(configEntry), new Holder(new ForgeConfigSpec.Builder().define("empty", "nothing_was_found"), null, false, 0, 0)).getValue();
+			return retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).getOrDefault(config.name()+"="+configName(configEntry), new Holder<>(new ForgeConfigSpec.Builder().define("empty", "nothing_was_found"), "nothing_was_found", null, false, 0, 0)).getValue();
 		} else {
 			return null;
 		}
 	}
 
-	public static Map<String,Holder> getValues(UnionConfig config) {
-		Map<String,Holder> values2 = new HashMap<String,Holder>();
+	public static Map<String,Holder<?>> getValues(UnionConfig config) {
+		Map<String,Holder<?>> values2 = new HashMap<String,Holder<?>>();
 
 		for (String configValue : retrieveValues(Type.CLIENT, Type.COMMON, Type.SERVER).keySet()) {
 			if (configValue.split("=")[0].equals(config.name())) {
@@ -231,27 +231,32 @@ public class ConfigBuilder {
 		}
 	}
 
-	public static class Holder {
-		protected final ForgeConfigSpec.ConfigValue<?> value;
+	public static class Holder<T extends Object> {
+		protected final ForgeConfigSpec.ConfigValue<T> value;
+		protected final T defaultValue;
 		protected final List<Component> comments;
-		protected final	boolean usesSider;
+		protected final	boolean usesSlider;
 		protected final double min;
 		protected final double max;
-		public Holder(final ForgeConfigSpec.ConfigValue<?> configvalue, final List<Component> comments, final boolean usesSider, final double min, final double max) {
+		public Holder(final ForgeConfigSpec.ConfigValue<T> configvalue, final T defaultValue, final List<Component> comments, final boolean usesSlider, final double min, final double max) {
 			this.comments = comments;
 			this.value = configvalue;
-			this.usesSider = usesSider;
+			this.defaultValue = defaultValue;
+			this.usesSlider = usesSlider;
 			this.min = min;
 			this.max = max;
 		}
-		public ForgeConfigSpec.ConfigValue<?> getValue() {
+		public ForgeConfigSpec.ConfigValue<T> getValue() {
 			return value;
+		}
+		public T getDefaultValue() {
+			return defaultValue;
 		}
 		public List<Component> getComments() {
 			return comments;
 		}
-		public boolean isUsesSider() {
-			return usesSider;
+		public boolean isUsingSlider() {
+			return usesSlider;
 		}
 		public double getMin() {
 			return min;
