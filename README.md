@@ -1,6 +1,6 @@
-# UnionLib [![Minecraft Version](https://img.shields.io/badge/minecraft-1.17.1-blue.svg)](#)
+# UnionLib [![Minecraft Version](https://img.shields.io/badge/minecraft-1.18-blue.svg)](#)
 
-## Hot to Add to your Project:
+## How to add to your Project:
 
 Insert the following text to your `build.gradle` file:
 ```
