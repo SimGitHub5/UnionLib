@@ -14,6 +14,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -112,7 +113,7 @@ public class ConfigBuilder {
 	public static void registerConfig(Class<?> configClass) {
 		if (configClass.isAnnotationPresent(UnionConfig.class) && !ConfigClassBuilder.configs.contains(configClass)) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
-			System.out.println("Registered the config for "+con.name());
+			UnionLib.debug("Registered the config for "+con.name());
 			ConfigClassBuilder.configs.add(configClass);
 			ConfigClassBuilder.client_builder.put(configClass, new ForgeConfigSpec.Builder());
 			ConfigClassBuilder.common_builder.put(configClass, new ForgeConfigSpec.Builder());
@@ -131,7 +132,7 @@ public class ConfigBuilder {
 	public static void registerConfig(ConfigObject configObject) {
 		if (configObject.getClass().isAnnotationPresent(UnionConfig.class) && !ConfigObjectBuilder.configs.contains(configObject)) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
-			System.out.println("Registered the config for "+con.name());
+			UnionLib.debug("Registered the config for "+con.name());
 			ConfigObjectBuilder.configs.add(configObject);
 			ConfigObjectBuilder.client_builder.put(configObject, new ForgeConfigSpec.Builder());
 			ConfigObjectBuilder.common_builder.put(configObject, new ForgeConfigSpec.Builder());
@@ -150,7 +151,7 @@ public class ConfigBuilder {
 	public static void loadConfig(ForgeConfigSpec config, String path, String fileName) {
 		File configFile = new File(path, fileName);
 		configFile.getParentFile().mkdirs();
-		System.out.println(path);
+		UnionLib.debug(path);
 		CommentedFileConfig file = (CommentedFileConfig)CommentedFileConfig.builder(configFile).sync().autosave().preserveInsertionOrder().onFileNotFound((newfile, configFormat) -> setupConfigFile(configFile, newfile, configFormat)).writingMode(WritingMode.REPLACE).build();
 		file.load();
 		config.setConfig(file);
@@ -173,29 +174,29 @@ public class ConfigBuilder {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
 				ConfigClassBuilder.read(configClass);
-				System.out.println("Detected change in "+con.name()+"'s config file. Reloading values");
+				UnionLib.debug("Detected change in "+con.name()+"'s config file. Reloading values");
 			}
 		}
 		for (ConfigObject configObject : ConfigObjectBuilder.configs) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 			if (con.autoReload()) {
 				ConfigObjectBuilder.read(configObject);
-				System.out.println("Detected change in "+con.name()+"'s config file. Reloading values");
+				UnionLib.debug("Detected change in "+con.name()+"'s config file. Reloading values");
 			}
 		}
 	}
 
 	public static void load(ModConfig.Type... exceptions) {
-		System.out.println("Loading all values from the config files into their respective configuration variables");
+		UnionLib.debug("Loading all values from the config files into their respective configuration variables");
 		for (Class<?> configClass : ConfigClassBuilder.configs) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			ConfigClassBuilder.read(configClass, exceptions);
-			System.out.println("Loading "+con.name()+"'s config");
+			UnionLib.debug("Loading "+con.name()+"'s config");
 		}
 		for (ConfigObject configObject : ConfigObjectBuilder.configs) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 			ConfigObjectBuilder.read(configObject, exceptions);
-			System.out.println("Loading "+con.name()+"'s config");
+			UnionLib.debug("Loading "+con.name()+"'s config");
 		}
 	}
 
@@ -222,10 +223,10 @@ public class ConfigBuilder {
 		public static void onLoad(WorldEvent.Load event) {
 			load(ModConfig.Type.COMMON);
 			if (!event.getWorld().isClientSide()) {
-				System.out.println("Loading All Server Config Files");
+				UnionLib.debug("Loading All Server Config Files");
 				load(ModConfig.Type.SERVER);
 			} else {
-				System.out.println("Loading All Client Config Files");
+				UnionLib.debug("Loading All Client Config Files");
 				load(ModConfig.Type.CLIENT);
 			}
 		}

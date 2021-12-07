@@ -32,7 +32,6 @@ public class ListScreen extends DefaultScreen {
 
 		this.addRenderableWidget(new Button(this.width / 2 - 100, this.height - 29, 200, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.configList.set(this.list.mainList);
-			System.out.println("CLos");
 			ConfigBuilder.reload();
 			this.minecraft.setScreen(this.previousScreen);
 		}));
@@ -46,7 +45,6 @@ public class ListScreen extends DefaultScreen {
 	@Override
 	public void onClose() {
 		this.configList.set(this.list.mainList);
-		System.out.println("CLos");
 		ConfigBuilder.reload();
 		super.onClose();
 	}

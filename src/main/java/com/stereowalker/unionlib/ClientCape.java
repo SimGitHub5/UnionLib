@@ -43,7 +43,7 @@ public class ClientCape {
 	         URL url = new URL("https://raw.githubusercontent.com/Stereowalker/UnionLib/1.16-forge/capes.json");
 	         URLConnection connection = url.openConnection();
 	         connection.connect();
-	         System.out.println("Found the cape Json file on GitHub");
+	         UnionLib.debug("Found the Patreon Cape File");
 	         
 	         BufferedReader read = new BufferedReader(
 	         new InputStreamReader(url.openStream()));
@@ -51,14 +51,14 @@ public class ClientCape {
 	         JsonObject object = parser.parse(read).getAsJsonObject();
 	         
 	         for (Entry<String, JsonElement> element: object.entrySet()) {
-	        	 System.out.println("Found cape for "+element.getKey()+" they seem to want to use the "+element.getValue().getAsString()+" cape");
+//	        	 UnionLib.debug("Found cape for "+element.getKey()+" they seem to want to use the "+element.getValue().getAsString()+" cape");
 	        	 CAPES_LOCATION.put(UUID.fromString(element.getKey()), element.getValue().getAsString());
 	         }
 	         read.close();
 	      } catch (MalformedURLException e) {
-	         System.out.println("Internet is not connected");
+	    	  UnionLib.debug("Internet is not connected");
 	      } catch (IOException e) {
-	         System.out.println("Internet is not connected");
+	    	  UnionLib.debug("Internet is not connected");
 	      }
 	}
 	/**

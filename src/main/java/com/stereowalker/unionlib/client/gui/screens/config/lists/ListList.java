@@ -128,22 +128,18 @@ public class ListList<T extends Object> extends ContainerObjectSelectionList<Lis
 			this.index = index;
 			this.removeButton = new OverflowTextButton(0, 0, 20, 20, new TextComponent("[X]").withStyle(ChatFormatting.RED), (onPress) -> {
 				ListList.this.remove(this.index);
-				System.out.println("Removing list entry at "+this.index);
 				ListList.this.mainList.remove(this.index);
 				int i = 0;
 				for (Entry ent : ListList.this.children()) {
 					if (ent instanceof ListList<?>.StringEntry) {
-						System.out.println("Removing responder and Reassigning object at "+((ListList<?>.ListEntry<?>)ent).index+" to "+i);
 						((ListList<?>.StringEntry)ent).index = i;
 						((ListList<?>.StringEntry)ent).setResponder = false;
 						((EditBox)((ListList<?>.StringEntry)ent).configInteractable).setResponder((p_214319_1_) -> {
-							System.out.println("No Responder");
 						});
 						
 						i++;
 					}
 					else if (ent instanceof ListList<?>.ListEntry<?>) {
-						System.out.println("Reassigning object at "+((ListList<?>.ListEntry<?>)ent).index+" to "+i);
 						((ListList<?>.ListEntry<?>)ent).index = i;
 						i++;
 					}
@@ -215,22 +211,18 @@ public class ListList<T extends Object> extends ContainerObjectSelectionList<Lis
 		public void tick() {
 			if (!setResponder) {
 				if (this.index < ListList.this.mainList.size()) {
-					System.out.println("Updating: index "+this.index+" size "+ ListList.this.mainList.size());
 					((EditBox)this.configInteractable).setResponder((p_214319_1_) -> {
-						System.out.println("Responder 1: "+p_214319_1_);
 						this.getMainList().set(this.index, p_214319_1_);
 					});
 					this.setResponder = true;
 				}
 				else {
-					System.out.println("Will not update: index "+this.index+" size "+ ListList.this.mainList.size());
 					//Try to update the index of this element
 					int i = 0;
 					for (Entry e : ListList.this.children()) {
 						if (e == this) {
 							this.index = i;
 							((EditBox)this.configInteractable).setResponder((p_214319_1_) -> {
-								System.out.println("Responder 2: "+p_214319_1_);
 								this.getMainList().set(this.index, p_214319_1_);
 							});
 							this.setResponder = true;

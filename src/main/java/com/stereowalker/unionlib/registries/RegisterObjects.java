@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -18,7 +19,7 @@ public class RegisterObjects {
 
 	public static void putItemsInForgeRegistries(IForgeRegistry<Item> forgeRegistry) {
 		for (Class<?> classs : registries) {
-			System.out.println("UnionLib Registry: Found class");
+			UnionLib.debug("UnionLib Registry: Found class "+classs);
 			RegistryHolder reg = null;
 			boolean hasAnnotation = classs.isAnnotationPresent(RegistryHolder.class);
 			if (hasAnnotation)reg = classs.getAnnotation(RegistryHolder.class);

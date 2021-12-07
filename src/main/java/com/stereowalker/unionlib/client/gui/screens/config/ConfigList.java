@@ -302,7 +302,6 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 				this.configInteractable = new EditBox(ConfigList.this.minecraft.font, 0, 0, this.interactionWidth, 20, new TranslatableComponent("config.editBox"));
 				((EditBox) this.configInteractable).setValue(this.config.getValue().get());
 				((EditBox)this.configInteractable).setResponder((p_214319_1_) -> {
-					System.out.println("Resp: "+p_214319_1_);
 					this.config.getValue().set(p_214319_1_);
 					ConfigBuilder.reload();
 				});
@@ -311,7 +310,6 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 
 		@Override
 		public void tick() {
-			//			System.out.println(((EditBox)this.configInteractable).getValue());
 			((EditBox)this.configInteractable).tick();
 		}
 	}
