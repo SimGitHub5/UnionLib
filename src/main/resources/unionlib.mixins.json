@@ -11,7 +11,7 @@
   ],
   "client": [
 	"client.GlDebugMixin",
-	"PauseScreenMixin",
+	"client.PauseScreenMixin",
 	"TitleScreenMixin",
 	"client.MinecraftMixin",
 	"client.ClientLevelMixin",

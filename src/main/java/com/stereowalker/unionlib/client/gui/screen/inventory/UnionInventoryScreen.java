@@ -1,8 +1,10 @@
 package com.stereowalker.unionlib.client.gui.screen.inventory;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
+import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 
 import net.minecraft.client.gui.components.ImageButton;
@@ -68,7 +70,7 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
-//		this.doRenderEffects = !this.recipeBookGui.isVisible(); TODO: Figure out what that was
+		//		this.doRenderEffects = !this.recipeBookGui.isVisible(); TODO: Figure out what that was
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(matrixStack, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -136,6 +138,18 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 		this.recipeBookGui.recipesUpdated();
 	}
 
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
+		if (super.keyPressed(pKeyCode, pScanCode, pModifiers)) {
+			return true;
+		} else if (KeyBindings.OPEN_UNION_INVENTORY.isActiveAndMatches(mouseKey)) {
+			this.onClose();
+			return true;
+		} else {return false;}
+	}
+
+	@Override
 	public void onClose() {
 		if (this.removeRecipeBookGui) {
 			this.recipeBookGui.removed();
