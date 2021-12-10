@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Maps;
-import com.stereowalker.unionlib.network.server.play.SCapePacket;
+import com.stereowalker.unionlib.network.protocol.game.SCapePacket;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

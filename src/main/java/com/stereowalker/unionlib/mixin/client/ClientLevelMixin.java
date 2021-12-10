@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.stereowalker.unionlib.ClientCape;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.config.ConfigBuilder;
-import com.stereowalker.unionlib.network.client.play.CQueueCapePacket;
-import com.stereowalker.unionlib.network.client.play.CUpdateCapeListPacket;
+import com.stereowalker.unionlib.network.protocol.game.CQueueCapePacket;
+import com.stereowalker.unionlib.network.protocol.game.CUpdateCapeListPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

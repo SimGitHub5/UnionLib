@@ -1,11 +1,10 @@
-package com.stereowalker.unionlib.network.client.play;
+package com.stereowalker.unionlib.network.protocol.game;
 
 import java.util.UUID;
 
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.player.CustomInventoryGetter;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
-import com.stereowalker.unionlib.network.client.CUnionPacket;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TranslatableComponent;

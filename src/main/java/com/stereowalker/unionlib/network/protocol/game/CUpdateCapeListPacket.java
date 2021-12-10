@@ -1,10 +1,9 @@
-package com.stereowalker.unionlib.network.client.play;
+package com.stereowalker.unionlib.network.protocol.game;
 
 import java.util.UUID;
 
 import com.stereowalker.unionlib.ServerCape;
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.network.client.CUnionPacket;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

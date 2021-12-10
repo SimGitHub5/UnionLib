@@ -1,9 +1,7 @@
-package com.stereowalker.unionlib.network.server;
+package com.stereowalker.unionlib.network.protocol.game;
 
 
 import java.util.function.Supplier;
-
-import com.stereowalker.unionlib.network.BasePacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

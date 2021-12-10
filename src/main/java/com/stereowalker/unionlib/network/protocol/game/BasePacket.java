@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.network;
+package com.stereowalker.unionlib.network.protocol.game;
 
 import java.util.function.Supplier;
 

@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.network.server.play;
+package com.stereowalker.unionlib.network.protocol.game;
 
 import java.util.Map;
 import java.util.UUID;
@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.google.common.collect.Maps;
 import com.stereowalker.unionlib.ClientCape;
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.network.server.SUnionPacket;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;

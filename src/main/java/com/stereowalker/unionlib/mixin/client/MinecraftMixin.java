@@ -12,7 +12,7 @@ import com.mojang.blaze3d.platform.WindowEventHandler;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
-import com.stereowalker.unionlib.network.client.play.CUnionInventoryPacket;
+import com.stereowalker.unionlib.network.protocol.game.CUnionInventoryPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
