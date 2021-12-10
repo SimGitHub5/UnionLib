@@ -54,6 +54,7 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 		private final Button configButton;
 		private final boolean noConfig;
 
+		@SuppressWarnings("resource")
 		private ModEntry(final MinecraftMod mod, final Screen screen) {
 			this.mod = mod;
 			this.screen = screen;

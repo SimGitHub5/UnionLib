@@ -2,10 +2,6 @@ package com.stereowalker.unionlib.config.tests;
 
 import com.stereowalker.unionlib.config.TestEnum;
 import com.stereowalker.unionlib.config.UnionConfig;
-import com.stereowalker.unionlib.config.UnionConfig.Comment;
-import com.stereowalker.unionlib.config.UnionConfig.Entry;
-import com.stereowalker.unionlib.config.UnionConfig.Range;
-import com.stereowalker.unionlib.config.UnionConfig.Slider;
 
 @UnionConfig(folder = "folder test", name = "union-test-class")
 public class TestClassConfig {

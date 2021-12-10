@@ -33,7 +33,6 @@ public class ClientCape {
 	// Copied from SkinManager
 	private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 2, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 	private static final Logger logger = LogManager.getLogger(UnionLib.MOD_ID);
-	private static final JsonParser parser = new JsonParser();
 
 	//CLient
 	private static final Map<UUID, String> CAPES_LOCATION = Maps.newHashMap();
@@ -48,7 +47,7 @@ public class ClientCape {
 	         BufferedReader read = new BufferedReader(
 	         new InputStreamReader(url.openStream()));
 	         
-	         JsonObject object = parser.parse(read).getAsJsonObject();
+	         JsonObject object = JsonParser.parseReader(read).getAsJsonObject();
 	         
 	         for (Entry<String, JsonElement> element: object.entrySet()) {
 //	        	 UnionLib.debug("Found cape for "+element.getKey()+" they seem to want to use the "+element.getValue().getAsString()+" cape");

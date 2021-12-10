@@ -14,8 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.OptionsScreen;
-import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import net.minecraft.client.gui.screens.controls.KeyBindsList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
