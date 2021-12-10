@@ -18,7 +18,6 @@ import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -215,20 +214,6 @@ public class ConfigBuilder {
 		@SubscribeEvent
 		public static void onReload(ModConfigEvent.Reloading event) {
 			reload();
-		}
-	}
-	@EventBusSubscriber(bus = Bus.FORGE)
-	public static class ForgeEventBus {
-		@SubscribeEvent
-		public static void onLoad(WorldEvent.Load event) {
-			load(ModConfig.Type.COMMON);
-			if (!event.getWorld().isClientSide()) {
-				UnionLib.debug("Loading All Server Config Files");
-				load(ModConfig.Type.SERVER);
-			} else {
-				UnionLib.debug("Loading All Client Config Files");
-				load(ModConfig.Type.CLIENT);
-			}
 		}
 	}
 

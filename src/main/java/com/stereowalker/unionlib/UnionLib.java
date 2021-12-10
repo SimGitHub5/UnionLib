@@ -2,12 +2,14 @@ package com.stereowalker.unionlib;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.unionlib.client.gui.screen.inventory.UScreens;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
@@ -21,19 +23,21 @@ import com.stereowalker.unionlib.config.tests.TestBindClass2Config;
 import com.stereowalker.unionlib.config.tests.TestClassConfig;
 import com.stereowalker.unionlib.config.tests.TestObjectConfig;
 import com.stereowalker.unionlib.entity.ai.UAttributes;
-import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.item.UItems;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 import com.stereowalker.unionlib.network.PacketRegistry;
 import com.stereowalker.unionlib.registries.RegisterObjects;
+import com.stereowalker.unionlib.registries.UnionLibRegistry;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ClientRegistry;
@@ -59,19 +63,19 @@ public class UnionLib {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final String INVENTORY_KEY = "UnionInventory";
 	private static final String NETWORK_PROTOCOL_VERSION = "1";
-	public static boolean debugMode = false;
 	public static List<MinecraftMod> mods = new ArrayList<MinecraftMod>();
 	public static LoadType loadLevel = null;
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
+	public static final ResourceLocation UNION_BUTTON_IMAGE = UnionLib.location("textures/gui/union_button.png");
 
 	public static void debug(String message) {
-		if (debugMode) {
+		if (CONFIG.debug) {
 			UnionLib.LOGGER.debug(message);
 		}
 	}
 
 	public static void warn(String message) {
-		if (debugMode) {
+		if (CONFIG.debug) {
 			UnionLib.LOGGER.warn(message);
 		}
 	}
@@ -95,7 +99,7 @@ public class UnionLib {
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
-		UAttributes.registerAll(modEventBus);
+		UnionLibRegistry.registerObjects();
 		PacketRegistry.registerMessages(CHANNEL);
 		ClientCape.loadCapes();
 
@@ -114,6 +118,13 @@ public class UnionLib {
 			@Override
 			public KeyMapping[] getModKeyMappings() {
 				return new KeyMapping[]{KeyBindings.OPEN_UNION_INVENTORY};
+			}
+			
+			@Override
+			public Map<EntityType<? extends LivingEntity>, List<Attribute>> appendAttributesWithoutValues() {
+				Map<EntityType<? extends LivingEntity>, List<Attribute>> map = Maps.newHashMap();
+				map.put(EntityType.PLAYER, Lists.newArrayList(UAttributes.DIG_SPEED));
+				return map;
 			}
 		};
 		new MinecraftMod("concept_class", location("textures/gui/test_1.png"), MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
@@ -180,7 +191,6 @@ public class UnionLib {
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-//			KeyBindings.registerKeyBindings();
 			mods.forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding));
 			UScreens.registerScreens();
 		}
@@ -189,26 +199,5 @@ public class UnionLib {
 	public static ResourceLocation location(String name)
 	{
 		return new ResourceLocation(MOD_ID, name);
-	}
-
-
-	/**
-	 * Returns the players accessory inventory. If this is ever edited, save it with {@link UnionLib#saveInventory(Player, UnionInventory)}
-	 * @param player
-	 * @return
-	 */
-	public static UnionInventory getAccessoryInventory (Player player) {
-		UnionInventory inventory = new UnionInventory(player);
-		inventory.read(player.getPersistentData().getList(INVENTORY_KEY, 10));
-		return inventory;
-	}
-
-	/**
-	 * Saves the accessory inventory to the players NBT. If this is not called after changes have been made, it will not save
-	 * @param player
-	 * @param inventory
-	 */
-	public static void saveInventory(Player player, UnionInventory inventory) {
-		player.getPersistentData().put(INVENTORY_KEY, inventory.write());
 	}
 }

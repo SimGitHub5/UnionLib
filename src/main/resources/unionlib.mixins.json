@@ -5,10 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "PlayerMixin",
-	"StructureStartMixin"
+	"ServerPlayerMixin",
+	"StructureStartMixin",
+	"MinecraftServerMixin"
   ],
   "client": [
-	"GMix"
+	"client.GlDebugMixin",
+	"PauseScreenMixin",
+	"TitleScreenMixin",
+	"client.MinecraftMixin",
+	"client.ClientLevelMixin",
+	"client.TextureAtlasMixin"
   ],
   "injectors": {
     "defaultRequire": 1

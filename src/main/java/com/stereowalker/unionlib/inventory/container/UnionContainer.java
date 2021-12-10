@@ -128,7 +128,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 			for(int j1 = 0; j1 < 3; ++j1) {
 				int index = j1 + l * 3;
 				final AccessorySlotType accessoryslottype = VALID_ACCESSORY_SLOTS[index];
-				this.addSlot(new Slot(unionInventory, index, 77 + j1 * 18, 8 + l * 18) {
+				this.addSlot(new Slot(inventory, index, 77 + j1 * 18, 8 + l * 18) {
 					/**
 					 * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in
 					 * the case of armor slots)
@@ -186,7 +186,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 	 */
 	@Override
 	public void slotsChanged(Container inventoryIn) {
-		UnionLib.saveInventory(player, inventory);
+//		UnionLib.saveInventory(player, inventory);
 		//TODO: Access Transform This later
 //		      WorkbenchContainer.updateCraftingResult(this.containerId, this.player.world, this.player, this.craftMatrix, this.craftResult);
 		updateCraftingResult(this, this.player.level, this.player, this.craftMatrix, this.craftResult);
@@ -219,7 +219,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 		if (!playerIn.level.isClientSide) {
 			this.clearContainer(playerIn, this.craftMatrix);
 		}
-		UnionLib.saveInventory(playerIn, inventory);
+//		UnionLib.saveInventory(playerIn, inventory);
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 	 */
 	@Override
 	public boolean stillValid(Player playerIn) {
-		UnionLib.saveInventory(player, inventory);
+//		UnionLib.saveInventory(player, inventory);
 		return true;
 	}
 

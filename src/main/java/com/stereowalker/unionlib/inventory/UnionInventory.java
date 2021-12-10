@@ -32,7 +32,7 @@ public class UnionInventory extends SimpleContainer {
 	//	      this.associatedChest = null;
 	//	   }
 
-	public void read(ListTag p_70486_1_) {
+	public void load(ListTag p_70486_1_) {
 		for(int i = 0; i < this.getContainerSize(); ++i) {
 			this.setItem(i, ItemStack.EMPTY);
 		}
@@ -47,20 +47,18 @@ public class UnionInventory extends SimpleContainer {
 
 	}
 
-	public ListTag write() {
-		ListTag listnbt = new ListTag();
-
+	public ListTag save(ListTag pNbtTagList) {
 		for(int i = 0; i < this.getContainerSize(); ++i) {
 			ItemStack itemstack = this.getItem(i);
 			if (!itemstack.isEmpty()) {
 				CompoundTag compoundnbt = new CompoundTag();
 				compoundnbt.putByte("Slot", (byte)i);
 				itemstack.save(compoundnbt);
-				listnbt.add(compoundnbt);
+				pNbtTagList.add(compoundnbt);
 			}
 		}
 
-		return listnbt;
+		return pNbtTagList;
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class UnionInventory extends SimpleContainer {
 	/**
 	 * Drop all armor and main inventory items.
 	 */
-	public void dropAllItems() {
+	public void dropAll() {
 		for(int i = 0; i < this.getContainerSize(); ++i) {
 			ItemStack itemstack = this.getItem(i);
 			if (!itemstack.isEmpty()) {
@@ -94,7 +92,7 @@ public class UnionInventory extends SimpleContainer {
 	/**
 	 * Copy the ItemStack contents from another InventoryPlayer instance
 	 */
-	public void copyInventory(UnionInventory playerInventory) {
+	public void replaceWith(UnionInventory playerInventory) {
 		for(int i = 0; i < this.getContainerSize(); ++i) {
 			this.setItem(i, playerInventory.getItem(i));
 		}

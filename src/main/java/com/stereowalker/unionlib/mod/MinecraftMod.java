@@ -1,17 +1,23 @@
 package com.stereowalker.unionlib.mod;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigGuiHandler;
@@ -97,6 +103,14 @@ public class MinecraftMod {
 
 	public void registerMessages(SimpleChannel channel) {
 
+	}
+	
+	public Map<EntityType<? extends LivingEntity>, List<Attribute>> appendAttributesWithoutValues() {
+		return Maps.newHashMap();
+	}
+	
+	public Map<EntityType<? extends LivingEntity>, List<Tuple<Attribute, Double>>> appendAttributesWithValues() {
+		return Maps.newHashMap();
 	}
 	
 	public List<Class<?>> getRegistries() {

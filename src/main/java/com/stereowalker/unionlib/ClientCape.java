@@ -104,12 +104,12 @@ public class ClientCape {
 	}
 
 	/**
-	 * Does the player have a C.O.M.B.A.T. cape?
+	 * Does the player have a Custom cape?
 	 * <p>
 	 * Currently only returns true for Stereowalker, Dev, CodeHexIO and other Patrons
 	 *
 	 * @param player The player
-	 * @return True if the player has a C.O.M.B.A.T. cape
+	 * @return True if the player has a Custom cape
 	 */
 	public static boolean doesPlayerNeedCapeClient(final AbstractClientPlayer player) {
 		return CAPES_LOCATION.containsKey(Player.createPlayerUUID(player.getGameProfile()));
