@@ -1,9 +1,5 @@
-[5.0.1]
-- Allowed string lists to be modifiable via the config screen
-- Added a config option to stop getting OpenGL messages
-- Fixed config comments not being displayed
-- Added a reset button to each config entry
-- Removed unnecessary debugging
-
-[5.0.0]
-- Made initial port to 1.18
+[6.0.0]
+- Properly displayed Patreon info in the Patreon page
+- Fix Union Inventory not closing with it's own keybind
+- Used mixins instead of events to prepare for fabric port
+- Initial port to 1.18.1
