@@ -50,7 +50,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.disableRefMap', 'true'
 			
-			args '--username', 'CodeHexIO', '--uuid', 'c5751ce1d50e4d47ca120e1ea1c75542'
+			args '--username', 'Stereowalker', '--uuid', "$System.env.MINECRAFTUUIDSTEREOWALKER"
 			arg "--mixin.config="+modId+".mixins.json"
 
             mods {

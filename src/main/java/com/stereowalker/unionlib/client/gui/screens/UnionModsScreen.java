@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.client.gui.components.ModList;
 import com.stereowalker.unionlib.client.gui.components.PatreonButton;
 import com.stereowalker.unionlib.client.gui.screen.DefaultScreen;
+import com.stereowalker.unionlib.client.gui.screens.supporter.SupporterScreen;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,7 +31,7 @@ public class UnionModsScreen extends DefaultScreen {
 		}));
 
 		this.addRenderableWidget(new PatreonButton(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TextComponent("Patreon"), (p_213124_1_) -> {
-			this.minecraft.setScreen(this.previousScreen);
+			this.minecraft.setScreen(new SupporterScreen(this.previousScreen));
 		}));
 	}
 

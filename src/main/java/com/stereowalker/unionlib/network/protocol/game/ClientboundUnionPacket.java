@@ -16,13 +16,13 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public abstract class SUnionPacket extends BasePacket {
+public abstract class ClientboundUnionPacket extends BasePacket {
 	
-	public SUnionPacket(SimpleChannel channel) {
+	public ClientboundUnionPacket(SimpleChannel channel) {
 		super(channel);
 	}
 	
-	public SUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
+	public ClientboundUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
 		super(packetBuffer, channel);
 	}
 

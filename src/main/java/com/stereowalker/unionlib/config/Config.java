@@ -17,10 +17,6 @@ public class Config implements ConfigObject {
 	@UnionConfig.Comment(comment = {"Enable this to show the unionlib config button in the main menu"})
 	public boolean config_button = true;
 	
-	@UnionConfig.Entry(group = "Capes" , name = "Show Capes", type = Type.CLIENT)
-	@UnionConfig.Comment(comment = {"Enable this to show the cape bestowed upon you if you are an obsidian supporter"})
-	public boolean display_cape = true;
-	
 	@UnionConfig.Entry(group = "Menus" , name = "Text Overflow Scroll Speed", type = Type.CLIENT)
 	@UnionConfig.Comment(comment = {"This determines how fast text scrolls if there is an overflow","Measured in ticks"})
 	@UnionConfig.Slider

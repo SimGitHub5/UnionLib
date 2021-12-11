@@ -12,7 +12,7 @@ import com.mojang.blaze3d.platform.WindowEventHandler;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
-import com.stereowalker.unionlib.network.protocol.game.CUnionInventoryPacket;
+import com.stereowalker.unionlib.network.protocol.game.ServerboundUnionInventoryPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,7 +36,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 				LocalPlayer clientPlayer = this.player;
 				
 				if (KeyBindings.OPEN_UNION_INVENTORY.consumeClick()) {
-					new CUnionInventoryPacket(clientPlayer.getUUID()).send();
+					new ServerboundUnionInventoryPacket(clientPlayer.getUUID()).send();
 				}
 			}
 		}

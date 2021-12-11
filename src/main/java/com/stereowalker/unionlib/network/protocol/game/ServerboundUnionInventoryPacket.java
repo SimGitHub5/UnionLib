@@ -12,15 +12,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 
-public class CUnionInventoryPacket extends CUnionPacket {
+public class ServerboundUnionInventoryPacket extends ServerboundUnionPacket {
 	private UUID uuid;
 
-	public CUnionInventoryPacket(final UUID uuid) {
+	public ServerboundUnionInventoryPacket(final UUID uuid) {
 		super(UnionLib.CHANNEL);
 		this.uuid = uuid;
 	}
 
-	public CUnionInventoryPacket (final FriendlyByteBuf packetBuffer) {
+	public ServerboundUnionInventoryPacket (final FriendlyByteBuf packetBuffer) {
 		super(packetBuffer, UnionLib.CHANNEL);
 		this.uuid = (new UUID(packetBuffer.readLong(), packetBuffer.readLong()));
 	}

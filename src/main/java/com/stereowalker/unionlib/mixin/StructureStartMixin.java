@@ -31,7 +31,7 @@ public class StructureStartMixin {
 	@Shadow @Final private PiecesContainer f_192654_;
 
 
-	@Redirect(method = "placeInChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/structure/StructurePiece;m_183269_(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureFeatureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/core/BlockPos;)Z"))
+	@Redirect(method = "placeInChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/structure/StructurePiece;m_183269_(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureFeatureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/core/BlockPos;)V"))
 	private void structurePieceGenerated(StructurePiece structurePiece, WorldGenLevel serverWorldAccess, StructureFeatureManager structureAccessor, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
 		ServerLevel world;
 
@@ -56,6 +56,6 @@ public class StructureStartMixin {
 		}
 
 		if(!this.f_192654_.f_192741_().isEmpty())
-		MinecraftForge.EVENT_BUS.post(new StructureAddedEvent((StructureStart<?>) (Object)this, world));
+			MinecraftForge.EVENT_BUS.post(new StructureAddedEvent((StructureStart<?>) (Object)this, world));
 	}
 }

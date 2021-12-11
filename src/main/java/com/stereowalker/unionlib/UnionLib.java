@@ -1,5 +1,6 @@
 package com.stereowalker.unionlib;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 import com.stereowalker.unionlib.network.PacketRegistry;
 import com.stereowalker.unionlib.registries.RegisterObjects;
 import com.stereowalker.unionlib.registries.UnionLibRegistry;
+import com.stereowalker.unionlib.supporter.Supporters;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -68,7 +70,7 @@ public class UnionLib {
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
 	public static final ResourceLocation UNION_BUTTON_IMAGE = UnionLib.location("textures/gui/union_button.png");
 
-	public static void debug(String message) {
+	public static void debug(Object message) {
 		if (CONFIG.debug) {
 			UnionLib.LOGGER.debug(message);
 		}
@@ -84,6 +86,7 @@ public class UnionLib {
 		return false;
 	}
 
+	@SuppressWarnings("resource")
 	public UnionLib() 
 	{
 		instance = this;
@@ -101,7 +104,6 @@ public class UnionLib {
 		MinecraftForge.EVENT_BUS.register(this);
 		UnionLibRegistry.registerObjects();
 		PacketRegistry.registerMessages(CHANNEL);
-		ClientCape.loadCapes();
 
 		new MinecraftMod("unionlib", location("textures/gui/union_button.png"), MinecraftMod.LoadType.BOTH) {
 			@Override
@@ -189,7 +191,9 @@ public class UnionLib {
 	{
 	}
 
+	@SuppressWarnings("resource")
 	private void clientSetup(final FMLClientSetupEvent event) {
+		Supporters.populateSupporters(new File(Minecraft.getInstance().gameDirectory, "supportercache.json"), true);
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
 			mods.forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding));
 			UScreens.registerScreens();

@@ -7,13 +7,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public abstract class CUnionPacket extends BasePacket{
+public abstract class ServerboundUnionPacket extends BasePacket{
 
-	public CUnionPacket(SimpleChannel channel) {
+	public ServerboundUnionPacket(SimpleChannel channel) {
 		super(channel);
 	}
 	
-	public CUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
+	public ServerboundUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
 		super(packetBuffer, channel);
 	}
 
