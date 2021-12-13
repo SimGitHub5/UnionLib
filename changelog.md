@@ -1,3 +1,6 @@
+[6.1.1]
+- Fixed refmap not loading
+
 [6.1.0]
 - Initial fabric port
 
