@@ -1,3 +1,6 @@
+[6.1.2]
+- Readded config load and relaod events
+
 [6.1.1]
 - Fixed refmap not loading
 
