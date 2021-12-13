@@ -64,7 +64,6 @@ public class UnionLib extends MinecraftMod {
 	public static final String INVENTORY_KEY = "UnionInventory";
 	public static List<MinecraftMod> mods = new ArrayList<MinecraftMod>();
 	public static LoadType loadLevel = null;
-	public static ResourceLocation UNION_BUTTON_IMAGE;
 
 	public static void debug(Object message) {
 		if (CONFIG.debug) {
@@ -84,13 +83,12 @@ public class UnionLib extends MinecraftMod {
 
 	public UnionLib() 
 	{
-		super("unionlib", new ResourceLocation("unionlib","textures/gui/union_button.png"), LoadType.BOTH);
+		super("unionlib", Locations.UNION_BUTTON_IMAGE, LoadType.BOTH);
 		instance = this;
 	}
 	
 	@Override
 	public void onModStartup() {
-		UNION_BUTTON_IMAGE = location("textures/gui/union_button.png");
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ConfigBuilder.registerConfig(CONFIG);
 		ConfigBuilder.registerConfig(SERVER_CONFIG);
@@ -105,8 +103,6 @@ public class UnionLib extends MinecraftMod {
 		MinecraftForge.EVENT_BUS.register(this);
 		UnionLibRegistry.registerObjects();
 
-		new MinecraftMod("unionlib", location("textures/gui/union_button.png"), MinecraftMod.LoadType.BOTH) {
-		};
 		new MinecraftMod("concept_class", location("textures/gui/test_1.png"), MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
 			@Override
 			@OnlyIn(Dist.CLIENT)
@@ -178,5 +174,12 @@ public class UnionLib extends MinecraftMod {
 		Map<EntityType<? extends LivingEntity>, List<Attribute>> map = Maps.newHashMap();
 		map.put(EntityType.PLAYER, Lists.newArrayList(UAttributes.DIG_SPEED));
 		return map;
+	}
+	
+	public static class Locations {
+		public static final ResourceLocation UNION_BUTTON_IMAGE = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/union_button.png");
+		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_necklace");
+		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_ring");
+		public static final ResourceLocation UNION_INVENTORY_BACKGROUND = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/container/union_inventory.png");
 	}
 }

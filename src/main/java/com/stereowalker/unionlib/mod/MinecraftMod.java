@@ -43,6 +43,7 @@ public class MinecraftMod {
 		this.modTexture = modTexture;
 		this.loadType = loadType;
 		if (shouldLoadMod && !ModHandler.isModRegistered(modid)) {
+			System.out.println("REGISTERED HERE");
 			onModStartup();
 			ModHandler.registerMod(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {

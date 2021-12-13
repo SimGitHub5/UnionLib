@@ -24,7 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionContainer> implements RecipeUpdateListener {
 	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
-	public static final ResourceLocation UNION_INVENTORY_BACKGROUND = UnionLib.instance.location("textures/gui/container/union_inventory.png");
 	/** The old x position of the mouse pointer */
 	private float oldMouseX;
 	/** The old y position of the mouse pointer */
@@ -90,7 +89,7 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, UNION_INVENTORY_BACKGROUND);
+		RenderSystem.setShaderTexture(0, UnionLib.Locations.UNION_INVENTORY_BACKGROUND);
 		int i = this.leftPos;
 		int j = this.topPos;
 		this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
