@@ -6,30 +6,29 @@ import com.stereowalker.unionlib.config.UnionValues;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class RegistryHelper {
-	public static boolean matchesRegisteredEntry(ResourceLocation name, ForgeRegistryEntry<?> registry) {
-		return registry.getRegistryName().equals(name);
-	}
+//	public static boolean matchesRegisteredEntry(ResourceLocation name, ForgeRegistryEntry<?> registry) {
+//		return registry.getRegistryName().equals(name);
+//	}
+//	
+//	public static boolean matchesRegisteredEntry(String name, ForgeRegistryEntry<?> registry) {
+//		ResourceLocation loc = new ResourceLocation(name);
+//		return matchesRegisteredEntry(loc, registry);
+//	}
+//	
+//	public static boolean listContainsRegisteredEntry(List<String> names, ForgeRegistryEntry<?> registry) {
+//		for (String name : names) {
+//			if (matchesRegisteredEntry(name, registry)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
-	public static boolean matchesRegisteredEntry(String name, ForgeRegistryEntry<?> registry) {
-		ResourceLocation loc = new ResourceLocation(name);
-		return matchesRegisteredEntry(loc, registry);
-	}
-	
-	public static boolean listContainsRegisteredEntry(List<String> names, ForgeRegistryEntry<?> registry) {
-		for (String name : names) {
-			if (matchesRegisteredEntry(name, registry)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static boolean listContainsRegisteredEntry(UnionValues.ConfigValue<List<String>> names, ForgeRegistryEntry<?> registry) {
-		return listContainsRegisteredEntry(names.get(), registry);
-	}
+//	public static boolean listContainsRegisteredEntry(UnionValues.ConfigValue<List<String>> names, ForgeRegistryEntry<?> registry) {
+//		return listContainsRegisteredEntry(names.get(), registry);
+//	}
 	
 	public static boolean matchesRegistryKey(ResourceLocation name, ResourceKey<?> key) {
 		return name.toString().equalsIgnoreCase(key.location().toString());

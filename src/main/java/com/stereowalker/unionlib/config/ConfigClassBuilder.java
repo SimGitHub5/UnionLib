@@ -1,5 +1,6 @@
 package com.stereowalker.unionlib.config;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,19 +13,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.loading.FMLPaths;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public class ConfigClassBuilder {
 
 	public static TranslatableComponent getConfigName(Class<?> configClass) {
@@ -218,7 +216,7 @@ public class ConfigClassBuilder {
 		}
 	}
 
-	public static void registerConfigurations(Class<?> configClass) {
+	public static void registerConfigurations(String modid, Class<?> configClass) {
 		UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 		String name = con.folder().isEmpty() ? con.name() : con.folder()+"\\"+con.name();
 
@@ -226,18 +224,19 @@ public class ConfigClassBuilder {
 		server_config.put(configClass, server_builder.get(configClass).build());
 		client_config.put(configClass, client_builder.get(configClass).build());
 		common_config.put(configClass, common_builder.get(configClass).build());
-
-		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, client_config.get(configClass), name+(con.appendWithType()?"-client":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.COMMON))ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common_config.get(configClass), name+(con.appendWithType()?"-common":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.SERVER))ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server_config.get(configClass), name+(con.appendWithType()?"-server":"")+".toml");
+		File configFile = new File(FabricLoader.getInstance().getConfigDir().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name());
+		configFile.getParentFile().mkdirs();
+		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ModLoadingContext.registerConfig(modid, ModConfig.Type.CLIENT, client_config.get(configClass), name+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.COMMON))ModLoadingContext.registerConfig(modid, ModConfig.Type.COMMON, common_config.get(configClass), name+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.SERVER))ModLoadingContext.registerConfig(modid, ModConfig.Type.SERVER, server_config.get(configClass), name+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	public static void loadConfigs(Class<?> configClass) {
 		UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 
-		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-client":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-common":"")+".toml");
-		if (hasConfigType(configClass, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configClass), FMLPaths.CONFIGDIR.get().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-server":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.CLIENT))ConfigBuilder.loadConfig(client_config.get(configClass), FabricLoader.getInstance().getConfigDir().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-client":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.COMMON))ConfigBuilder.loadConfig(common_config.get(configClass), FabricLoader.getInstance().getConfigDir().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-common":"")+".toml");
+		if (hasConfigType(configClass, ModConfig.Type.SERVER))ConfigBuilder.loadConfig(server_config.get(configClass), FabricLoader.getInstance().getConfigDir().toString() + (con.folder().isEmpty() ? "" : "\\"+con.folder()), con.name()+(con.appendWithType()?"-server":"")+".toml");
 	}
 
 	static final List<Class<?>> configs = Lists.newArrayList();

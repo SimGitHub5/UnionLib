@@ -1,39 +1,35 @@
 package com.stereowalker.unionlib.registries;
 
-import java.util.function.Consumer;
+import java.util.Map;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.entity.ai.UAttributes;
-import com.stereowalker.unionlib.inventory.container.UContainerType;
+import com.stereowalker.unionlib.mod.ModHandler;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 
 public class UnionLibRegistry
 {
 	public static void registerObjects() {
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-			modEventBus.addGenericListener(Attribute.class, (Consumer<RegistryEvent.Register<Attribute>>)event-> {
-				UAttributes.registerAll(event.getRegistry());
-			});
-			modEventBus.addGenericListener(MenuType.class, (Consumer<RegistryEvent.Register<MenuType<?>>>)event-> {
-				UContainerType.registerAll(event.getRegistry());
-			});
-			modEventBus.addGenericListener(Item.class, (Consumer<RegistryEvent.Register<Item>>)event-> {
-				RegisterObjects.putItemsInForgeRegistries(event.getRegistry());
-			});
-			modEventBus.addListener((Consumer<EntityAttributeModificationEvent>)event-> {
-				UnionLib.mods.forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithoutValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr))));
-				UnionLib.mods.forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr.getA(), attr.getB()))));
-			});
+			RegisterObjects.putObjectsInFabricRegistries();
+
+			Map<EntityType<? extends LivingEntity>, AttributeSupplier> oldMap = DefaultAttributes.SUPPLIERS;
+			ImmutableMap.Builder<EntityType<? extends LivingEntity>, AttributeSupplier> newMap = ImmutableMap.builder();
+			for (EntityType<? extends LivingEntity> entity : oldMap.keySet()) {
+				AttributeSupplier.Builder build = AttributeSupplier.builder();
+				oldMap.get(entity).instances.forEach((attr, inst) -> {
+					build.add(attr, inst.getBaseValue());
+				});
+				ModHandler.mods.values().forEach((mod) -> {if (mod.appendAttributesWithoutValues().get(entity) != null) mod.appendAttributesWithoutValues().get(entity).forEach((attr) -> build.add(attr));});
+				ModHandler.mods.values().forEach((mod) -> {if (mod.appendAttributesWithValues().get(entity) != null) mod.appendAttributesWithValues().get(entity).forEach((attr) -> build.add(attr.getA(), attr.getB()));});
+				newMap.put(entity, build.build());
+			}
+			DefaultAttributes.SUPPLIERS = newMap.build();
 		}
 	}
 }

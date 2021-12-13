@@ -16,6 +16,8 @@ import com.stereowalker.unionlib.config.ConfigBuilder.Holder;
 import com.stereowalker.unionlib.config.UnionConfig;
 import com.stereowalker.unionlib.util.RegistryHelper;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -27,10 +29,8 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 	protected ConfigScreen screen;
 
@@ -112,11 +112,11 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ConfigList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class CategoryEntry extends ConfigList.Entry {
 		private final Component labelText;
 		private final int labelWidth;
@@ -144,7 +144,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ConfigEntry<T> extends ConfigList.Entry {
 		protected final Holder<T> config;
 		/** The mod */
@@ -248,7 +248,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class EnumEntry extends ConfigList.ConfigEntry<Enum<?>> {
 		private EnumEntry(final Component name, final Holder<Enum<?>> config) {
 			super(name, config);
@@ -268,7 +268,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class BooleanEntry extends ConfigList.ConfigEntry<Boolean> {
 		private BooleanEntry(final Component name, final Holder<Boolean> config) {
 			super(name, config);
@@ -288,7 +288,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class StringEntry extends ConfigList.ConfigEntry<String> {
 		private StringEntry(final Component name, final Holder<String> config) {
 			super(name, config);
@@ -314,7 +314,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class NumberedEntry<V extends Number> extends ConfigList.ConfigEntry<V> {
 		private NumberedEntry(final Component name, final Holder<V> config) {
 			super(name, config);
@@ -395,7 +395,7 @@ public class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ListEntry extends ConfigList.ConfigEntry<List<?>> {
 		private ListEntry(final Component name, final Holder<List<?>> config) {
 			super(name, config);

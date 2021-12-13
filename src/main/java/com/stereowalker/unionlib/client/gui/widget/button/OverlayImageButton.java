@@ -4,15 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class OverlayImageButton extends ImageButton {
 	private final ResourceLocation overlayLocation;
 	private final int xTexStart;
@@ -21,11 +21,11 @@ public class OverlayImageButton extends ImageButton {
 	private final int textureHeight;
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
-		this(x, y, width, height, xTexStart, yTexStart, 20, UnionLib.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
+		this(x, y, width, height, xTexStart, yTexStart, 20, UnionLib.instance.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
-		this(x, y, width, height, xTexStart, yTexStart, yDiffText, UnionLib.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
+		this(x, y, width, height, xTexStart, yTexStart, yDiffText, UnionLib.instance.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation resourceLocation, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {

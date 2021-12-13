@@ -20,11 +20,11 @@ public class ModControlsScreen extends KeyBindsScreen {
 
 	@Override
 	protected void init() {
-		this./*controlList*/f_193977_ = new ModKeyBindsList(this, this.minecraft);
-		this.addWidget(this./*controlList*/f_193977_);
-		this./*resetButton*/f_193978_ = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("controls.resetAll"), (p_97538_) -> {
+		this.keyBindsList = new ModKeyBindsList(this, this.minecraft);
+		this.addWidget(this.keyBindsList);
+		this.resetButton = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("controls.resetAll"), (p_97538_) -> {
 			for(KeyMapping keymapping : this.mod.getModKeyMappings()) {
-				keymapping.setToDefault();
+				keymapping.setKey(keymapping.getDefaultKey());
 			}
 
 			KeyMapping.resetMapping();

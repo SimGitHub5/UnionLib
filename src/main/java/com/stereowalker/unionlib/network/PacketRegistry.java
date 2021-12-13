@@ -1,22 +1,18 @@
 package com.stereowalker.unionlib.network;
 
-import java.util.function.Function;
-
-import com.stereowalker.unionlib.network.protocol.game.BasePacket;
 import com.stereowalker.unionlib.network.protocol.game.ServerboundUnionInventoryPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.simple.SimpleChannel;
-
-
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class PacketRegistry {
-	static int netID = -1;
-	public static void registerMessages(SimpleChannel channel) {
-		registerMessage(channel, netID++, ServerboundUnionInventoryPacket.class, (packetBuffer) -> {return new ServerboundUnionInventoryPacket(packetBuffer);});
+	@Environment(EnvType.CLIENT)
+	public static void registerClientboundListeners() {
+//		ClientPlayNetworking.registerGlobalReceiver(TileGroupsS2CPacket.ID, TileGroupsS2CPacket::apply);
 	}
 
-    public static <T extends BasePacket> void registerMessage(SimpleChannel channel, int index, Class<T> messageType, Function<FriendlyByteBuf, T> decoder) {
-        channel.registerMessage(index, messageType, (packet,buffer) -> { packet.encode(buffer); }, decoder, (packet,context) -> { packet.message(context);});
-    }
+	public static void registerServerboundListeners() {
+		ServerPlayNetworking.registerGlobalReceiver(ServerboundUnionInventoryPacket.id, (server, player, handler, buf, responseSender) -> new ServerboundUnionInventoryPacket(buf).message(server, player, handler, responseSender));
+	}
 }

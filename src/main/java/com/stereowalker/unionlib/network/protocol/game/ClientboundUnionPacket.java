@@ -1,50 +1,43 @@
 package com.stereowalker.unionlib.network.protocol.game;
 
 
-import java.util.function.Supplier;
-
+import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.simple.SimpleChannel;
 
 public abstract class ClientboundUnionPacket extends BasePacket {
 	
-	public ClientboundUnionPacket(SimpleChannel channel) {
-		super(channel);
-	}
-	
-	public ClientboundUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
-		super(packetBuffer, channel);
+	public ClientboundUnionPacket(FriendlyByteBuf packetBuffer) {
+		super(packetBuffer);
 	}
 
-	@SuppressWarnings({ "deprecation", "resource" })
-	public void message(final Supplier<NetworkEvent.Context> contextSupplier) {
-		final NetworkEvent.Context context = contextSupplier.get();
-		if (shouldRun()) {
-			context.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-				context.setPacketHandled(handleOnClient(Minecraft.getInstance().player));
-			}));
-		}
+	@Environment(EnvType.CLIENT)
+	public void message(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
+		client.execute(() -> {
+			handleOnClient(client.player);
+		});
 	}
 
 	public boolean shouldRun() {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract boolean handleOnClient(LocalPlayer player);
 
 	public void send(ServerPlayer playerEntity) {
-		this.channel.sendTo(this, playerEntity.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+		FriendlyByteBuf buff = new FriendlyByteBuf(Unpooled.buffer());
+		this.encode(buff);
+		ServerPlayNetworking.send(playerEntity, this.getId(), buff);
 	}
 
 	public void send(ServerLevel world) {

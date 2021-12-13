@@ -1,3 +1,6 @@
+[6.1.0]
+- Initial fabric port
+
 [6.0.0]
 - Properly displayed Patreon info in the Patreon page
 - Fix Union Inventory not closing with it's own keybind

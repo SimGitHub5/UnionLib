@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "unionlib",
+  "version": "${version}",
+
+  "name": "UnionLib",
+  "description": "A library mod for all my mods",
+  "authors": [
+    "Stereowalker"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/unionlib"
+  },
+
+  "license": "All Rights Reserved",
+  "icon": "pack.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.stereowalker.unionlib.UnionLib"
+    ],
+    "client": [
+      "com.stereowalker.unionlib.UnionLib"
+    ]
+  },
+  "mixins": [
+    "unionlib.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17",
+	"forgeconfigapiport": [">=3.0.0", "<4.0.0"]
+  },
+  "accessWidener": "unionlib.accesswidener",
+  "suggests": {
+    "another-mod": "*"
+  }
+}

@@ -1,32 +1,32 @@
 package com.stereowalker.unionlib.util;
 
-import net.minecraftforge.fml.ModList;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ModHelper {
 
 	public static boolean isBOPLoaded(boolean shouldReturnTrue) {
-		if (!shouldReturnTrue)return ModList.get().isLoaded("biomesoplenty");
+		if (!shouldReturnTrue)return FabricLoader.getInstance().isModLoaded("biomesoplenty");
 		else return true;
 	}
 	public static boolean isJEILoaded() {
-		return ModList.get().isLoaded("jei");
+		return FabricLoader.getInstance().isModLoaded("jei");
 	}
 	public static boolean isCuriosLoaded() {
-		return ModList.get().isLoaded("curios");
+		return FabricLoader.getInstance().isModLoaded("curios");
 	}
 	public static boolean isMantleLoaded() {
-		return ModList.get().isLoaded("mantle");
+		return FabricLoader.getInstance().isModLoaded("mantle");
 	}
 	public static boolean isSereneSeasonsLoaded() {
-		return ModList.get().isLoaded("sereneseasons");
+		return FabricLoader.getInstance().isModLoaded("sereneseasons");
 	}
 	public static boolean isPrimalWinterLoaded() {
-		return ModList.get().isLoaded("primalwinter");
+		return FabricLoader.getInstance().isModLoaded("primalwinter");
 	}
 	public static boolean isSurviveLoaded() {
-		return ModList.get().isLoaded("survive");
+		return FabricLoader.getInstance().isModLoaded("survive");
 	}
 	public static boolean isOriginsLoaded() {
-		return ModList.get().isLoaded("origins");
+		return FabricLoader.getInstance().isModLoaded("origins");
 	}
 }

@@ -18,12 +18,8 @@ import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ConfigBuilder {
 	static Map<String,Holder<?>> client_values = new HashMap<String,Holder<?>>();
@@ -109,7 +105,7 @@ public class ConfigBuilder {
 	 * As long as the class has the annotation {@link UnionConfig} it will be registered
 	 * @param configClass
 	 */
-	public static void registerConfig(Class<?> configClass) {
+	public static void registerConfig(String modid, Class<?> configClass) {
 		if (configClass.isAnnotationPresent(UnionConfig.class) && !ConfigClassBuilder.configs.contains(configClass)) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			UnionLib.debug("Registered the config for "+con.name());
@@ -118,7 +114,7 @@ public class ConfigBuilder {
 			ConfigClassBuilder.common_builder.put(configClass, new ForgeConfigSpec.Builder());
 			ConfigClassBuilder.server_builder.put(configClass, new ForgeConfigSpec.Builder());
 
-			ConfigClassBuilder.registerConfigurations(configClass);
+			ConfigClassBuilder.registerConfigurations(modid, configClass);
 			ConfigClassBuilder.loadConfigs(configClass);
 			ConfigClassBuilder.read(configClass);
 		} else if (!configClass.isAnnotationPresent(UnionConfig.class)) {
@@ -128,7 +124,7 @@ public class ConfigBuilder {
 		}
 	}
 
-	public static void registerConfig(ConfigObject configObject) {
+	public static void registerConfig(String modid, ConfigObject configObject) {
 		if (configObject.getClass().isAnnotationPresent(UnionConfig.class) && !ConfigObjectBuilder.configs.contains(configObject)) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 			UnionLib.debug("Registered the config for "+con.name());
@@ -137,7 +133,7 @@ public class ConfigBuilder {
 			ConfigObjectBuilder.common_builder.put(configObject, new ForgeConfigSpec.Builder());
 			ConfigObjectBuilder.server_builder.put(configObject, new ForgeConfigSpec.Builder());
 
-			ConfigObjectBuilder.registerConfigurations(configObject);
+			ConfigObjectBuilder.registerConfigurations(modid, configObject);
 			ConfigObjectBuilder.loadConfigs(configObject);
 			ConfigObjectBuilder.read(configObject);
 		} else if (!configObject.getClass().isAnnotationPresent(UnionConfig.class)) {
@@ -205,17 +201,17 @@ public class ConfigBuilder {
 		return Lists.newArrayList(DOT_SPLITTER.split(path));
 	}
 
-	@EventBusSubscriber(bus = Bus.MOD)
-	public static class ModEventBus {
-		@SubscribeEvent
-		public static void onLoad(ModConfigEvent.Loading event) {
-			load();
-		}
-		@SubscribeEvent
-		public static void onReload(ModConfigEvent.Reloading event) {
-			reload();
-		}
-	}
+//	@EventBusSubscriber(bus = Bus.MOD)
+//	public static class ModEventBus {
+//		@SubscribeEvent
+//		public static void onLoad(ModConfigEvent.Loading event) {
+//			load();
+//		}
+//		@SubscribeEvent
+//		public static void onReload(ModConfigEvent.Reloading event) {
+//			reload();
+//		}
+//	}
 
 	public static class Holder<T extends Object> {
 		protected final ForgeConfigSpec.ConfigValue<T> value;

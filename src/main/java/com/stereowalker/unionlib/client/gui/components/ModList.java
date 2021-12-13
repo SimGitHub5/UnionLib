@@ -4,13 +4,15 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.gui.screens.ModConfigurationScreen;
 import com.stereowalker.unionlib.client.gui.screens.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.screens.controls.ModControlsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.mod.ModHandler;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -18,15 +20,13 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 
 	public ModList(Minecraft mcIn, UnionModsScreen screen) {
 		super(mcIn, screen.width +45, screen.height, 43, screen.height - 32, 25);
-		for(MinecraftMod mod : UnionLib.mods) {
+		for(MinecraftMod mod : ModHandler.mods.values()) {
 			this.addEntry(new ModList.ModEntry(mod, screen));
 		}
 
@@ -40,11 +40,11 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 		return super.getRowWidth() + 72;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ModList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ModEntry extends ModList.Entry {
 		/** The mod */
 		private final MinecraftMod mod;
@@ -54,7 +54,6 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 		private final Button configButton;
 		private final boolean noConfig;
 
-		@SuppressWarnings("resource")
 		private ModEntry(final MinecraftMod mod, final Screen screen) {
 			this.mod = mod;
 			this.screen = screen;
@@ -70,7 +69,7 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 				this.noConfig = false;
 			} else if (this.mod.getModKeyMappings().length > 0 && this.mod.getConfigScreen(minecraft, this.screen) == null) {
 				this.configButton = new Button(0, 0, 200, 20, new TranslatableComponent("union.gui.controls"), (onPress) -> {
-					minecraft.setScreen(new ModControlsScreen(mod, this.screen, screen.getMinecraft().options));
+					minecraft.setScreen(new ModControlsScreen(mod, this.screen, screen.minecraft.options));
 				});
 				this.noConfig = false;
 			} else if (this.mod.getModKeyMappings().length > 0 && this.mod.getConfigScreen(minecraft, this.screen) != null) {

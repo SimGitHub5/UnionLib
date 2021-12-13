@@ -7,6 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.supporter.Supporters;
 import com.stereowalker.unionlib.supporter.Supporters.Supporter;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -15,10 +17,8 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SupporterList extends ContainerObjectSelectionList<SupporterList.Entry> {
 	protected SupporterScreen screen;
 
@@ -53,11 +53,11 @@ public class SupporterList extends ContainerObjectSelectionList<SupporterList.En
 		return super.getRowWidth() + 72;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<SupporterList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class CategoryEntry extends SupporterList.Entry {
 		private final Component labelText;
 		private final int labelWidth;

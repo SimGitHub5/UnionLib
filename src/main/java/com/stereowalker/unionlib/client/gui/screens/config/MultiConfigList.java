@@ -8,16 +8,16 @@ import com.stereowalker.unionlib.config.ConfigClassBuilder;
 import com.stereowalker.unionlib.config.ConfigObject;
 import com.stereowalker.unionlib.config.ConfigObjectBuilder;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MultiConfigList extends ContainerObjectSelectionList<MultiConfigList.Entry> {
 
 	public MultiConfigList(Minecraft mcIn, MinecraftModConfigsScreen screen) {
@@ -41,7 +41,7 @@ public class MultiConfigList extends ContainerObjectSelectionList<MultiConfigLis
 		return super.getRowWidth() + 29;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<MultiConfigList.Entry> {
 		/** The localized key description for this KeyEntry */
 		protected Button configButton;
@@ -73,7 +73,7 @@ public class MultiConfigList extends ContainerObjectSelectionList<MultiConfigLis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ModConfigObjectEntry extends MultiConfigList.Entry {
 		private ModConfigObjectEntry(final ConfigObject obj, final Screen screen) {
 			this.configButton = new Button(0, 0, 200, 20, ConfigObjectBuilder.getConfigName(obj), (onPress) -> {
@@ -82,7 +82,7 @@ public class MultiConfigList extends ContainerObjectSelectionList<MultiConfigLis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ModConfigClassEntry extends MultiConfigList.Entry {
 		private ModConfigClassEntry(final Class<?> cla, final Screen screen) {
 			this.configButton = new Button(0, 0, 200, 20, ConfigClassBuilder.getConfigName(cla), (onPress) -> {

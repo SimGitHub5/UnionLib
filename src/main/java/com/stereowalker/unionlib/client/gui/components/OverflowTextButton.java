@@ -43,7 +43,7 @@ public class OverflowTextButton extends Button {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-		int i = this.getYImage(this./*isHovered*/m_198029_());
+		int i = this.getYImage(this.isHoveredOrFocused());
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
@@ -75,7 +75,7 @@ public class OverflowTextButton extends Button {
 			shouldhaveOverflow = false;
 		}
 
-		if (this./*isHovered*/m_198029_() && hasOverflow) {
+		if (this.isHoveredOrFocused() && hasOverflow) {
 			ticks++;
 			if (ticks >= UnionLib.CONFIG.textScrollSpeed) {
 				ticks = 0;
@@ -83,7 +83,7 @@ public class OverflowTextButton extends Button {
 				passedText = new TextComponent(passedText.getString()+remainingText.getString().charAt(0));
 				remainingText = new TextComponent(remainingText.getString().substring(1));
 			}
-		} else if (this./*isHovered*/m_198029_() && shouldhaveOverflow && completedTicks < UnionLib.CONFIG.textScrollReset) {
+		} else if (this.isHoveredOrFocused() && shouldhaveOverflow && completedTicks < UnionLib.CONFIG.textScrollReset) {
 			completedTicks++;
 		} else {
 			ticks = 0;
@@ -92,9 +92,9 @@ public class OverflowTextButton extends Button {
 			passedText = new TextComponent("");
 		}
 
-		drawCenteredString(pPoseStack, minecraft.font, buttonText, this.x + this.width / 2, this.y + (this.height - 8) / 2, getFGColor());
+		drawCenteredString(pPoseStack, minecraft.font, buttonText, this.x + this.width / 2, this.y + (this.height - 8) / 2, this.active ? 0xFFFFFF : 0xA0A0A0);
 	
-		if (this./*isHovered*/m_198029_()) {
+		if (this.isHoveredOrFocused()) {
 			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
 		}
 	}

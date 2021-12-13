@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.client.gui.components.OverflowTextButton;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -16,11 +18,9 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ListList<T extends Object> extends ContainerObjectSelectionList<ListList.Entry> {
 	protected ListScreen screen;
 	public List<T> mainList;
@@ -57,11 +57,11 @@ public class ListList<T extends Object> extends ContainerObjectSelectionList<Lis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ListList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class AddEntry extends ListList.Entry {
 		/** The mod */
 		protected final Button addButton;
@@ -108,7 +108,7 @@ public class ListList<T extends Object> extends ContainerObjectSelectionList<Lis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class ListEntry<S> extends ListList.Entry {
 		protected S entry;
 		protected int index;
@@ -197,7 +197,7 @@ public class ListList<T extends Object> extends ContainerObjectSelectionList<Lis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class StringEntry extends ListList<?>.ListEntry<String> {
 		boolean setResponder = false;
 		private StringEntry(String entry, int index) {

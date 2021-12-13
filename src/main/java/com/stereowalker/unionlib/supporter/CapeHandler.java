@@ -12,15 +12,15 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.stereowalker.unionlib.UnionLib;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class CapeHandler {
 	// Copied from SkinManager
 	private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 2, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
@@ -34,7 +34,6 @@ public class CapeHandler {
 	 * @param player The player
 	 */
 	public static void queuePlayerCapeReplacement(final AbstractClientPlayer player) {
-		System.out.println(player.getScoreboardName()+" "+Player.createPlayerUUID(player.getGameProfile())+" "+player.getUUID());
 		if (doesPlayerNeedCapeClient(player)) {
 			final String displayName = player.getDisplayName().getString();
 

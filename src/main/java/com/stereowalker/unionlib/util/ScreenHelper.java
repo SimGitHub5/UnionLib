@@ -2,11 +2,11 @@ package com.stereowalker.unionlib.util;
 
 import com.mojang.blaze3d.platform.Window;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ScreenHelper {
 	public enum ScreenOffset {
 		TOP_LEFT, TOP, TOP_RIGHT,

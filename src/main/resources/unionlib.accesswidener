@@ -1,0 +1,23 @@
+accessWidener v1 named
+accessible method net/minecraft/client/gui/components/AbstractSliderButton setValue (D)V
+accessible class net/minecraft/client/gui/screens/controls/KeyBindsList$KeyEntry
+accessible method net/minecraft/client/gui/screens/controls/KeyBindsList$KeyEntry <init> (Lnet/minecraft/client/gui/screens/controls/KeyBindsList;Lnet/minecraft/client/KeyMapping;Lnet/minecraft/network/chat/Component;)V
+accessible class net/minecraft/client/gui/screens/controls/KeyBindsList$KeyEntry$1
+accessible class net/minecraft/client/gui/screens/controls/KeyBindsList$KeyEntry$2
+accessible field net/minecraft/client/gui/screens/controls/KeyBindsList keyBindsScreen Lnet/minecraft/client/gui/screens/controls/KeyBindsScreen;
+accessible field net/minecraft/client/gui/screens/controls/KeyBindsList maxNameWidth I
+accessible field net/minecraft/client/gui/screens/controls/KeyBindsScreen keyBindsList Lnet/minecraft/client/gui/screens/controls/KeyBindsList;
+accessible field net/minecraft/client/gui/screens/controls/KeyBindsScreen resetButton Lnet/minecraft/client/gui/components/Button;
+accessible field net/minecraft/client/multiplayer/PlayerInfo textureLocations Ljava/util/Map;
+accessible method net/minecraft/client/player/AbstractClientPlayer getPlayerInfo ()Lnet/minecraft/client/multiplayer/PlayerInfo;
+accessible field net/minecraft/server/level/WorldGenRegion level Lnet/minecraft/server/level/ServerLevel;
+#Fabric doesn't transform this normally
+accessible method net/minecraft/client/gui/screens/MenuScreens register (Lnet/minecraft/world/inventory/MenuType;Lnet/minecraft/client/gui/screens/MenuScreens$ScreenConstructor;)V
+accessible field net/minecraft/client/gui/screens/Screen minecraft Lnet/minecraft/client/Minecraft;
+accessible method net/minecraft/util/thread/BlockableEventLoop submitAsync (Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;
+accessible field net/minecraft/world/entity/ai/attributes/DefaultAttributes SUPPLIERS Ljava/util/Map;
+mutable field net/minecraft/world/entity/ai/attributes/DefaultAttributes SUPPLIERS Ljava/util/Map;
+accessible method net/minecraft/world/inventory/MenuType <init> (Lnet/minecraft/world/inventory/MenuType$MenuSupplier;)V
+accessible class net/minecraft/world/inventory/MenuType$MenuSupplier
+accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier instances Ljava/util/Map;
+accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor

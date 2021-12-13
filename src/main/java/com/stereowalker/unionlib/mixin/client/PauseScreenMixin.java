@@ -25,7 +25,7 @@ public abstract class PauseScreenMixin extends Screen {
 	public void init_inject(CallbackInfo ci) {
 		if (UnionLib.CONFIG.config_button) {
 			this.addRenderableWidget(new OverlayImageButton(this.width / 2 + 104, this.height/ 4 + 120 + -16, 20, 20, 0, 0, 20, UnionLib.UNION_BUTTON_IMAGE, 20, 40, (p_213088_1_) -> {
-				this.getMinecraft().setScreen(new UnionModsScreen(this));
+				this.minecraft.setScreen(new UnionModsScreen(this));
 			}, new TranslatableComponent("menu.button.union")));
 		}
 	}

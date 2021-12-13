@@ -6,9 +6,14 @@ import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.entity.player.CustomInventoryGetter;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 
@@ -16,12 +21,12 @@ public class ServerboundUnionInventoryPacket extends ServerboundUnionPacket {
 	private UUID uuid;
 
 	public ServerboundUnionInventoryPacket(final UUID uuid) {
-		super(UnionLib.CHANNEL);
+		super(null);
 		this.uuid = uuid;
 	}
 
 	public ServerboundUnionInventoryPacket (final FriendlyByteBuf packetBuffer) {
-		super(packetBuffer, UnionLib.CHANNEL);
+		super(packetBuffer);
 		this.uuid = (new UUID(packetBuffer.readLong(), packetBuffer.readLong()));
 	}
 
@@ -40,5 +45,11 @@ public class ServerboundUnionInventoryPacket extends ServerboundUnionPacket {
 			}, new TranslatableComponent("")));
 		}
 		return true;
+	}
+
+	public static ResourceLocation id = UnionLib.instance.location("serverbound_union_inventory_packet");
+	@Override
+	public ResourceLocation getId() {
+		return id;
 	}
 }

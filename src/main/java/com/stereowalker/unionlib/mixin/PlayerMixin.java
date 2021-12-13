@@ -78,12 +78,12 @@ public abstract class PlayerMixin extends LivingEntity implements CustomInventor
 	}
 
 	@ModifyVariable(
-			method = "getDigSpeed(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)F",
+			method = "getDestroySpeed(Lnet/minecraft/world/level/block/state/BlockState;)F",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/effect/MobEffectUtil;hasDigSpeed(Lnet/minecraft/world/entity/LivingEntity;)Z"
 					),
-			index = 3
+			index = 2
 			)
 	private float getDigSpeed(float f) {
 		AttributeInstance instance = this.getAttribute(UAttributes.DIG_SPEED);

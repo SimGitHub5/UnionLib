@@ -7,6 +7,8 @@ import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.inventory.UnionInventory;
 import com.stereowalker.unionlib.item.AccessoryItem.AccessorySlotType;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,8 +30,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 	public static final ResourceLocation LOCATION_BLOCKS_TEXTURE = new ResourceLocation("textures/atlas/blocks.png");
@@ -39,8 +39,8 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
 	
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.location("item/empty_accessory_slot_necklace");
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.location("item/empty_accessory_slot_ring");
+	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.instance.location("item/empty_accessory_slot_necklace");
+	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.instance.location("item/empty_accessory_slot_ring");
 	private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
 	private static final EquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 	private static final ResourceLocation[] ACCESSORY_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ACCESSORY_SLOT_NECKLACE, EMPTY_ACCESSORY_SLOT_RING};
@@ -85,7 +85,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 				 */
 				@Override
 				public boolean mayPlace(ItemStack stack) {
-					return stack.canEquip(equipmentslottype, player);
+					return equipmentslottype == Mob.getEquipmentSlotForItem(stack);
 				}
 
 				/**
@@ -97,7 +97,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 					return !itemstack.isEmpty() && !playerIn.isCreative() && EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.mayPickup(playerIn);
 				}
 
-				@OnlyIn(Dist.CLIENT)
+				@Environment(EnvType.CLIENT)
 				@Override
 				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 					return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
@@ -117,7 +117,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 		}
 
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
-			@OnlyIn(Dist.CLIENT)
+			@Environment(EnvType.CLIENT)
 			public Pair<ResourceLocation, ResourceLocation> getBackground() {
 				return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.EMPTY_ARMOR_SLOT_SHIELD);
 			}
@@ -155,7 +155,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 						return !itemstack.isEmpty() && !playerIn.isCreative() && EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.mayPickup(playerIn);
 					}
 
-					@OnlyIn(Dist.CLIENT)
+					@Environment(EnvType.CLIENT)
 					@Override
 					public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 						return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ACCESSORY_SLOT_TEXTURES[accessoryslottype.getIndex()]);
@@ -326,7 +326,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 		return this.craftMatrix.getHeight();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public int getSize() {
 		return 5;

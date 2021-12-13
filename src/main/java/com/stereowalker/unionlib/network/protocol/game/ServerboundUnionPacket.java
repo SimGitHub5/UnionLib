@@ -1,37 +1,30 @@
 package com.stereowalker.unionlib.network.protocol.game;
 
-import java.util.function.Supplier;
-
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
-public abstract class ServerboundUnionPacket extends BasePacket{
+public abstract class ServerboundUnionPacket extends BasePacket {
 
-	public ServerboundUnionPacket(SimpleChannel channel) {
-		super(channel);
-	}
-	
-	public ServerboundUnionPacket(FriendlyByteBuf packetBuffer, SimpleChannel channel) {
-		super(packetBuffer, channel);
+	public ServerboundUnionPacket(FriendlyByteBuf packetBuffer) {
+		super(packetBuffer);
 	}
 
-	@Override
-	public void message(final Supplier<NetworkEvent.Context> contextSupplier) {
-		final NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			final ServerPlayer sender = context.getSender();
-			if (sender == null) {
-				return;
-			}
-			context.setPacketHandled(handleOnServer(sender));
+	public void message(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, PacketSender responseSender) {
+		server.execute(() -> {
+			handleOnServer(player);
 		});
 	}
 	
 	public abstract boolean handleOnServer(ServerPlayer sender);
 
 	public void send() {
-		this.channel.sendToServer(this);
+		FriendlyByteBuf buff = new FriendlyByteBuf(Unpooled.buffer());
+		this.encode(buff);
+		ClientPlayNetworking.send(this.getId(), buff);
 	}
 }

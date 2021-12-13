@@ -1,12 +1,13 @@
 package com.stereowalker.unionlib.client.gui.screen.inventory;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.keybindings.KeyBindings;
 import com.stereowalker.unionlib.inventory.container.UnionContainer;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -18,13 +19,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionContainer> implements RecipeUpdateListener {
 	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
-	public static final ResourceLocation UNION_INVENTORY_BACKGROUND = UnionLib.location("textures/gui/container/union_inventory.png");
+	public static final ResourceLocation UNION_INVENTORY_BACKGROUND = UnionLib.instance.location("textures/gui/container/union_inventory.png");
 	/** The old x position of the mouse pointer */
 	private float oldMouseX;
 	/** The old y position of the mouse pointer */
@@ -140,10 +139,9 @@ public class UnionInventoryScreen extends EffectRenderingInventoryScreen<UnionCo
 
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
 		if (super.keyPressed(pKeyCode, pScanCode, pModifiers)) {
 			return true;
-		} else if (KeyBindings.OPEN_UNION_INVENTORY.isActiveAndMatches(mouseKey)) {
+		} else if (KeyBindings.OPEN_UNION_INVENTORY.matches(pKeyCode, pScanCode)) {
 			this.onClose();
 			return true;
 		} else {return false;}
