@@ -143,11 +143,11 @@ public class UnionLib extends MinecraftMod {
 	@SuppressWarnings("resource")
 	private void clientSetup(final FMLClientSetupEvent event) {
 		Supporters.populateSupporters(new File(Minecraft.getInstance().gameDirectory, "supportercache.json"), true);
+		ModHandler.mods.values().forEach((mod) -> {
+			mod.onModStartupInClient();
+			Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding);
+		});
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			ModHandler.mods.values().forEach((mod) -> {
-				mod.onModStartupInClient();
-				Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding);
-			});
 			UScreens.registerScreens();
 		}
 	}
