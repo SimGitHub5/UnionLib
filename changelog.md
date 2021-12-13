@@ -1,3 +1,6 @@
+[6.1.4]
+- Fix client-side only run not registering keymaps
+
 [6.1.3]
 - Moved ResourceLocations to a single class
 
