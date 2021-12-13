@@ -21,7 +21,7 @@ public class PatreonButton extends Button {
 		Minecraft minecraft = Minecraft.getInstance();
 		Font font = minecraft.font;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, UnionLib.location("textures/gui/patreon_button.png"));
+		RenderSystem.setShaderTexture(0, UnionLib.instance.location("textures/gui/patreon_button.png"));
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 		int i = this.getYImage(this./*isHovered*/m_198029_());
 		RenderSystem.enableBlend();

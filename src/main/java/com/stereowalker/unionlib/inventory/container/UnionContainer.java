@@ -39,8 +39,8 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
 	public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
 	
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.location("item/empty_accessory_slot_necklace");
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.location("item/empty_accessory_slot_ring");
+	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.instance.location("item/empty_accessory_slot_necklace");
+	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.instance.location("item/empty_accessory_slot_ring");
 	private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
 	private static final EquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 	private static final ResourceLocation[] ACCESSORY_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ACCESSORY_SLOT_NECKLACE, EMPTY_ACCESSORY_SLOT_RING};

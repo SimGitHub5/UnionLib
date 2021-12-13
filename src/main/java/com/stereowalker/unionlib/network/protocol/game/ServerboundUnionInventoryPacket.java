@@ -16,12 +16,12 @@ public class ServerboundUnionInventoryPacket extends ServerboundUnionPacket {
 	private UUID uuid;
 
 	public ServerboundUnionInventoryPacket(final UUID uuid) {
-		super(UnionLib.CHANNEL);
+		super(UnionLib.instance.channel);
 		this.uuid = uuid;
 	}
 
 	public ServerboundUnionInventoryPacket (final FriendlyByteBuf packetBuffer) {
-		super(packetBuffer, UnionLib.CHANNEL);
+		super(packetBuffer, UnionLib.instance.channel);
 		this.uuid = (new UUID(packetBuffer.readLong(), packetBuffer.readLong()));
 	}
 

@@ -12,7 +12,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class PacketRegistry {
 	static int netID = -1;
-	public static void registerMessages(SimpleChannel channel) {
+	public static void registerServerboundListeners(SimpleChannel channel) {
 		registerMessage(channel, netID++, ServerboundUnionInventoryPacket.class, (packetBuffer) -> {return new ServerboundUnionInventoryPacket(packetBuffer);});
 	}
 

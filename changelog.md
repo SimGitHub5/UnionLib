@@ -1,3 +1,6 @@
+[6.1.2]
+- Updated to match changes made on fabric branch
+
 [6.0.0]
 - Properly displayed Patreon info in the Patreon page
 - Fix Union Inventory not closing with it's own keybind

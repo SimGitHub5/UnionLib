@@ -42,8 +42,9 @@ public class MinecraftMod {
 		this.modid = modid;
 		this.modTexture = modTexture;
 		this.loadType = loadType;
-		if (shouldLoadMod) {
-			UnionLib.mods.add(this);
+		if (shouldLoadMod && !ModHandler.isModRegistered(modid)) {
+			onModStartup();
+			ModHandler.registerMod(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {
 				return new ConfigGuiHandler.ConfigGuiFactory((minecraft, parentScreen) -> {
 					return getConfigScreen(minecraft, parentScreen);
@@ -59,6 +60,12 @@ public class MinecraftMod {
 		}
 		else
 			this.channel = null;
+	}
+	
+	public void onModStartup() {
+	}
+
+	public void onModStartupInClient() {
 	}
 
 	public MinecraftMod(String modid, ResourceLocation modTexture, LoadType loadType) {
