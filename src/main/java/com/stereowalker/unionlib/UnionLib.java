@@ -32,7 +32,6 @@ import com.stereowalker.unionlib.supporter.Supporters;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
@@ -44,7 +43,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 
-public class UnionLib extends MinecraftMod implements ModInitializer {
+public class UnionLib extends MinecraftMod {
 
 	public static UnionLib instance;
 	public static TestObjectConfig test_config = new TestObjectConfig();

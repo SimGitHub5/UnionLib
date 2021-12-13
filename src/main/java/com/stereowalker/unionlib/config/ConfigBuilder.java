@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.fml.event.config.ModConfigEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
@@ -105,10 +106,27 @@ public class ConfigBuilder {
 	 * As long as the class has the annotation {@link UnionConfig} it will be registered
 	 * @param configClass
 	 */
+	private static List<String> modidList = Lists.newArrayList();
+	private static void handleConfigEvent(String modid) {
+		if (!modidList.contains(modid)) {
+			modidList.add(modid);
+			ModConfigEvent.RELOADING.register((ModConfig config) -> {
+				if (config.getModId().equals(modid)) {
+					reload();
+				}
+			});
+			ModConfigEvent.LOADING.register((ModConfig config) -> {
+				if (config.getModId().equals(modid)) {
+					load();
+				}
+			});
+		}
+	}
 	public static void registerConfig(String modid, Class<?> configClass) {
 		if (configClass.isAnnotationPresent(UnionConfig.class) && !ConfigClassBuilder.configs.contains(configClass)) {
 			UnionConfig con = configClass.getAnnotation(UnionConfig.class);
 			UnionLib.debug("Registered the config for "+con.name());
+			handleConfigEvent(modid);
 			ConfigClassBuilder.configs.add(configClass);
 			ConfigClassBuilder.client_builder.put(configClass, new ForgeConfigSpec.Builder());
 			ConfigClassBuilder.common_builder.put(configClass, new ForgeConfigSpec.Builder());
@@ -128,6 +146,7 @@ public class ConfigBuilder {
 		if (configObject.getClass().isAnnotationPresent(UnionConfig.class) && !ConfigObjectBuilder.configs.contains(configObject)) {
 			UnionConfig con = configObject.getClass().getAnnotation(UnionConfig.class);
 			UnionLib.debug("Registered the config for "+con.name());
+			handleConfigEvent(modid);
 			ConfigObjectBuilder.configs.add(configObject);
 			ConfigObjectBuilder.client_builder.put(configObject, new ForgeConfigSpec.Builder());
 			ConfigObjectBuilder.common_builder.put(configObject, new ForgeConfigSpec.Builder());
@@ -200,18 +219,6 @@ public class ConfigBuilder {
 	{
 		return Lists.newArrayList(DOT_SPLITTER.split(path));
 	}
-
-//	@EventBusSubscriber(bus = Bus.MOD)
-//	public static class ModEventBus {
-//		@SubscribeEvent
-//		public static void onLoad(ModConfigEvent.Loading event) {
-//			load();
-//		}
-//		@SubscribeEvent
-//		public static void onReload(ModConfigEvent.Reloading event) {
-//			reload();
-//		}
-//	}
 
 	public static class Holder<T extends Object> {
 		protected final ForgeConfigSpec.ConfigValue<T> value;
