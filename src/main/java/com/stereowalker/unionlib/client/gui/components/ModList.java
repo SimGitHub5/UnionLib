@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stereowalker.unionlib.UnionLib;
 import com.stereowalker.unionlib.client.gui.screens.ModConfigurationScreen;
 import com.stereowalker.unionlib.client.gui.screens.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.screens.controls.ModControlsScreen;
 import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.mod.ModHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -26,7 +26,7 @@ public class ModList extends ContainerObjectSelectionList<ModList.Entry> {
 
 	public ModList(Minecraft mcIn, UnionModsScreen screen) {
 		super(mcIn, screen.width +45, screen.height, 43, screen.height - 32, 25);
-		for(MinecraftMod mod : UnionLib.mods) {
+		for(MinecraftMod mod : ModHandler.mods.values()) {
 			this.addEntry(new ModList.ModEntry(mod, screen));
 		}
 

@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Maps;
 import com.stereowalker.unionlib.UnionLib;
+import com.stereowalker.unionlib.mod.ModHandler;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
@@ -15,8 +16,8 @@ public class UnionLibRegistry
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
 			RegisterObjects.putObjectsInForgeRegistries();
 			FMLJavaModLoadingContext.get().getModEventBus().addListener((Consumer<EntityAttributeModificationEvent>)event-> {
-				UnionLib.mods.forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithoutValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr))));
-				UnionLib.mods.forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr.getA(), attr.getB()))));
+				ModHandler.mods.values().forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithoutValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr))));
+				ModHandler.mods.values().forEach((mod) -> Maps.newHashMap(mod.appendAttributesWithValues()).forEach((ent, ma) -> ma.forEach((attr) -> event.add(ent, attr.getA(), attr.getB()))));
 			});
 		}
 	}

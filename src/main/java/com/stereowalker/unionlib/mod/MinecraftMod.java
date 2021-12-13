@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.stereowalker.unionlib.UnionLib;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -43,7 +42,6 @@ public class MinecraftMod {
 		this.modTexture = modTexture;
 		this.loadType = loadType;
 		if (shouldLoadMod && !ModHandler.isModRegistered(modid)) {
-			System.out.println("REGISTERED HERE");
 			onModStartup();
 			ModHandler.registerMod(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {

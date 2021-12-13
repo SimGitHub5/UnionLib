@@ -16,7 +16,6 @@ public class ModHandler {
 	}
 
 	public static void registerMod(MinecraftMod mod) {
-		System.out.println("ACTRUALLY REGISTERED");
 		mods.put(mod.getModid(), mod);
 	}
 

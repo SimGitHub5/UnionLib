@@ -1,7 +1,6 @@
 package com.stereowalker.unionlib;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ import com.stereowalker.unionlib.entity.ai.UAttributes;
 import com.stereowalker.unionlib.inventory.container.UContainerType;
 import com.stereowalker.unionlib.item.UItems;
 import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.mod.ModHandler;
 import com.stereowalker.unionlib.network.PacketRegistry;
 import com.stereowalker.unionlib.registries.UnionLibRegistry;
 import com.stereowalker.unionlib.supporter.Supporters;
@@ -62,7 +62,6 @@ public class UnionLib extends MinecraftMod {
 	public static final String MOD_ID = "unionlib";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final String INVENTORY_KEY = "UnionInventory";
-	public static List<MinecraftMod> mods = new ArrayList<MinecraftMod>();
 	public static LoadType loadLevel = null;
 
 	public static void debug(Object message) {
@@ -145,7 +144,7 @@ public class UnionLib extends MinecraftMod {
 	private void clientSetup(final FMLClientSetupEvent event) {
 		Supporters.populateSupporters(new File(Minecraft.getInstance().gameDirectory, "supportercache.json"), true);
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			mods.forEach((mod) -> {
+			ModHandler.mods.values().forEach((mod) -> {
 				mod.onModStartupInClient();
 				Lists.newArrayList(mod.getModKeyMappings()).forEach(ClientRegistry::registerKeyBinding);
 			});
