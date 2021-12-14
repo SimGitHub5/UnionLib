@@ -1,3 +1,6 @@
+[6.1.3]
+- Moved ResourceLocations to a single class
+
 [6.1.2]
 - Readded config load and relaod events
 
