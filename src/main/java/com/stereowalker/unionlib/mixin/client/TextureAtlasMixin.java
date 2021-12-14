@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.inventory.container.UnionContainer;
 
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -29,8 +28,8 @@ public abstract class TextureAtlasMixin extends AbstractTexture implements Ticka
 	public void prepareToStitch_inject (ResourceManager pResourceManager, Stream<ResourceLocation> pSpriteNames, ProfilerFiller pProfiler, int pMipLevel, CallbackInfoReturnable<TextureAtlas.Preparations> cir, Set<ResourceLocation> set) {
 		if(this.location().equals(InventoryMenu.BLOCK_ATLAS))
 		{
-			set.add(UnionContainer.EMPTY_ACCESSORY_SLOT_RING);
-			set.add(UnionContainer.EMPTY_ACCESSORY_SLOT_NECKLACE);
+			set.add(UnionLib.Locations.EMPTY_ACCESSORY_SLOT_RING);
+			set.add(UnionLib.Locations.EMPTY_ACCESSORY_SLOT_NECKLACE);
 			UnionLib.debug("Stiching accessorires");
 		}
 	}

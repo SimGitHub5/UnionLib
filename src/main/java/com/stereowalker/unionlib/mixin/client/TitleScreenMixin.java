@@ -24,7 +24,7 @@ public abstract class TitleScreenMixin extends Screen {
 	@Inject(method = "init", at = @At("TAIL"))
 	public void init_inject(CallbackInfo ci) {
 		if (UnionLib.CONFIG.config_button) {
-			this.addRenderableWidget(new OverlayImageButton(this.width / 2 + 104, this.height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, UnionLib.UNION_BUTTON_IMAGE, 20, 40, (p_213088_1_) -> {
+			this.addRenderableWidget(new OverlayImageButton(this.width / 2 + 104, this.height / 4 + 48 + 24 * 2, 20, 20, 0, 0, 20, UnionLib.Locations.UNION_BUTTON_IMAGE, 20, 40, (p_213088_1_) -> {
 				this.minecraft.setScreen(new UnionModsScreen(this));
 			}, new TranslatableComponent("menu.button.union")));
 		}

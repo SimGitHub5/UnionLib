@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.ResultContainer;
@@ -32,18 +33,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
-	public static final ResourceLocation LOCATION_BLOCKS_TEXTURE = new ResourceLocation("textures/atlas/blocks.png");
-	public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = new ResourceLocation("item/empty_armor_slot_helmet");
-	public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE = new ResourceLocation("item/empty_armor_slot_chestplate");
-	public static final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS = new ResourceLocation("item/empty_armor_slot_leggings");
-	public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
-	public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
-	
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = UnionLib.instance.location("item/empty_accessory_slot_necklace");
-	public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = UnionLib.instance.location("item/empty_accessory_slot_ring");
-	private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
+	private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET};
 	private static final EquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-	private static final ResourceLocation[] ACCESSORY_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ACCESSORY_SLOT_NECKLACE, EMPTY_ACCESSORY_SLOT_RING};
+	private static final ResourceLocation[] ACCESSORY_SLOT_TEXTURES = new ResourceLocation[]{UnionLib.Locations.EMPTY_ACCESSORY_SLOT_NECKLACE, UnionLib.Locations.EMPTY_ACCESSORY_SLOT_RING};
 	private static final AccessorySlotType[] VALID_ACCESSORY_SLOTS = new AccessorySlotType[]{AccessorySlotType.NECKLACE, AccessorySlotType.NECKLACE, AccessorySlotType.NECKLACE, AccessorySlotType.RING, AccessorySlotType.NECKLACE, AccessorySlotType.NECKLACE, AccessorySlotType.RING, AccessorySlotType.NECKLACE, AccessorySlotType.NECKLACE};
 	private final CraftingContainer craftMatrix = new CraftingContainer(this, 2, 2);
 	private final ResultContainer craftResult = new ResultContainer();
@@ -100,7 +92,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 				@Environment(EnvType.CLIENT)
 				@Override
 				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-					return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
+					return Pair.of(InventoryMenu.BLOCK_ATLAS, UnionContainer.ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
 				}
 			});
 		}
@@ -119,7 +111,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			@Environment(EnvType.CLIENT)
 			public Pair<ResourceLocation, ResourceLocation> getBackground() {
-				return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.EMPTY_ARMOR_SLOT_SHIELD);
+				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
 			}
 		});
 		
@@ -158,7 +150,7 @@ public class UnionContainer extends RecipeBookMenu<CraftingContainer> {
 					@Environment(EnvType.CLIENT)
 					@Override
 					public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-						return Pair.of(UnionContainer.LOCATION_BLOCKS_TEXTURE, UnionContainer.ACCESSORY_SLOT_TEXTURES[accessoryslottype.getIndex()]);
+						return Pair.of(InventoryMenu.BLOCK_ATLAS, UnionContainer.ACCESSORY_SLOT_TEXTURES[accessoryslottype.getIndex()]);
 					}
 				});
 			}

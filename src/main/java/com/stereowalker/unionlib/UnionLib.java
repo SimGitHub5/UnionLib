@@ -55,7 +55,6 @@ public class UnionLib extends MinecraftMod {
 //	private static final String NETWORK_PROTOCOL_VERSION = "1";
 	public static LoadType loadLevel = null;
 //	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
-	public static ResourceLocation UNION_BUTTON_IMAGE;
 
 	public static void debug(Object message) {
 		if (CONFIG.debug) {
@@ -75,13 +74,12 @@ public class UnionLib extends MinecraftMod {
 
 	public UnionLib() 
 	{
-		super("unionlib", new ResourceLocation("unionlib","textures/gui/union_button.png"), LoadType.BOTH);
+		super("unionlib", Locations.UNION_BUTTON_IMAGE, LoadType.BOTH);
 		instance = this;
 	}
 	
 	@Override
 	public void onModStartup() {
-		UNION_BUTTON_IMAGE = location("textures/gui/union_button.png");
 		ConfigBuilder.registerConfig(getModid(), CONFIG);
 		ConfigBuilder.registerConfig(getModid(), SERVER_CONFIG);
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -154,5 +152,12 @@ public class UnionLib extends MinecraftMod {
 			ModHandler.mods.values().forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(KeyBindingHelper::registerKeyBinding));
 			UScreens.registerScreens();
 		}
+	}
+	
+	public static class Locations {
+		public static final ResourceLocation UNION_BUTTON_IMAGE = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/union_button.png");
+		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_necklace");
+		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_ring");
+		public static final ResourceLocation UNION_INVENTORY_BACKGROUND = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/container/union_inventory.png");
 	}
 }
