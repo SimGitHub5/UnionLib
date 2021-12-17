@@ -1,3 +1,6 @@
+[6.1.5]
+- Fix incompatibility with optifine
+
 [6.1.4]
 - Fix client-side only run not registering keymaps
 
