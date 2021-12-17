@@ -3,6 +3,8 @@
   "package": "com.stereowalker.unionlib.mixin",
   "refmap": "unionlib.refmap.json",
   "compatibilityLevel": "JAVA_17",
+    "minVersion": "0.8",
+	"plugin": "com.stereowalker.unionlib.mixin.UnionLibMixinPlugin",
   "mixins": [
     "PlayerMixin",
 	"ServerPlayerMixin",
@@ -15,7 +17,8 @@
 	"client.TitleScreenMixin",
 	"client.MinecraftMixin",
 	"client.ClientLevelMixin",
-	"client.TextureAtlasMixin"
+	"client.vanilla.TextureAtlasMixin",
+	"client.optifine.TextureAtlasMixin"
   ],
   "injectors": {
     "defaultRequire": 1

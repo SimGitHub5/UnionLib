@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.mixin.client;
+package com.stereowalker.unionlib.mixin.client.optifine;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -24,13 +24,13 @@ import net.minecraft.world.inventory.InventoryMenu;
 public abstract class TextureAtlasMixin extends AbstractTexture implements Tickable {
 	@Shadow public ResourceLocation location() {return null;}
 	
-	@Inject(method = "prepareToStitch", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void prepareToStitch_inject (ResourceManager pResourceManager, Stream<ResourceLocation> pSpriteNames, ProfilerFiller pProfiler, int pMipLevel, CallbackInfoReturnable<TextureAtlas.Preparations> cir, Set<ResourceLocation> set) {
+	@Inject(method = "prepareToStitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/Stitcher;<init>(III)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+	public void prepareToStitch_inject_optifine(ResourceManager pResourceManager, Stream<ResourceLocation> pSpriteNames, ProfilerFiller pProfiler, int pMipLevel, CallbackInfoReturnable<TextureAtlas.Preparations> cir, int l, Set<ResourceLocation> set) {
 		if(this.location().equals(InventoryMenu.BLOCK_ATLAS))
 		{
 			set.add(UnionLib.Locations.EMPTY_ACCESSORY_SLOT_RING);
 			set.add(UnionLib.Locations.EMPTY_ACCESSORY_SLOT_NECKLACE);
-			UnionLib.debug("Stiching accessorires");
+			UnionLib.debug("Optifine Installed, Stitching Into Atlas Using Alternative");
 		}
 	}
 }

@@ -85,7 +85,7 @@ public class UnionLib extends MinecraftMod {
 		super("unionlib", Locations.UNION_BUTTON_IMAGE, LoadType.BOTH);
 		instance = this;
 	}
-	
+
 	@Override
 	public void onModStartup() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -100,7 +100,6 @@ public class UnionLib extends MinecraftMod {
 		modEventBus.addListener(this::setup);
 		modEventBus.addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
-		UnionLibRegistry.registerObjects();
 
 		new MinecraftMod("concept_class", location("textures/gui/test_1.png"), MinecraftMod.LoadType.CLIENT, !FMLEnvironment.production) {
 			@Override
@@ -130,7 +129,7 @@ public class UnionLib extends MinecraftMod {
 			}
 		};
 	}
-	
+
 	@Override
 	public void registerMessages(SimpleChannel channel) {
 		PacketRegistry.registerServerboundListeners(channel);
@@ -151,7 +150,7 @@ public class UnionLib extends MinecraftMod {
 			UScreens.registerScreens();
 		}
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
@@ -160,21 +159,24 @@ public class UnionLib extends MinecraftMod {
 
 	@Override
 	public List<Class<?>> getRegistries() {
-		return Lists.newArrayList(UAttributes.class, UItems.class, UContainerType.class);
+		if (UnionLib.loadLevel != LoadType.CLIENT)
+			return Lists.newArrayList(UAttributes.class, UItems.class, UContainerType.class);
+		else 
+			return Lists.newArrayList();
 	}
-	
+
 	@Override
 	public KeyMapping[] getModKeyMappings() {
 		return new KeyMapping[]{KeyBindings.OPEN_UNION_INVENTORY};
 	}
-	
+
 	@Override
 	public Map<EntityType<? extends LivingEntity>, List<Attribute>> appendAttributesWithoutValues() {
 		Map<EntityType<? extends LivingEntity>, List<Attribute>> map = Maps.newHashMap();
 		map.put(EntityType.PLAYER, Lists.newArrayList(UAttributes.DIG_SPEED));
 		return map;
 	}
-	
+
 	public static class Locations {
 		public static final ResourceLocation UNION_BUTTON_IMAGE = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/union_button.png");
 		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_necklace");

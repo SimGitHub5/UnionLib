@@ -17,6 +17,7 @@ public class ModHandler {
 
 	public static void registerMod(MinecraftMod mod) {
 		mods.put(mod.getModid(), mod);
+		UnionLibRegistry.registerObjects(mod);
 	}
 
 	public static void setup() {
@@ -45,10 +46,6 @@ public class ModHandler {
 					}
 				} else break;
 				///////////////////////////////////
-				for (Class<?> clas : mod.getRegistries()) {
-					RegisterObjects.register(clas);
-				}
-				UnionLibRegistry.registerObjects();
 			}
 			hasRegisteredModObjects = true;
 		}

@@ -43,6 +43,7 @@ public class MinecraftMod {
 		this.loadType = loadType;
 		if (shouldLoadMod && !ModHandler.isModRegistered(modid)) {
 			onModStartup();
+			ModHandler.setup();
 			ModHandler.registerMod(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {
 				return new ConfigGuiHandler.ConfigGuiFactory((minecraft, parentScreen) -> {
