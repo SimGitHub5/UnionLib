@@ -1,3 +1,6 @@
+[6.1.6]
+- Address failure to load on servers
+
 [6.1.5]
 - Fix incompatibility with optifine
 
