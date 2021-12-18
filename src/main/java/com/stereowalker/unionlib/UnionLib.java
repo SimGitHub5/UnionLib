@@ -166,6 +166,7 @@ public class UnionLib extends MinecraftMod {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public KeyMapping[] getModKeyMappings() {
 		return new KeyMapping[]{KeyBindings.OPEN_UNION_INVENTORY};
 	}

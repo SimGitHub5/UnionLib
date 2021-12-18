@@ -46,10 +46,7 @@ public class MinecraftMod {
 			ModHandler.setup();
 			ModHandler.registerMod(this);
 			ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> {
-				return new ConfigGuiHandler.ConfigGuiFactory((minecraft, parentScreen) -> {
-					return getConfigScreen(minecraft, parentScreen);
-				});
-
+				return new ConfigGuiHandler.ConfigGuiFactory(this::getConfigScreen);
 			});
 			if (this.loadType != LoadType.CLIENT) {
 				this.channel = NetworkRegistry.newSimpleChannel(location("main_simple_channel"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
