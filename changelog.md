@@ -1,3 +1,6 @@
+[6.1.7]
+- Used a static variable for the overlay button image background. Fixes #2
+
 [6.1.6]
 - Address failure to load on servers
 
