@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.unionlib.client.gui.screens.ModConfigurationScreen;
 import com.stereowalker.unionlib.client.gui.screens.UnionModsScreen;
 import com.stereowalker.unionlib.client.gui.screens.controls.ModControlsScreen;
-import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 import com.stereowalker.unionlib.mod.ModHandler;
 

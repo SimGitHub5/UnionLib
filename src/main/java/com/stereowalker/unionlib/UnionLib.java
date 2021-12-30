@@ -28,7 +28,6 @@ import com.stereowalker.unionlib.item.UItems;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 import com.stereowalker.unionlib.mod.ModHandler;
 import com.stereowalker.unionlib.network.PacketRegistry;
-import com.stereowalker.unionlib.registries.UnionLibRegistry;
 import com.stereowalker.unionlib.supporter.Supporters;
 
 import net.minecraft.client.KeyMapping;
@@ -180,6 +179,7 @@ public class UnionLib extends MinecraftMod {
 
 	public static class Locations {
 		public static final ResourceLocation UNION_BUTTON_IMAGE = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/union_button.png");
+		public static final ResourceLocation OVERLAY_BUTTON_IMAGE_BACKGROUND = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/button_background.png");
 		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_necklace");
 		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_RING = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_ring");
 		public static final ResourceLocation UNION_INVENTORY_BACKGROUND = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/container/union_inventory.png");

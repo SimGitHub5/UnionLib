@@ -1,4 +1,4 @@
-package com.stereowalker.unionlib.client.gui.widget.button;
+package com.stereowalker.unionlib.client.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,11 +21,11 @@ public class OverlayImageButton extends ImageButton {
 	private final int textureHeight;
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
-		this(x, y, width, height, xTexStart, yTexStart, 20, UnionLib.instance.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
+		this(x, y, width, height, xTexStart, yTexStart, 20, UnionLib.Locations.OVERLAY_BUTTON_IMAGE_BACKGROUND, overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {
-		this(x, y, width, height, xTexStart, yTexStart, yDiffText, UnionLib.instance.location("textures/gui/button_background.png"), overlayLocation, textureWidth, textureHeight, onPress, title);
+		this(x, y, width, height, xTexStart, yTexStart, yDiffText, UnionLib.Locations.OVERLAY_BUTTON_IMAGE_BACKGROUND, overlayLocation, textureWidth, textureHeight, onPress, title);
 	}
 
 	public OverlayImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffText, ResourceLocation resourceLocation, ResourceLocation overlayLocation, int textureWidth, int textureHeight, Button.OnPress onPress, Component title) {

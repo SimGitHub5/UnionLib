@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stereowalker.unionlib.UnionLib;
+import com.stereowalker.unionlib.client.gui.components.OverlayImageButton;
 import com.stereowalker.unionlib.client.gui.screens.UnionModsScreen;
-import com.stereowalker.unionlib.client.gui.widget.button.OverlayImageButton;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
