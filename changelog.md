@@ -1,3 +1,7 @@
+[6.1.5]
+- Fix client-side only run not registering keymaps
+- Check for Optifabric when applying the optifine patch
+
 [6.1.4]
 - Fix incompatibility with optifine
 
