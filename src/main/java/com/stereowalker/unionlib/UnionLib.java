@@ -52,9 +52,9 @@ public class UnionLib extends MinecraftMod {
 	public static final String MOD_ID = "unionlib";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final String INVENTORY_KEY = "UnionInventory";
-//	private static final String NETWORK_PROTOCOL_VERSION = "1";
+	//	private static final String NETWORK_PROTOCOL_VERSION = "1";
 	public static LoadType loadLevel = null;
-//	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
+	//	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(location("main"), () -> NETWORK_PROTOCOL_VERSION, NETWORK_PROTOCOL_VERSION::equals, NETWORK_PROTOCOL_VERSION::equals);
 
 	public static void debug(Object message) {
 		if (CONFIG.debug) {
@@ -77,7 +77,7 @@ public class UnionLib extends MinecraftMod {
 		super("unionlib", Locations.UNION_BUTTON_IMAGE, LoadType.BOTH);
 		instance = this;
 	}
-	
+
 	@Override
 	public void onModStartup() {
 		ConfigBuilder.registerConfig(getModid(), CONFIG);
@@ -117,7 +117,6 @@ public class UnionLib extends MinecraftMod {
 				return new KeyMapping[]{new KeyMapping("key.unionlib.test_bind", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "DAD")};
 			}
 		};
-		ModHandler.setup();
 	}
 
 	@Override
@@ -128,21 +127,24 @@ public class UnionLib extends MinecraftMod {
 
 	@Override
 	public List<Class<?>> getRegistries() {
-		return Lists.newArrayList(UAttributes.class, UItems.class, UContainerType.class);
+		if (UnionLib.loadLevel != LoadType.CLIENT)
+			return Lists.newArrayList(UAttributes.class, UItems.class, UContainerType.class);
+		else 
+			return Lists.newArrayList();
 	}
-	
+
 	@Override
 	public KeyMapping[] getModKeyMappings() {
 		return new KeyMapping[]{KeyBindings.OPEN_UNION_INVENTORY};
 	}
-	
+
 	@Override
 	public Map<EntityType<? extends LivingEntity>, List<Attribute>> appendAttributesWithoutValues() {
 		Map<EntityType<? extends LivingEntity>, List<Attribute>> map = Maps.newHashMap();
 		map.put(EntityType.PLAYER, Lists.newArrayList(UAttributes.DIG_SPEED));
 		return map;
 	}
-	
+
 	@SuppressWarnings("resource")
 	@Override
 	@Environment(EnvType.CLIENT)
@@ -153,7 +155,7 @@ public class UnionLib extends MinecraftMod {
 			UScreens.registerScreens();
 		}
 	}
-	
+
 	public static class Locations {
 		public static final ResourceLocation UNION_BUTTON_IMAGE = new ResourceLocation(UnionLib.MOD_ID, "textures/gui/union_button.png");
 		public static final ResourceLocation EMPTY_ACCESSORY_SLOT_NECKLACE = new ResourceLocation(UnionLib.MOD_ID, "item/empty_accessory_slot_necklace");

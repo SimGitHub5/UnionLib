@@ -1,23 +1,26 @@
 {
-  "required": true,
-  "package": "com.stereowalker.unionlib.mixin",
-  "refmap": "UnionLib-refmap.json",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "PlayerMixin",
-	"ServerPlayerMixin",
-	"StructureStartMixin",
-	"MinecraftServerMixin"
-  ],
-  "client": [
-	"client.GlDebugMixin",
-	"client.PauseScreenMixin",
-	"client.TitleScreenMixin",
-	"client.MinecraftMixin",
-	"client.ClientLevelMixin",
-	"client.TextureAtlasMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"package": "com.stereowalker.unionlib.mixin",
+	"refmap": "UnionLib-refmap.json",
+	"compatibilityLevel": "JAVA_17",
+	"minVersion": "0.8",
+	"plugin": "com.stereowalker.unionlib.mixin.UnionLibMixinPlugin",
+	"mixins": [
+		"PlayerMixin",
+		"ServerPlayerMixin",
+		"StructureStartMixin",
+		"MinecraftServerMixin"
+	],
+	"client": [
+		"client.GlDebugMixin",
+		"client.PauseScreenMixin",
+		"client.TitleScreenMixin",
+		"client.MinecraftMixin",
+		"client.ClientLevelMixin",
+		"client.vanilla.TextureAtlasMixin",
+		"client.optifine.TextureAtlasMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

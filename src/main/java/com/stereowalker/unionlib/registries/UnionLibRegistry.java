@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.stereowalker.unionlib.UnionLib;
-import com.stereowalker.unionlib.mod.ModHandler;
+import com.stereowalker.unionlib.mod.MinecraftMod;
 import com.stereowalker.unionlib.mod.MinecraftMod.LoadType;
 
 import net.minecraft.world.entity.EntityType;
@@ -14,9 +14,9 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 
 public class UnionLibRegistry
 {
-	public static void registerObjects() {
+	public static void registerObjects(MinecraftMod mod) {
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			RegisterObjects.putObjectsInFabricRegistries();
+			RegisterObjects.putObjectsInFabricRegistries(mod);
 
 			Map<EntityType<? extends LivingEntity>, AttributeSupplier> oldMap = DefaultAttributes.SUPPLIERS;
 			ImmutableMap.Builder<EntityType<? extends LivingEntity>, AttributeSupplier> newMap = ImmutableMap.builder();
@@ -25,8 +25,8 @@ public class UnionLibRegistry
 				oldMap.get(entity).instances.forEach((attr, inst) -> {
 					build.add(attr, inst.getBaseValue());
 				});
-				ModHandler.mods.values().forEach((mod) -> {if (mod.appendAttributesWithoutValues().get(entity) != null) mod.appendAttributesWithoutValues().get(entity).forEach((attr) -> build.add(attr));});
-				ModHandler.mods.values().forEach((mod) -> {if (mod.appendAttributesWithValues().get(entity) != null) mod.appendAttributesWithValues().get(entity).forEach((attr) -> build.add(attr.getA(), attr.getB()));});
+				if (mod.appendAttributesWithoutValues().get(entity) != null) mod.appendAttributesWithoutValues().get(entity).forEach((attr) -> build.add(attr));
+				if (mod.appendAttributesWithValues().get(entity) != null) mod.appendAttributesWithValues().get(entity).forEach((attr) -> build.add(attr.getA(), attr.getB()));
 				newMap.put(entity, build.build());
 			}
 			DefaultAttributes.SUPPLIERS = newMap.build();
