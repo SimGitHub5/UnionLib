@@ -150,8 +150,8 @@ public class UnionLib extends MinecraftMod {
 	@Environment(EnvType.CLIENT)
 	public void onModStartupInClient() {
 		Supporters.populateSupporters(new File(Minecraft.getInstance().gameDirectory, "supportercache.json"), true);
+		ModHandler.mods.values().forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(KeyBindingHelper::registerKeyBinding));
 		if (UnionLib.loadLevel != LoadType.CLIENT) {
-			ModHandler.mods.values().forEach((mod) -> Lists.newArrayList(mod.getModKeyMappings()).forEach(KeyBindingHelper::registerKeyBinding));
 			UScreens.registerScreens();
 		}
 	}
