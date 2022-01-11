@@ -30,7 +30,10 @@ public class UnionLibMixinPlugin implements IMixinConfigPlugin {
 		else if (mixinClassName.contains("mixin.client.vanilla"))
 		{
 			try{Class.forName("optifine.Patcher");return false;}
-			catch (ClassNotFoundException e){return true;}
+			catch (ClassNotFoundException e){ 
+				try{Class.forName("me.modmuss50.optifabric.mod.OptifabricSetup");return false;}
+				catch (ClassNotFoundException e2){return true;}
+			}
 		}
 		else return true;
 	}
